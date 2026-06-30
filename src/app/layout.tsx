@@ -129,11 +129,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        {/* Pre-hydration theme script — prevents flash of wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('theme');
+                  var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+                  var theme = stored || (prefersLight ? 'light' : 'dark');
+                  if (theme === 'light') document.documentElement.classList.remove('dark');
+                  else document.documentElement.classList.add('dark');
+                } catch (e) {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
         />
       </head>
       <body
@@ -142,7 +160,7 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          enableSystem={false}
+          enableSystem
           disableTransitionOnChange
         >
           {children}

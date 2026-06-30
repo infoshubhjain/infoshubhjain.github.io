@@ -64,7 +64,7 @@ export function LoadingScreen() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="relative mb-8"
           >
-            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-primary/30 glass-strong glow-primary">
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-primary/30 liquid-glass-strong glow-primary">
               <span className="font-display text-2xl font-bold text-gradient-primary">
                 SJ
               </span>

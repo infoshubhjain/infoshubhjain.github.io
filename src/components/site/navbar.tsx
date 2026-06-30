@@ -12,6 +12,7 @@ import { navItems, profile } from "@/lib/portfolio-data";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
 import { cn } from "@/lib/utils";
 import { Magnetic } from "./magnetic";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
   const [hidden, setHidden] = useState(false);
@@ -75,7 +76,7 @@ export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
         <nav
           className={cn(
             "mx-auto flex w-full max-w-6xl items-center justify-between rounded-2xl px-3 py-2.5 transition-all duration-500 sm:px-4",
-            scrolled ? "glass-strong shadow-2xl shadow-black/30" : "border border-transparent"
+            scrolled ? "liquid-glass-strong shadow-2xl shadow-black/10" : "border border-transparent"
           )}
         >
           {/* Logo */}
@@ -132,6 +133,8 @@ export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
               <kbd className="hidden font-sans text-[10px] tracking-wide sm:inline">K</kbd>
             </button>
 
+            <ThemeToggle />
+
             <Magnetic strength={0.25} className="hidden sm:inline-flex">
               <button
                 onClick={() => go("contact")}
@@ -170,7 +173,7 @@ export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-x-4 top-24 rounded-2xl glass-strong p-3"
+              className="absolute inset-x-4 top-24 rounded-2xl liquid-glass-strong p-3 border border-border/50"
             >
               <div className="grid gap-1">
                 {navItems.map((item, i) => (

@@ -273,7 +273,7 @@ export function Hero() {
 
 function TerminalHUD() {
   return (
-    <div className="relative rounded-2xl border-gradient glass-strong scanlines overflow-hidden">
+    <div className="relative rounded-2xl liquid-glass-strong scanlines overflow-hidden border border-border/50">
       {/* Terminal title bar */}
       <div className="flex items-center justify-between border-b border-border bg-background/40 px-4 py-2.5">
         <div className="flex items-center gap-1.5">

@@ -1,0 +1,424 @@
+     1→     1→SHUBH JAIN
+     2→     2→ 
+     3→     3→Phone: +2179795689
+     4→     4→Email: shubhj3@illinois.edu
+     5→     5→
+     6→     6→https://www.linkedin.com/in/infoshubhjain/
+     7→     7→https://github.com/infoshubhjain 
+     8→     8→
+     9→     9→
+    10→    10→Languages: English (IELTS 8.0/9.0), Hindi (Native)
+    11→    11→
+    12→    12→Education
+    13→    13→Bachelor of Science in Computer Science, University of Illinois Urbana-Champaign
+    14→    14→Expected Graduation: May 2029
+    15→    15→CGPA: 3.83/4.0
+    16→    16→ 
+    17→    17→Deans List @ UIUC
+    18→    18→
+    19→    19→James Scholar @ UIUC
+    20→    20→
+    21→    21→Jan 2025 - May 2026
+    22→    22→Llama naturals, REVAMP UIUC BERT
+    23→    23→
+    24→    24→BERT Ad Compliance Classifier | Machine Learning Engineer
+    25→    25→Built the data preprocessing and tokenization infrastructure for a DistilBERT-based NLP system that detects FDA/FTC advertising compliance violations across 15 regulatory categories using PyTorch and HuggingFace Transformers.
+    26→    26→Engineered an end-to-end text processing pipeline that transformed raw advertising scripts into model-ready tensor datasets (input_ids, attention_mask, labels), establishing the interface between dataset curation and transformer fine-tuning workflows.
+    27→    27→Expanded and balanced the training corpus by 5.3× (10 → 53 labeled samples), achieving near-equal class distribution while increasing coverage across regulatory violation scenarios and advertising channels.
+    28→    28→Designed the canonical dataset schema and tensor artifact specification adopted throughout the project, enabling seamless integration between preprocessing, training, and evaluation stages.
+    29→    29→Curated a domain-specific NLP dataset spanning social media, influencer marketing, e-commerce listings, broadcast advertising, podcasts, email campaigns, and print media to improve model robustness across heterogeneous input formats.
+    30→    30→Implemented DistilBERT-compatible tokenization with 512-token context handling, padding, truncation, and attention masking, ensuring consistency between preprocessing and downstream transformer architecture.
+    31→    31→Authored comprehensive technical documentation covering data flow, tensor specifications, pipeline architecture, and deployment instructions, reducing onboarding complexity for future contributors.
+    32→    32→Technical Highlights
+    33→    33→Owned an entire stage of a multi-component machine learning pipeline from architecture design through implementation, artifact generation, validation, and documentation.
+    34→    34→Defined project-wide data contracts used by downstream contributors, including dataset schemas and serialized tensor formats.
+    35→    35→Applied transformer-based NLP preprocessing techniques to convert unstructured advertising content into structured model inputs suitable for supervised fine-tuning.
+    36→    36→Quantified Impact
+    37→    37→Increased labeled dataset size by 430% while maintaining balanced binary classification labels across 15 compliance categories.
+    38→    38→Produced tokenized datasets utilizing the full 512-token DistilBERT context window, enabling support for long-form advertising content.
+    39→    39→Contributed across data engineering, NLP preprocessing, dataset curation, documentation, and ML infrastructure within a collaborative Git-based development environment.
+    40→    40→
+    41→    41→
+    42→    42→CS
+    43→    43→
+    44→    44→Resume Bullet Points — AI Career App
+    45→    45→Project Title: AI-Powered Adaptive Learning Platform (Career & Skills)
+    46→    46→https://aiceuiuc.vercel.app/
+    47→    47→
+    48→    48→Dec 2025 - May 2026
+    49→    49→
+    50→    50→
+    51→    51→AI-Powered Adaptive Learning Platform | Next.js, FastAPI, Python, Supabase, OpenAI API | Dec 2025 - May 2026
+    52→    52→Architected a full-stack adaptive learning platform with a multi-agent backend orchestrating 7 specialized agents (Roadmap, Knowledge, Quiz, Conversation, Tasker, Memory Compactor, Orchestrator) that coordinate in real time to personalize the learning experience end-to-end
+    53→    53→Implemented a Bayesian Knowledge Tracing (BKT) engine from scratch that models per-skill mastery probabilities across sessions using parameters for learning rate, guess rate, and slip rate; the engine selects the next question by maximizing expected information gain over the learner's current skill frontier
+    54→    54→Built an adaptive placement system that seeds per-user, per-project skill priors at session start and updates durable Bayesian posteriors in Supabase after every quiz attempt, enabling the system to resume accurate knowledge state across sessions and projects
+    55→    55→Designed a 4-layer orchestration pipeline (Next.js frontend, FastAPI agent API, orchestration runtime, Supabase persistence) with 10+ database tables tracking sessions, quiz attempts, skill observations, and memory compaction across users
+    56→    56→Integrated OpenAI API across multiple agents to dynamically generate personalized learning roadmaps, adaptive quiz questions with answer keys, topic lesson plans, and conversational tutoring, while keeping knowledge estimation algorithmic and deterministic via BKT
+    57→    57→Persisted session replay capability by storing full transcript, active quiz state, roadmap progress, and skill probabilities in Supabase, allowing users to close and reopen a session with full context restored
+    58→    58→
+    59→    59→Architecture & Backend
+    60→    60→Designed and built a multi-agent orchestration system using a custom ReAct (Reason + Act) loop with 7 specialized AI agents (Roadmap, Knowledge, Quiz, Conversation, Dungeon, Tasker, Memory) composed via a mixin-based architecture for modular, phase-driven learning workflows
+    61→    61→Implemented a Bayesian Knowledge Tracing (BKT) engine from scratch — posterior updates, entropy-based information gain heuristics, and adaptive frontier selection — to sequence placement probes and personalize skill progression for each user
+    62→    62→Built a FastAPI + Python REST backend with async request handling, Pydantic v2 validation, pluggable LLM provider routing (OpenAI, Gemini, OpenRouter), and a YAML-based config layer for model switching without code changes
+    63→    63→Engineered quiz fingerprinting to deduplicate generated questions across placement sessions and prevent repetition, with answer keys persisted in Supabase and correctness evaluation feeding back into BKT state
+    64→    64→
+    65→    65→Frontend & UX
+    66→    66→Developed a Next.js 15 (App Router) frontend with TypeScript, Tailwind CSS, Radix UI, and Framer Motion — including a streaming-style chat interface, adaptive quiz modal, roadmap preview flow, and a post-lesson dungeon narrative experience
+    67→    67→Built useChatSession, a custom React hook with polling and exponential backoff, to manage multi-turn session state, XP/level updates, and phase transitions without WebSockets
+    68→    68→Integrated a Monaco Editor-based code playground supporting interactive p5.js sketches for visual coding lessons, alongside KaTeX math rendering and Prism.js syntax highlighting for rich technical content
+    69→    69→
+    70→    70→AI & Data
+    71→    71→Designed a sliding-window conversation memory manager with dynamic token budgeting (~8% of LLM context, 1600–24000 token range) to sustain coherent multi-turn teaching sessions across 200+ message transcripts
+    72→    72→Implemented dual-scope knowledge state persistence — global per-user and local per-project skill probability tables in Supabase — enabling cross-roadmap skill transfer and fine-grained learning analytics
+    73→    73→Integrated a dependency-free DuckDuckGo web scraper to enrich lesson content with fresh resources at inference time, without relying on third-party search APIs
+    74→    74→
+    75→    75→Infrastructure & Deployment
+    76→    76→Containerized the backend with Docker (Python 3.11-slim + Uvicorn), deployed to Google Cloud Run; frontend deployed to Vercel with SSR and auth middleware
+    77→    77→Managed Supabase PostgreSQL with 11 incremental migrations, pgvector for semantic roadmap retrieval, Row-Level Security (RLS) policies for user data isolation, and anonymous auth for frictionless onboarding
+    78→    78→Wired end-to-end gamification (XP, levels, streaks, milestones) with Supabase event sourcing for auditability and future analytics
+    79→    79→
+    80→    80→One-liner for project header
+    81→    81→AI-powered adaptive learning platform with Bayesian Knowledge Tracing, multi-agent orchestration, and personalized roadmap generation — full-stack Next.js / FastAPI / Supabase, deployed on Vercel + Cloud Run
+    82→    82→
+    83→    83→
+    84→    84→
+    85→    85→
+    86→    86→
+    87→    87→
+    88→    88→CS 128 Honors Project
+    89→    89→Urbana-Champaign, IL
+    90→    90→Expected May 2028
+    91→    91→neuro-rust | Feedforward Neural Network in Rust | github | Team: neuro-rust Spring 2026
+    92→    92→• Built a feedforward neural network from scratch in Rust with zero ML libraries, using only ndarray for matrix math and rand for
+    93→    93→weight initialization; implemented forward propagation, backpropagation, and online stochastic gradient descent across a
+    94→    94→configurable layer architecture.
+    95→    95→• Implemented Xavier/Glorot weight initialization, sigmoid activation with analytic derivative, MSE loss, and chain rule
+    96→    96→backpropagation across all layers; network successfully learns XOR in 10,000 epochs with online SGD at learning rate 1.0.
+    97→    97→• Owned project setup, Network struct and constructor, backpropagation implementation including delta computation and upstream
+    98→    98→gradient propagation, final code cleanup, doc comments on all public structs and methods, and RUN.md from scratch.
+    99→    99→• Wrote 15 unit tests across all modules covering sigmoid correctness, layer output shapes, forward pass cache consistency, exact
+   100→   100→weight update verification via hand-computed gradients, loss decrease over 500 steps, and XOR convergence after 20k epochs.
+   101→   101→
+   102→   102→
+   103→   103→
+   104→   104→
+   105→   105→Junior AI & NLP Lead Researcher and Intern, Exam Lounge May 2024 – August 2024
+   106→   106→• Led cross-functional team of 31 interns using Agile methodology, improving exam model accuracy by 15%
+   107→   107→• Designed and implemented data pipelines for processing large-scale educational datasets
+   108→   108→• Developed optimization techniques that enhanced software performance by 20%
+   109→   109→• Coordinated multiple bug detection teams, reducing critical production errors by 40%
+   110→   110→• Awarded “Intern of the Month” for 3 out of 4 months for exceptional problem-solving and communication
+   111→   111→
+   112→   112→Machine Learning Intern, IETE June 2023 – August 2023
+   113→   113→• Developed and deployed full-stack AI chatbot with database integration, handling 200+ daily inquiries
+   114→   114→• Built data pipeline using Python to process and analyze user interaction data in real-time
+   115→   115→• Implemented Bidirectional LSTM model with 87% accuracy for misinformation detection
+   116→   116→• Created customer sentiment analysis tool processing 10,000+ reviews using SQL databases
+   117→   117→• Completed capstone price prediction project using regression models with <5% mean error
+   118→   118→
+   119→   119→Lead Software Engineer, Project Harvest Dec 2025 – Present
+   120→   120→• Developed a full-stack ecosystem for 4 dining halls, integrating React, Python scrapers, and Node.js API for real-time updates.
+   121→   121→• Built a responsive dashboard for 1000+ daily users, showing calories, macros, allergens, and meal filtering.
+   122→   122→• Engineered Python Selenium scrapers to collect daily menus automatically, ensuring 100% up-to-date data.
+   123→   123→• Designed RESTful endpoints and Node.js backend, serving 100% of frontend requests efficiently from SQLite.
+   124→   124→• Implemented CI/CD pipelines via GitHub Actions, automating daily scraping, validation, and deployment; cut manual main-
+   125→   125→tenance by 90%.
+   126→   126→
+   127→   127→Lead Software Engineer and Project Manager, SIGAIDA Campus Energy August 2025 – December 2025
+   128→   128→• Led a 10-member team to architect and implement full-stack environmental monitoring platform using Next.js 14, TypeScript,
+   129→   129→FastAPI, and SQLite, delivering real-time air quality, weather, vegetation, and transit analytics via RESTful services.
+   130→   130→• Engineered PyTorch LSTM forecasting pipeline predicting PM2.5 levels 24 hours ahead, training on multi-year environmental
+   131→   131→datasets and integrating scheduled inference directly into backend APIs.
+   132→   132→• Built automated ETL pipelines integrating 4+ external data sources including OpenAQ, Open-Meteo, Google Earth Engine,
+   133→   133→and GTFS, standardizing heterogeneous satellite and sensor data into unified schemas for scalable querying.
+   134→   134→• Containerized backend services using Docker Compose and deployed production-ready FastAPI endpoints with interactive
+   135→   135→geospatial and time-series visualizations for real-time and historical analysis.
+   136→   136→
+   137→   137→Lead Software Engineer, Project Helix August 2025 – December 2025
+   138→   138→• Built full-stack campus event aggregation platform scraping and unifying 1000+ events from 15+ university sources,
+   139→   139→normalizing inconsistent HTML structures into centralized relational schema for dynamic querying and filtering.
+   140→   140→• Engineered scalable multi-technique scraping pipeline combining BeautifulSoup and Playwright to handle static and JavaScript-
+   141→   141→rendered sources, implementing deduplication logic and scheduled scraping workflows.
+   142→   142→• Developed RESTful API layer and OAuth2-based Google Calendar integration enabling authenticated users to export aggregated
+   143→   143→events directly to personal calendars using token-based secure access control.
+   144→   144→
+   145→   145→
+   146→   146→Freelance Web Developer May 2023 - may 2025
+   147→   147→Designed and developed 40+ websites (Wix, Squarespace, HTML/CSS)
+   148→   148→Implemented SEO, responsive UI/UX, payment gateways, e-commerce, booking systems, and analytics
+   149→   149→Managed complete project lifecycles, client consultation to launch
+   150→   150→
+   151→   151→AI & ML Intern | YBI Foundation: 
+   152→   152→ Intensive one-month program (practical AI/ML)
+   153→   153→
+   154→   154→IIT Delhi IHFC - Rancho Labs (Summer):
+   155→   155→ Among 20 students selected nationwide; Python fundamentals; linear regression projects; networking with IIT alumni
+   156→   156→
+   157→   157→
+   158→   158→
+   159→   159→
+   160→   160→
+   161→   161→
+   162→   162→
+   163→   163→
+   164→   164→
+   165→   165→RESEARCH EXPERIENCE & PUBLICATIONS
+   166→   166→Expected Graduation: May 2029
+   167→   167→CGPA: 3.75/4.0
+   168→   168→
+   169→   169→Patent
+   170→   170→IoT and Agriculture June 2024
+   171→   171→• Designed and patented a comprehensive IoT-based precision agriculture system enabling real-time monitoring of soil,
+   172→   172→crop, water, and environmental parameters to improve efficiency and reduce resource waste
+   173→   173→• Integrated sensor networks, automated irrigation control, and predictive analytics for optimized yield, water usage, and
+   174→   174→crop health management
+   175→   175→• Developed scalable frameworks contributing to sustainable farming and smart agriculture initiatives in India
+   176→   176→
+   177→   177→
+   178→   178→Published Research Papers
+   179→   179→A Comparative Assessment of Advanced Conversational Agents: ChatGPT, Gemini, Perplexity, and Claude
+   180→   180→International Journal of Emerging Technology and Advanced Engineering (IJETAE) June 2024
+   181→   181→• Conducted comprehensive comparative analysis evaluating factual accuracy, relevance, completeness, coherence, creativity,
+   182→   182→and bias across four leading conversational AI models using mixed-methods approach
+   183→   183→• Performed quantitative and qualitative analysis across diverse question types including factual, open-ended, situational, hypothetical,
+   184→   184→and creative questions to identify model strengths and weaknesses
+   185→   185→• Revealed significant performance variations: ChatGPT excels in creative text generation, Gemini demonstrates superior factual accu-
+   186→   186→racy, while Perplexity and Claude show varying interpretability and bias levels
+   187→   187→Investigation of the Performance of ChatGPT in Answering Common Sense-Based Questionnaires
+   188→   188→International Journal of Emerging Technology and Advanced Engineering (IJETAE) September 2023
+   189→   189→• Developed comprehensive questionnaire evaluating ChatGPT’s common-sense reasoning abilities across diverse domains, identify-
+   190→   190→ing high error rates and inconsistencies in fundamental factual knowledge
+   191→   191→• Best Junior Author of the Year 2023 (awarded USD 1,000); most downloaded high school-authored research paper in journal
+   192→   192→history
+   193→   193→• Employed quantitative accuracy metrics and qualitative human assessor evaluation to analyze ChatGPT’s comprehension, reasoning
+   194→   194→limitations, and contextual appropriateness in common-sense scenarios
+   195→   195→Authored Books
+   196→   196→IoT in Agriculture: Revolutionizing Indian Farming November 2024
+   197→   197→ISBN: 978-9394351950
+   198→   198→• Explored IoT applications in Indian agriculture, addressing challenges of climate change, water scarcity, soil degradation, and
+   199→   199→crop productivity through comprehensive research and practical frameworks
+   200→   200→• Developed and documented practical frameworks for smart farming, including sensor deployment strategies, crop monitoring systems,
+   201→   201→predictive analytics models, and automated alert mechanisms
+   202→   202→• Distributed 500+ copies to universities across India, integrated into academic libraries and research programs; recognized by the
+   203→   203→Governor of Madhya Pradesh for significant contribution to agricultural innovation
+   204→   204→Beyond the Black Box: Unlocking the Secrets of Explainable AI May 2025
+   205→   205→ISBN: B0F38TX4ZR
+   206→   206→• Investigated the black-box problem in AI systems, presenting comprehensive methods including post-hoc interpretability, coun-
+   207→   207→terfactual reasoning, rule-based models, and surrogate modeling techniques
+   208→   208→• Applied Explainable AI techniques to real-world domains including healthcare diagnostics, financial risk assessment, and autonomous
+   209→   209→vehicle systems
+   210→   210→• Highlighted ethical, regulatory, and fairness considerations in AI deployment, emphasizing transparency, trustworthiness, and account-
+   211→   211→ability in algorithmic decision-making
+   212→   212→
+   213→   213→Junior Editor-in-Chief | MetroVaartha (National Newspaper) August 2022 - August 2023
+   214→   214→Authored the article “Artificial Intelligence: Blessing or Curse?”, analyzing technical, ethical, and societal implications of AI; reached 50,000+ readers and sparked community discussions on technology adoption.
+   215→   215→
+   216→   216→
+   217→   217→Managed the technology section, supervising a team of junior editors and contributors; implemented content workflow improvements that boosted readership by 15% within six months.
+   218→   218→
+   219→   219→
+   220→   220→Proofread, fact-checked, and edited 200+ articles, ensuring technical accuracy, clarity, and compliance with editorial standards.
+   221→   221→
+   222→   222→
+   223→   223→Conducted industry interviews with tech professionals and startups, synthesizing insights into accessible, engaging content.
+   224→   224→
+   225→   225→
+   226→   226→Developed comprehensive editorial guidelines, standardizing tone, style, and formatting across sections to improve consistency and quality.
+   227→   227→
+   228→   228→
+   229→   229→Skills demonstrated: Editorial Leadership, Content Strategy, Technical & Research Writing, Fact-Checking, Proofreading, Interviewing, Team Supervision, Analytical Thinking, Publication Planning, Audience Engagement, Quality Assurance.
+   230→   230→
+   231→   231→
+   232→   232→
+   233→   233→
+   234→   234→
+   235→   235→Book Writing Assistant / Freelance Editor & Proofreader March 2023 - May 2025
+   236→   236→Assisted in 10+ book projects, conducting in-depth research, drafting content, providing developmental feedback, and editing for clarity, structure, and style.
+   237→   237→
+   238→   238→
+   239→   239→Edited and proofread 300+ academic essays spanning technical, scientific, and academic topics; applied domain-specific knowledge to ensure accuracy and readability.
+   240→   240→
+   241→   241→
+   242→   242→Developed custom style guides, formatting standards, and writing resources for authors and clients, ensuring consistent tone and adherence to publication guidelines.
+   243→   243→
+   244→   244→
+   245→   245→Delivered detailed feedback on argumentation, structure, and content flow, helping authors enhance clarity, coherence, and logical progression in their writing.
+   246→   246→
+   247→   247→
+   248→   248→Skills demonstrated: Developmental Editing, Technical & Academic Writing, Proofreading, Research & Fact-Checking, Style Guide Creation, Content Structuring, Author Mentorship, Critical Analysis, Communication, Attention to Detail, Project Management.
+   249→   249→
+   250→   250→
+   251→   251→
+   252→   252→
+   253→   253→
+   254→   254→LEADERSHIP & PROJECT EXPERIENCE
+   255→   255→\
+   256→   256→CS Peer Mentor Siebel Center for Computer Science, UIUC — January 2026 – Present
+   257→   257→Delivered 80+ one-on-one academic support sessions across multiple CS courses, resolving conceptual doubts, debugging code, and explaining foundational to intermediate programming concepts to students at varying levels of experience.
+   258→   258→Guided students through doubt-clearing for courses spanning CS 124, CS 128, CS 173, and CS 225, adapting explanations in real time based on each student's specific point of confusion rather than delivering scripted walkthroughs.
+   259→   259→Advised 80+ students on navigating the UIUC CS ecosystem — RSO discovery, internship sourcing and application strategy, research access, course sequencing, and how to build a competitive profile from freshman year onward.
+   260→   260→Identified recurring patterns of confusion across students and proactively developed clearer explanation frameworks for high-friction topics, reducing the time needed to resolve common doubts in repeat sessions.
+   261→   261→Maintained consistent session availability and follow-through, building ongoing relationships with returning students who came back across multiple weeks for continued support on evolving coursework challenges.
+   262→   262→
+   263→   263→CS 124 Assistant Tutor University of Illinois Urbana-Champaign — January 2026 – Present
+   264→   264→Delivered targeted tutoring sessions to CS 124 students on Kotlin syntax, object-oriented programming, type systems, control flow, and data structure fundamentals, meeting students at their exact point of confusion rather than re-teaching full lessons from scratch.
+   265→   265→Supported students through homework problem sets and machine problems end-to-end — from understanding the prompt and decomposing the problem to identifying bugs, tracing logic errors, and understanding why a fix worked rather than just applying it.
+   266→   266→Assisted with structured in-class lessons, providing real-time supplementary explanation to students who needed additional support during instruction and stepping in immediately when confusion surfaced rather than waiting for it to compound.
+   267→   267→Developed a pattern recognition approach to tutoring, identifying the three to four conceptual misunderstandings that caused the majority of student errors in Kotlin assignments and building targeted explanations specifically designed to address each one.
+   268→   268→Built student confidence alongside technical understanding by framing doubt-clearing sessions around guided questioning rather than direct answers, pushing students to reason through problems independently while providing scaffolding where needed.
+   269→   269→
+   270→   270→Director of Board Development – SSUAB           August 2025 - present
+   271→   271→Planned, coordinated, and executed multiple skill-development events for the student board, increasing engagement and participation.
+   272→   272→Designed and authored a comprehensive report identifying opportunities for undergraduate research and career services improvement.
+   273→   273→Conducted data collection and analysis to inform actionable recommendations for enhancing student access to professional resources.
+   274→   274→Built and maintained relationships with faculty, university departments, and external stakeholders to expand opportunities for board members.
+   275→   275→Mentored peers in LinkedIn optimization, resume refinement, and professional communication skills.
+   276→   276→Delivered workshops and one-on-one sessions to strengthen team collaboration and interpersonal skills.
+   277→   277→Managed event logistics, scheduling, and participant engagement to ensure seamless execution and measurable impact.
+   278→   278→Monitored and evaluated program outcomes, implementing improvements based on feedback and participation metrics.
+   279→   279→Fostered a culture of continuous learning, professional development, and research-oriented thinking within the board.
+   280→   280→Developed leadership, strategic planning, networking, mentorship, and communication skills through hands-on experience.
+   281→   281→
+   282→   282→Panels Head | UI-CON | University of Illinois Urbana-Champaign | Oct 2025 – Feb 2026
+   283→   283→• Led planning and execution for the panel programming division of a large-scale university comic convention attracting 2,000+ attendees over a multi-day event.
+   284→   284→ • Managed and coordinated 60+ volunteers across panel operations, registration, crowd management, and guest coordination, maintaining smooth operations across 8+ event areas.
+   285→   285→ • Oversaw the scheduling and execution of 20+ panels, workshops, and Q&A sessions, coordinating logistics for 40+ speakers, artists, and industry guests.
+   286→   286→ • Designed and implemented operational workflows for panel scheduling, speaker communication, and room transitions, reducing delays and maintaining on-time panel starts.
+   287→   287→ • Collaborated with 20+ executive board members, staff coordinators, and external vendors to manage programming logistics, AV setup, and venue coordination.
+   288→   288→ • Directed volunteer shift planning covering 250+ total volunteer hours, ensuring consistent staffing for panel moderation, attendee check-in, and room management.
+   289→   289→ • Managed real-time crowd flow for panel sessions, coordinating room capacity limits and line organization.
+   290→   290→ • Developed standardized training materials and briefings for volunteers, improving coordination across teams and reducing operational issues during peak convention hours.
+   291→   291→ • Handled live operational troubleshooting across 6+ simultaneous panels and performances, resolving scheduling conflicts, speaker delays, and technical issues under tight time constraints.
+   292→   292→ • Implemented structured communication channels between panel teams, operations staff, and executive leadership to maintain efficient decision-making during high-traffic periods.
+   293→   293→ • Ensured compliance with venue safety policies and capacity regulations while maintaining a high-quality attendee experience across all programming spaces.
+   294→   294→ • Delivered a highly organized convention experience through strong leadership, operational planning, and cross-team coordination in a high-pressure, fast-paced event environment.
+   295→   295→
+   296→   296→
+   297→   297→
+   298→   298→Management Head | Indian Graduate Student Association, Diwali on the Quad Event | October 2025
+   299→   299→• Directed operational planning and execution for a large-scale campus Diwali festival attended by 1,000+ students and community members, one of the highest turnout cultural events of the semester.
+   300→   300→ • Managed and coordinated a 30+ member volunteer team across logistics, event setup, guest coordination, and on-site operations to ensure smooth execution of a 4+ hour campus-wide celebration.
+   301→   301→ • Designed and maintained a centralized scheduling and task-management system overseeing 50+ operational tasks and timelines, improving coordination across multiple planning teams.
+   302→   302→ • Led outreach and promotion initiatives across 15+ student organizations and campus networks
+   303→   303→ • Oversaw end-to-end logistics, including stage setup, performance coordination, vendor communication, and equipment allocation for 10+ cultural performances and activities.
+   304→   304→ • Organized volunteer shift scheduling covering 80+ total volunteer hours, ensuring adequate staffing for event setup, guest management, and post-event teardown.
+   305→   305→ • Managed real-time crowd flow and event operations for 1,000+ attendees, coordinating entry points, check-in processes, and activity transitions to maintain safe and efficient movement across the event area.
+   306→   306→ • Coordinated with 5+ executive board members and campus partners to align programming, budgeting, and operational planning for the event.
+   307→   307→ • Implemented structured tracking for participant inflow and operational resources, monitoring hundreds of check-ins and event interactions to support efficient event management.
+   308→   308→ • Supervised setup and teardown operations involving 20+ logistical assets including staging, lighting, sound equipment, and cultural booths.
+   309→   309→
+   310→   310→
+   311→   311→
+   312→   312→
+   313→   313→Founder & President | AI and STEM Club March 2023- March 2025
+   314→   314→Established the city’s first AI & STEM lab and professional recording studio, providing students access to cutting-edge technologies including Raspberry Pi, Arduino, AI platforms, and audio production tools.
+   315→   315→
+   316→   316→
+   317→   317→Built and led the school’s largest student club (80+ members), designing mentorship programs, project pipelines, and collaborative workshops to develop technical skills, teamwork, and leadership among members.
+   318→   318→
+   319→   319→
+   320→   320→Developed an AI-powered chatbot to streamline school operations, enhancing communication, scheduling, and information accessibility; presented the project at the annual fest, winning “Best Club Exhibition” among 50+ clubs.
+   321→   321→
+   322→   322→
+   323→   323→Secured $7,000+ annual funding from sponsors and school grants; managed bi-weekly executive meetings, drafted agendas, and maintained comprehensive digital documentation including project roadmaps, progress reports, and technical manuals.
+   324→   324→
+   325→   325→
+   326→   326→Skills demonstrated: Leadership, Strategic Planning, Technical Project Development, AI & Machine Learning Implementation, Mentorship, Fundraising, Team Management, Workflow Optimization, Innovation, Communication, Organizational Design.
+   327→   327→
+   328→   328→
+   329→   329→Founder & President | Project Uthaan  December 2022 - December 2025
+   330→   330→Raised $24,000+ in funding through grant proposals, corporate partnerships, and social outreach; structured operational and financial frameworks to ensure accountability and transparency.
+   331→   331→
+   332→   332→
+   333→   333→Directed 200+ volunteers across 6 cities, coordinating tasks, timelines, and regional leaders to ensure uniform program delivery and operational efficiency.
+   334→   334→
+   335→   335→
+   336→   336→Oversaw construction of 8 classrooms, installation of 100+ computers, and partnership with Techno Global University, expanding educational access for underserved communities.
+   337→   337→
+   338→   338→
+   339→   339→Designed and executed programs benefiting 700+ women, 600+ children, and 300+ senior citizens, directly educating 2,200+ participants through digital literacy, vocational skills, and community development workshops.
+   340→   340→
+   341→   341→
+   342→   342→Maintained compliance reporting, internal communications, volunteer tracking, and documentation, ensuring operational transparency and measurable impact.
+   343→   343→
+   344→   344→
+   345→   345→Skills demonstrated: Large-scale Project Management, Leadership, Fundraising, Volunteer Coordination, Strategic Planning, Operations Oversight, Stakeholder Engagement, Impact Assessment, Communication, Social Entrepreneurship.
+   346→   346→
+   347→   347→
+   348→   348→Head of Operations | SBI Sustainability Drive  June 2023 - July 2023
+   349→   349→Led and coordinated an 80-member team, liaising with SBI, BHEL, and local NGOs to execute a large-scale environmental initiative.
+   350→   350→
+   351→   351→
+   352→   352→Developed detailed event agendas, logistics plans, and impact reports, ensuring tasks were clearly assigned and tracked.
+   353→   353→
+   354→   354→
+   355→   355→Raised $10,000+ and oversaw the plantation of 18,000+ trees (including 100+ native species) across 6 acres, implementing sustainable practices for long-term environmental impact.
+   356→   356→
+   357→   357→
+   358→   358→Managed media coverage, press releases, and community engagement, raising awareness and building partnerships for environmental sustainability.
+   359→   359→
+   360→   360→
+   361→   361→Skills demonstrated: Operational Leadership, Environmental Management, Logistics Coordination, Stakeholder Collaboration, Fundraising, Strategic Execution, Team Management, Event Planning, Public Relations, Reporting & Documentation.
+   362→   362→
+   363→   363→
+   364→   364→ICT Captain | TSVS Student Council       August 2023- august 2024
+   365→   365→Organized 15+ cybersecurity workshops for 900+ participants, teaching safe digital practices, ethical hacking basics, and privacy awareness.
+   366→   366→
+   367→   367→
+   368→   368→Hosted Sanskaar TechFest, attracting 1,000+ nationwide participants, overseeing event scheduling, technical infrastructure, and on-site support.
+   369→   369→
+   370→   370→
+   371→   371→Managed school website, internal networks, and cybersecurity protocols, implementing updates and solutions to prevent system vulnerabilities.
+   372→   372→
+   373→   373→
+   374→   374→Recognized with “School Colour for ICT”, the only recipient in high school for contributions to technology advancement and student empowerment.
+   375→   375→
+   376→   376→
+   377→   377→Skills demonstrated: Leadership, IT & Cybersecurity, Event Management, Technical Operations, Strategic Planning, Team Coordination, Problem-Solving, Digital Literacy Advocacy, Communication, Infrastructure Management.
+   378→   378→
+   379→   379→
+   380→   380→Model United Nations (MUN)    Feb 2022 - Nov 2024
+   381→   381→Chaired 8+ committees, enforcing parliamentary procedure, managing debate flow, and ensuring adherence to rules across sessions.
+   382→   382→
+   383→   383→
+   384→   384→Served as Secretary General for 2 large-scale MUNs with 700+ delegates, developing conference agendas, documentation, and procedural frameworks for seamless execution.
+   385→   385→
+   386→   386→
+   387→   387→Trained junior chairs and secretariat in minute-taking, roll calls, motions, and conflict resolution, building leadership capacity within the team.
+   388→   388→
+   389→   389→
+   390→   390→Participated in 35+ MUNs, winning 17 Best Delegate awards, demonstrating excellence in negotiation, diplomacy, and policy analysis.
+   391→   391→
+   392→   392→
+   393→   393→Skills demonstrated: Leadership, Public Speaking, Negotiation, Policy Analysis, Event Management, Mentorship & Training, Strategic Planning, Decision-Making, Documentation, Multicultural Collaboration, Conflict Resolution.
+   394→   394→
+   395→   395→
+   396→   396→Teacher & Mentor | Bharat Scouts and Guides   March 2022 - march 2023
+   397→   397→Mentored 400+ underprivileged children, providing educational materials, mentorship, and guidance to support academic and personal development.
+   398→   398→
+   399→   399→
+   400→   400→Managed 90+ volunteers, organized community campaigns reaching 30,000+ individuals, and raised $1,500+ to fund education initiatives.
+   401→   401→
+   402→   402→
+   403→   403→Participated in environmental drives including tree plantation campaigns and Green India initiatives, promoting sustainability and ecological awareness.
+   404→   404→
+   405→   405→
+   406→   406→Skills demonstrated: Mentorship, Community Engagement, Volunteer Management, Fundraising, Educational Leadership, Environmental Stewardship, Organizational Planning, Strategic Implementation, Communication, Leadership Development.
+   407→   407→
+   408→   408→
+   409→   409→Volunteer & Co-Management Roles 
+   410→   410→Hira Nyas Trust: Designed and executed computer literacy workshops for underprivileged communities; organized fundraising via handmade product sales.
+   411→   411→
+   412→   412→
+   413→   413→Lalitambha Social Welfare Society: Conducted workshops on computer basics and digital literacy; improved community access to educational resources.
+   414→   414→
+   415→   415→
+   416→   416→S.H.E Foundation: Coordinated project management, operational strategy, and execution for social initiatives supporting education and community development.
+   417→   417→
+   418→   418→
+   419→   419→Skills demonstrated: Project Coordination, Volunteer Leadership, Community Service, Fundraising, Educational Program Development, Strategic Planning, Communication, Problem-Solving, Social Impact, Training & Development.
+   420→   420→
+   421→   421→
+   422→   422→
+   423→   423→
+   424→   424→

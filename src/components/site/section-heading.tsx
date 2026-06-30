@@ -7,6 +7,8 @@ import { FadeIn } from "./animated-text";
 
 type SectionHeadingProps = {
   eyebrow: string;
+  /** When provided, shown as a code-style file path next to the eyebrow. */
+  fileLabel?: string;
   title: ReactNode;
   description?: ReactNode;
   align?: "left" | "center";
@@ -15,6 +17,7 @@ type SectionHeadingProps = {
 
 export function SectionHeading({
   eyebrow,
+  fileLabel,
   title,
   description,
   align = "left",
@@ -29,12 +32,18 @@ export function SectionHeading({
       )}
     >
       <FadeIn>
-        <div className="inline-flex items-center gap-2.5 rounded-full border border-primary/30 bg-primary/5 px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.22em] text-primary">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
-          </span>
-          {eyebrow}
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Code-style file path chip */}
+          <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 font-mono text-[11px] font-medium tracking-tight">
+            <span className="text-muted-foreground">/</span>
+            <span className="text-primary">{eyebrow.toLowerCase().replace(/\s+/g, "_")}</span>
+            <span className="text-muted-foreground/70">.tsx</span>
+          </div>
+          {fileLabel && (
+            <span className="hidden font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:inline">
+              {fileLabel}
+            </span>
+          )}
         </div>
       </FadeIn>
 

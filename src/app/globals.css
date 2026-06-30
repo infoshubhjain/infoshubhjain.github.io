@@ -379,6 +379,40 @@
     font-family: var(--font-display), var(--font-geist-sans), sans-serif;
     letter-spacing: -0.02em;
   }
+
+  /* Terminal / code-style text */
+  .font-mono-accent {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    letter-spacing: 0.02em;
+  }
+
+  /* Scanline overlay for terminal cards */
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 2px,
+      color-mix(in oklch, var(--foreground) 3%, transparent) 2px,
+      color-mix(in oklch, var(--foreground) 3%, transparent) 3px
+    );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Glow text shadow for CS accents */
+  .text-glow-primary {
+    text-shadow:
+      0 0 12px color-mix(in oklch, var(--primary) 60%, transparent),
+      0 0 32px color-mix(in oklch, var(--primary) 30%, transparent);
+  }
+  .text-glow-accent {
+    text-shadow:
+      0 0 12px color-mix(in oklch, var(--accent) 60%, transparent),
+      0 0 32px color-mix(in oklch, var(--accent) 30%, transparent);
+  }
 }
 
 /* ===================================================================
@@ -426,8 +460,27 @@
   100% { opacity: 0; }
 }
 
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes glitch-shift {
+  0%, 92%, 100% { transform: translate(0); }
+  93% { transform: translate(-1px, 1px); }
+  94% { transform: translate(1px, -1px); }
+  95% { transform: translate(-1px, -1px); }
+  96% { transform: translate(1px, 1px); }
+}
+
 .animate-float-y { animation: float-y 6s ease-in-out infinite; }
 .animate-pulse-glow { animation: pulse-glow 3.5s ease-in-out infinite; }
+.animate-glitch { animation: glitch-shift 4s infinite; }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

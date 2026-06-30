@@ -37,6 +37,7 @@ export function Achievements() {
 
       <SectionHeading
         eyebrow="Awards"
+        fileLabel="08 · recognition · scholarships"
         title={
           <>
             A wall of{" "}

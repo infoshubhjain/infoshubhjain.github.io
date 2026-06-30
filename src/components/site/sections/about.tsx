@@ -14,6 +14,7 @@ export function About() {
 
       <SectionHeading
         eyebrow="About"
+        fileLabel="02 · mission · vision · timeline"
         title={
           <>
             A builder operating at the intersection of{" "}

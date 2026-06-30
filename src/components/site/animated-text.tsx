@@ -23,11 +23,10 @@ const container: Variants = {
 };
 
 const child: Variants = {
-  hidden: { y: "0.6em", opacity: 0, filter: "blur(8px)" },
+  hidden: { y: "0.6em", opacity: 0 },
   visible: {
     y: "0em",
     opacity: 1,
-    filter: "blur(0px)",
     transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
   },
 };

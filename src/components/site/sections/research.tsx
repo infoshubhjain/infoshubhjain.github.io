@@ -27,6 +27,7 @@ export function Research() {
 
       <SectionHeading
         eyebrow="Research"
+        fileLabel="04 · papers · books · patent"
         title={
           <>
             Peer-reviewed papers, authored books,{" "}

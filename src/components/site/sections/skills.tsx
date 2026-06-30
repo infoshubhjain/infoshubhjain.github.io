@@ -52,6 +52,7 @@ export function Skills() {
 
       <SectionHeading
         eyebrow="Skills"
+        fileLabel="07 · constellation · clusters"
         title={
           <>
             An interconnected toolkit for{" "}

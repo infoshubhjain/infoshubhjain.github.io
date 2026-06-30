@@ -85,12 +85,14 @@ export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
             data-cursor-label="Home"
             aria-label="Go to home"
           >
-            <span className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-primary/40 bg-primary/10 font-display text-sm font-bold text-primary transition-all group-hover:scale-105 group-hover:glow-primary">
+            <span className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-primary/40 bg-primary/10 font-mono text-sm font-bold text-primary transition-all group-hover:scale-105 group-hover:glow-primary">
+              <span className="text-primary/60">{"<"}</span>
               SJ
+              <span className="text-primary/60">{"/>"}</span>
               <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
             </span>
-            <span className="hidden font-display text-sm font-semibold tracking-tight text-foreground sm:block">
-              Shubh Jain
+            <span className="hidden font-mono text-sm font-semibold tracking-tight text-foreground sm:block">
+              shubh<span className="text-primary">_</span>jain
             </span>
           </button>
 

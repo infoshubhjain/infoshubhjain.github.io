@@ -24,6 +24,7 @@ export function Experience() {
 
       <SectionHeading
         eyebrow="Experience"
+        fileLabel="05 · internships · research · engineering"
         title={
           <>
             Internships, research, and engineering —{" "}

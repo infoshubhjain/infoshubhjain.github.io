@@ -89,6 +89,7 @@ export function Projects() {
 
       <SectionHeading
         eyebrow="Projects"
+        fileLabel="03 · filter · search · sort"
         title={
           <>
             Things I have{" "}

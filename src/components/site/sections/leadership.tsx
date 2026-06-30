@@ -54,6 +54,7 @@ export function Leadership() {
 
       <SectionHeading
         eyebrow="Leadership"
+        fileLabel="06 · founder · events · mentoring"
         title={
           <>
             Leading at scale —{" "}

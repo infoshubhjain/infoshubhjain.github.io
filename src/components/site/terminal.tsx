@@ -83,6 +83,88 @@ export function Typewriter({
 }
 
 /**
+ * Rotating typewriter — cycles through an array of phrases.
+ * Types a phrase, holds, deletes it, then types the next one.
+ *
+ * Example phrases: ["CS @ UIUC", "AI Researcher", "Full-Stack Engineer"]
+ */
+export function RotatingTypewriter({
+  phrases,
+  typeSpeed = 65,
+  deleteSpeed = 35,
+  holdDuration = 1800,
+  delay = 0,
+  className,
+}: {
+  phrases: string[];
+  typeSpeed?: number;
+  deleteSpeed?: number;
+  holdDuration?: number;
+  delay?: number;
+  className?: string;
+}) {
+  // Reduced-motion check happens inside the effect; for SSR we assume
+  // full motion. Initial state is "waiting" so the effect kicks off the
+  // first transition after `delay`.
+  const [display, setDisplay] = useState("");
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [phase, setPhase] = useState<"typing" | "holding" | "deleting" | "waiting" | "static">("waiting");
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      // Static mode — show the first phrase, no animation.
+      // Use a microtask to avoid setState-during-render warnings.
+      const id = requestAnimationFrame(() => {
+        setDisplay(phrases[0] ?? "");
+        setPhase("static");
+      });
+      return () => cancelAnimationFrame(id);
+    }
+
+    if (phase === "static") return;
+
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (phase === "waiting") {
+      timer = setTimeout(() => setPhase("typing"), delay);
+    } else if (phase === "typing") {
+      const current = phrases[phraseIndex] ?? "";
+      if (display.length >= current.length) {
+        timer = setTimeout(() => setPhase("holding"), holdDuration / 2);
+      } else {
+        timer = setTimeout(() => {
+          setDisplay(current.slice(0, display.length + 1));
+        }, typeSpeed);
+      }
+    } else if (phase === "holding") {
+      timer = setTimeout(() => setPhase("deleting"), holdDuration);
+    } else if (phase === "deleting") {
+      if (display.length <= 0) {
+        // Wrap in a microtask to avoid synchronous setState in effect body.
+        Promise.resolve().then(() => {
+          setPhraseIndex((prev) => (prev + 1) % phrases.length);
+          setPhase("typing");
+        });
+      } else {
+        timer = setTimeout(() => {
+          setDisplay(display.slice(0, -1));
+        }, deleteSpeed);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [display, phase, phraseIndex, phrases, typeSpeed, deleteSpeed, holdDuration, delay]);
+
+  return (
+    <span className={className} aria-live="polite">
+      {display}
+      {phase !== "static" && <TerminalCursor />}
+    </span>
+  );
+}
+
+/**
  * A vertical or horizontal stream of pseudo-random binary/hex characters.
  * Used as a subtle background decoration.
  */

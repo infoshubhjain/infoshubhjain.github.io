@@ -173,7 +173,7 @@ export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-x-4 top-24 rounded-2xl liquid-glass-strong p-3 border border-border/50"
+              className="absolute inset-x-4 top-24 rounded-2xl liquid-glass-strong p-3"
             >
               <div className="grid gap-1">
                 {navItems.map((item, i) => (

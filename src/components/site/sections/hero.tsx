@@ -7,7 +7,7 @@ import { heroCopy, profile } from "@/lib/portfolio-data";
 import { AnimatedText } from "../animated-text";
 import { Magnetic } from "../magnetic";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
-import { Typewriter, TerminalCursor, BinaryStream } from "../terminal";
+import { Typewriter, TerminalCursor, BinaryStream, RotatingTypewriter } from "../terminal";
 
 const HeroScene = lazy(() =>
   import("../hero/hero-scene").then((m) => ({ default: m.HeroScene }))
@@ -123,11 +123,19 @@ export function Hero() {
                 SHUBH JAIN
               </span>
               <span className="mt-2 block font-mono text-2xl font-medium text-primary sm:text-3xl md:text-4xl">
-                <Typewriter
-                  text="> CS @ UIUC"
-                  speed={75}
-                  delay={700}
-                  cursor={true}
+                <RotatingTypewriter
+                  phrases={[
+                    "CS @ UIUC",
+                    "AI Researcher",
+                    "Multi-Agent Builder",
+                    "DistilBERT Engineer",
+                    "Bayesian KT Author",
+                    "2× Published Author",
+                  ]}
+                  typeSpeed={65}
+                  deleteSpeed={30}
+                  holdDuration={1600}
+                  delay={1200}
                 />
               </span>
             </h1>
@@ -273,7 +281,7 @@ export function Hero() {
 
 function TerminalHUD() {
   return (
-    <div className="relative rounded-2xl liquid-glass-strong scanlines overflow-hidden border border-border/50">
+    <div className="relative rounded-2xl liquid-glass-strong scanlines overflow-hidden">
       {/* Terminal title bar */}
       <div className="flex items-center justify-between border-b border-border bg-background/40 px-4 py-2.5">
         <div className="flex items-center gap-1.5">

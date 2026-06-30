@@ -246,7 +246,7 @@ function ProjectCard({
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
         "group relative overflow-hidden rounded-2xl liquid-glass transition-all",
-        open ? "border-primary/40" : "border border-border hover:border-primary/30"
+        open ? "ring-1 ring-primary/40" : "hover:ring-1 hover:ring-primary/30"
       )}
     >
       {/* Spotlight */}

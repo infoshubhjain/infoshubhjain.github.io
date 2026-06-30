@@ -11,10 +11,14 @@ import {
   X,
   ArrowUpDown,
   Sparkles,
+  Maximize2,
 } from "lucide-react";
 import { SectionShell, SectionHeading } from "../section-heading";
 import { projects, type Project } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
+import { CaseStudyModal } from "../case-study-modal";
+
+const CASE_STUDY_IDS = ["adaptive-learning", "bert-compliance", "sigaida"];
 
 const ALL_TAGS = Array.from(
   new Set(projects.flatMap((p) => p.tags))
@@ -36,6 +40,7 @@ export function Projects() {
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [sort, setSort] = useState<SortId>("featured");
   const [openId, setOpenId] = useState<string | null>(projects[0]?.id ?? null);
+  const [caseStudyProject, setCaseStudyProject] = useState<Project | null>(null);
 
   const filtered = useMemo(() => {
     let list = [...projects];
@@ -186,11 +191,18 @@ export function Projects() {
                 onToggle={() =>
                   setOpenId((prev) => (prev === p.id ? null : p.id))
                 }
+                onCaseStudy={() => setCaseStudyProject(p)}
               />
             ))}
           </AnimatePresence>
         </motion.div>
       </LayoutGroup>
+
+      {/* Case study modal */}
+      <CaseStudyModal
+        project={caseStudyProject}
+        onClose={() => setCaseStudyProject(null)}
+      />
 
       {filtered.length === 0 && (
         <div className="mt-12 flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
@@ -232,11 +244,15 @@ function ProjectCard({
   project,
   open,
   onToggle,
+  onCaseStudy,
 }: {
   project: Project;
   open: boolean;
   onToggle: () => void;
+  onCaseStudy: () => void;
 }) {
+  const hasCaseStudy = CASE_STUDY_IDS.includes(project.id);
+
   return (
     <motion.article
       layout
@@ -259,16 +275,37 @@ function ProjectCard({
         }}
       />
 
-      <div className="relative p-6">
+      <div className="relative">
+        {/* Project preview image */}
+        <div className="relative h-40 overflow-hidden sm:h-44">
+          <img
+            src={`/projects/${project.id}.png`}
+            alt={project.title}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+          {/* Featured badge overlays image */}
+          <div className="absolute left-4 top-4 flex flex-wrap items-center gap-1.5">
+            {project.featured && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-background/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur-md">
+                <Sparkles className="h-2.5 w-2.5" /> Featured
+              </span>
+            )}
+            {hasCaseStudy && (
+              <span className="inline-flex items-center rounded-full border border-accent/40 bg-background/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent backdrop-blur-md">
+                Case Study
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="mb-2 flex flex-wrap items-center gap-1.5">
-              {project.featured && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
-                  <Sparkles className="h-2.5 w-2.5" /> Featured
-                </span>
-              )}
               <span className="inline-flex items-center rounded-full border border-border bg-card/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 {project.category}
               </span>
@@ -374,6 +411,15 @@ function ProjectCard({
           </button>
 
           <div className="flex items-center gap-1.5">
+            {hasCaseStudy && (
+              <button
+                onClick={onCaseStudy}
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-accent/40 bg-accent/10 px-2.5 text-xs font-semibold text-accent transition-colors hover:bg-accent/20"
+                data-cursor-label="Deep dive"
+              >
+                <Maximize2 className="h-3 w-3" /> Case Study
+              </button>
+            )}
             {project.demo && (
               <a
                 href={project.demo}
@@ -408,6 +454,7 @@ function ProjectCard({
               </a>
             )}
           </div>
+        </div>
         </div>
       </div>
     </motion.article>

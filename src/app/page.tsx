@@ -17,6 +17,7 @@ import { Leadership } from "@/components/site/sections/leadership";
 import { Skills } from "@/components/site/sections/skills";
 import { Achievements } from "@/components/site/sections/achievements";
 import { Contact } from "@/components/site/sections/contact";
+import { InteractiveTerminal } from "@/components/site/interactive-terminal";
 
 export default function Home() {
   useSmoothScroll();
@@ -29,6 +30,7 @@ export default function Home() {
       <ScrollProgress />
       <Navbar onOpenCommand={() => setPaletteOpen(true)} />
       <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} />
+      <InteractiveTerminal />
 
       <main className="relative min-h-screen">
         {/* Persistent background ambiance */}

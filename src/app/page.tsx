@@ -12,6 +12,7 @@ import { Hero } from "@/components/site/sections/hero";
 import { About } from "@/components/site/sections/about";
 import { Projects } from "@/components/site/sections/projects";
 import { Research } from "@/components/site/sections/research";
+import { Writing } from "@/components/site/sections/writing";
 import { Experience } from "@/components/site/sections/experience";
 import { Leadership } from "@/components/site/sections/leadership";
 import { Skills } from "@/components/site/sections/skills";
@@ -47,6 +48,7 @@ export default function Home() {
         <About />
         <Projects />
         <Research />
+        <Writing />
         <Experience />
         <Leadership />
         <Skills />

@@ -75,26 +75,26 @@ export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
       >
         <nav
           className={cn(
-            "mx-auto flex w-full max-w-6xl items-center justify-between rounded-2xl px-3 py-2.5 transition-all duration-500 sm:px-4",
-            scrolled ? "liquid-glass-strong shadow-2xl shadow-black/10" : "border border-transparent"
+            "mx-auto flex w-full max-w-6xl items-center justify-between rounded-2xl px-3 py-2.5 transition-all duration-500 sm:px-4 liquid-glass",
+            scrolled && "shadow-2xl shadow-black/10 scale-[1.005]"
           )}
         >
-          {/* Logo */}
+          {/* Wordmark — text only, no icon */}
           <button
             onClick={() => go("home")}
-            className="group relative flex items-center gap-2.5 rounded-xl px-1.5 py-1"
+            className="group relative flex items-center gap-1.5 rounded-lg px-1.5 py-1 font-mono text-sm font-semibold tracking-tight text-foreground transition-colors hover:text-primary"
             data-cursor-label="Home"
             aria-label="Go to home"
           >
-            <span className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-primary/40 bg-primary/10 font-mono text-sm font-bold text-primary transition-all group-hover:scale-105 group-hover:glow-primary">
-              <span className="text-primary/60">{"<"}</span>
-              SJ
-              <span className="text-primary/60">{"/>"}</span>
-              <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-            </span>
-            <span className="hidden font-mono text-sm font-semibold tracking-tight text-foreground sm:block">
+            <span className="text-primary/70">$</span>
+            <span>
               shubh<span className="text-primary">_</span>jain
             </span>
+            <motion.span
+              className="inline-block w-[1.5ch] bg-primary"
+              style={{ height: "1em", animation: "cursor-blink 1.1s steps(1) infinite" }}
+              aria-hidden
+            />
           </button>
 
           {/* Desktop nav */}

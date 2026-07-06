@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/site/theme-provider";
+import { projects, research, books } from "@/lib/portfolio-data";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -123,6 +124,48 @@ const personJsonLd = {
   ],
 };
 
+// Per-project structured data as CreativeWork / SoftwareApplication.
+const projectJsonLd = projects.map((p) => ({
+  "@context": "https://schema.org",
+  "@type": p.category === "Research" ? "ScholarlyArticle" : "SoftwareApplication",
+  name: p.title,
+  description: p.oneLiner,
+  author: { "@type": "Person", name: "Shubh Jain" },
+  url: SITE_URL,
+  applicationCategory: p.category,
+  programmingLanguage: p.tech.join(", "),
+  keywords: p.tags.join(", "),
+  datePublished: `${p.year}`,
+  ...(p.demo && { installUrl: p.demo }),
+  ...(p.github && { codeRepository: p.github }),
+}));
+
+// Research papers as ScholarlyArticle.
+const researchJsonLd = research.map((r) => ({
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  name: r.title,
+  description: r.abstract,
+  author: { "@type": "Person", name: "Shubh Jain" },
+  publisher: { "@type": "Organization", name: r.venue },
+  datePublished: r.date,
+  keywords: r.topics.join(", "),
+}));
+
+// Books as Book.
+const booksJsonLd = books.map((b) => ({
+  "@context": "https://schema.org",
+  "@type": "Book",
+  name: b.title,
+  description: b.abstract,
+  author: { "@type": "Person", name: "Shubh Jain" },
+  isbn: b.isbn,
+  datePublished: b.date,
+  keywords: b.topics.join(", "),
+}));
+
+const allJsonLd = [personJsonLd, ...projectJsonLd, ...researchJsonLd, ...booksJsonLd];
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -131,10 +174,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-        />
+        {allJsonLd.map((jsonLd, i) => (
+          <script
+            key={i}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        ))}
         {/* Pre-hydration theme script — prevents flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{

@@ -1,0 +1,10 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+
+User-Agent: Googlebot
+Allow: /
+Disallow: /api/
+
+Host: https://infoshubhjain.github.io
+Sitemap: https://infoshubhjain.github.io/sitemap.xml

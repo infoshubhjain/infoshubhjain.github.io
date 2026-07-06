@@ -7,14 +7,20 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import { Menu, X, Command } from "lucide-react";
+import { Menu, X, Command, MousePointer2 } from "lucide-react";
 import { navItems, profile } from "@/lib/portfolio-data";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
 import { cn } from "@/lib/utils";
 import { Magnetic } from "./magnetic";
 import { ThemeToggle } from "./theme-toggle";
 
-export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
+export function Navbar({
+  onOpenCommand,
+  onOpenCursorPlayground,
+}: {
+  onOpenCommand: () => void;
+  onOpenCursorPlayground: () => void;
+}) {
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -131,6 +137,15 @@ export function Navbar({ onOpenCommand }: { onOpenCommand: () => void }) {
             >
               <Command className="h-3 w-3" />
               <kbd className="hidden font-sans text-[10px] tracking-wide sm:inline">K</kbd>
+            </button>
+
+            <button
+              onClick={onOpenCursorPlayground}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card/40 text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+              aria-label="Open cursor playground"
+              data-cursor-label="Cursors"
+            >
+              <MousePointer2 className="h-4 w-4" />
             </button>
 
             <ThemeToggle />

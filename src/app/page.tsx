@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSmoothScroll } from "@/lib/hooks/use-smooth-scroll";
-import { CustomCursor } from "@/components/site/custom-cursor";
+import { CustomCursor } from "@/components/site/cursors";
 import { ScrollProgress } from "@/components/site/scroll-progress";
 import { LoadingScreen } from "@/components/site/loading-screen";
 import { Navbar } from "@/components/site/navbar";
@@ -19,18 +19,24 @@ import { Skills } from "@/components/site/sections/skills";
 import { Achievements } from "@/components/site/sections/achievements";
 import { Contact } from "@/components/site/sections/contact";
 import { InteractiveTerminal } from "@/components/site/interactive-terminal";
+import { CursorPlayground } from "@/components/site/cursor-playground";
 
 export default function Home() {
   useSmoothScroll();
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [cursorPlaygroundOpen, setCursorPlaygroundOpen] = useState(false);
 
   return (
     <>
       <LoadingScreen />
       <CustomCursor />
       <ScrollProgress />
-      <Navbar onOpenCommand={() => setPaletteOpen(true)} />
+      <Navbar
+        onOpenCommand={() => setPaletteOpen(true)}
+        onOpenCursorPlayground={() => setCursorPlaygroundOpen(true)}
+      />
       <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} />
+      <CursorPlayground open={cursorPlaygroundOpen} onClose={() => setCursorPlaygroundOpen(false)} />
       <InteractiveTerminal />
 
       <main className="relative min-h-screen">

@@ -30,12 +30,14 @@ export type CursorVariant =
 const STORAGE_KEY = "cursor-variant";
 
 export function getStoredCursorVariant(): CursorVariant {
-  if (typeof window === "undefined") return "default";
+  if (typeof window === "undefined") return "gooey";
   const stored = localStorage.getItem(STORAGE_KEY);
   const valid: CursorVariant[] = [
     "default", "blob", "spotlight", "trail", "crosshair", "gooey", "glitch"
   ];
-  return valid.includes(stored as CursorVariant) ? (stored as CursorVariant) : "default";
+  // Default to gooey magnetic — it's the most premium-feeling and
+  // complements the liquid glass aesthetic.
+  return valid.includes(stored as CursorVariant) ? (stored as CursorVariant) : "gooey";
 }
 
 export function setCursorVariant(variant: CursorVariant) {

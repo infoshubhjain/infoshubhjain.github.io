@@ -20,6 +20,7 @@ import { Achievements } from "@/components/site/sections/achievements";
 import { Contact } from "@/components/site/sections/contact";
 import { InteractiveTerminal } from "@/components/site/interactive-terminal";
 import { CursorPlayground } from "@/components/site/cursor-playground";
+import { LiquidWipe } from "@/components/site/liquid-wipe";
 
 export default function Home() {
   useSmoothScroll();
@@ -37,6 +38,7 @@ export default function Home() {
       />
       <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} />
       <CursorPlayground open={cursorPlaygroundOpen} onClose={() => setCursorPlaygroundOpen(false)} />
+      <LiquidWipe />
       <InteractiveTerminal />
 
       <main className="relative min-h-screen">

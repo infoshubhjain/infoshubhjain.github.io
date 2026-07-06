@@ -36,38 +36,47 @@ export function useSmoothScroll() {
     // Expose lenis globally so navbar/anchors can drive it.
     (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
 
-    // Handle in-page hash links smoothly.
-    const handleAnchorClick = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement)?.closest("a[href^='#']") as
-        | HTMLAnchorElement
-        | null;
-      if (!target) return;
-      const id = target.getAttribute("href")?.slice(1);
-      if (!id) return;
-      const el = document.getElementById(id);
-      if (!el) return;
-      e.preventDefault();
-      lenis.scrollTo(el, { offset: -80, duration: 1.4 });
-    };
-    document.addEventListener("click", handleAnchorClick);
-
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
-      document.removeEventListener("click", handleAnchorClick);
       delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
   }, []);
 }
 
-/** Programmatic smooth scroll to a section id. */
+/**
+ * Programmatic smooth scroll to a section id.
+ * Fires a liquid-wipe transition (if available) before scrolling.
+ */
 export function scrollToSection(id: string) {
-  const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
   const el = document.getElementById(id);
   if (!el) return;
+
+  const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
+
+  // Try to fire the liquid wipe transition first.
+  // The wipe component exposes itself via a custom event.
+  const wipeAvailable = window.dispatchEvent(
+    new CustomEvent("liquid-wipe-request", { detail: { targetId: id } })
+  );
+
+  // If something is listening for the wipe event, let it handle the scroll.
+  // Otherwise scroll immediately.
+  if (!wipeAvailable) return;
+
+  // Check if a listener is actually registered by seeing if the event was
+  // canceled. We use a simpler approach: a global flag.
+  const hasWipe = (window as unknown as { __liquidWipeActive?: boolean }).__liquidWipeActive;
+  if (hasWipe) {
+    // Wipe will handle the scroll after the curtain covers.
+    return;
+  }
+
+  // No wipe — scroll directly.
   if (lenis) {
     lenis.scrollTo(el, { offset: -80, duration: 1.4 });
   } else {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
+

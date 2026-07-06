@@ -7,6 +7,7 @@ import { profile, projects, navItems, about } from "@/lib/portfolio-data";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import confetti from "canvas-confetti";
 
 type Line = {
   type: "input" | "output" | "error" | "success" | "system";
@@ -205,10 +206,39 @@ export function InteractiveTerminal() {
       usage: "sudo hire-me",
       execute: (args) => {
         if (args[0] === "hire-me" || args.join(" ") === "hire-me") {
-          setTimeout(() => scrollToSection("contact"), 800);
+          // Fire a tasteful confetti burst from both corners.
+          const colors = ["#10d9a3", "#a855f7", "#06b6d4", "#ffffff"];
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { x: 0.2, y: 0.8 },
+            colors,
+            disableForReducedMotion: true,
+          });
+          setTimeout(() => {
+            confetti({
+              particleCount: 80,
+              spread: 70,
+              origin: { x: 0.8, y: 0.8 },
+              colors,
+              disableForReducedMotion: true,
+            });
+          }, 150);
+          // A second wave from the center.
+          setTimeout(() => {
+            confetti({
+              particleCount: 50,
+              spread: 100,
+              origin: { x: 0.5, y: 0.6 },
+              colors,
+              disableForReducedMotion: true,
+            });
+          }, 350);
+
+          setTimeout(() => scrollToSection("contact"), 1200);
           return [
             { type: "success", content: "[sudo] password for visitor: ********" },
-            { type: "output", content: "Permission granted. Redirecting to contact..." },
+            { type: "output", content: "Permission granted. Confetti deployed. Redirecting to contact..." },
           ];
         }
         if (args[0] === "rm" && args[1] === "-rf") {

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { useRef, Suspense, lazy, useState, useEffect } from "react";
 import { ArrowDownRight, FileDown, Github, Linkedin, Terminal } from "lucide-react";
 import { heroCopy, profile } from "@/lib/portfolio-data";
@@ -23,14 +23,55 @@ export function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
 
+  // Scroll progress as a ref — passed to the Three.js scene for scroll-driven camera.
+  const scrollProgressRef = useRef(0);
+  useEffect(() => {
+    const unsub = scrollYProgress.on("change", (v) => {
+      scrollProgressRef.current = v;
+    });
+    return () => unsub();
+  }, [scrollYProgress]);
+
+  // Mouse parallax — depth layers for hero content.
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  // Smoothed values for different layers (different spring stiffness = different depth).
+  const layer1X = useSpring(mouseX, { stiffness: 50, damping: 20 }); // far back, slowest
+  const layer1Y = useSpring(mouseY, { stiffness: 50, damping: 20 });
+  const layer2X = useSpring(mouseX, { stiffness: 80, damping: 20 }); // middle
+  const layer2Y = useSpring(mouseY, { stiffness: 80, damping: 20 });
+  const layer3X = useSpring(mouseX, { stiffness: 120, damping: 20 }); // front, fastest
+  const layer3Y = useSpring(mouseY, { stiffness: 120, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    // Normalize to -1 → 1 from center.
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const yNorm = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    mouseX.set(x * 20); // max 20px shift
+    mouseY.set(yNorm * 20);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
   return (
     <section
       id="home"
       ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="relative flex min-h-[100svh] items-center overflow-hidden px-5 pt-24 sm:px-8"
     >
-      {/* Aurora blobs */}
-      <div aria-hidden className="absolute inset-0 -z-10">
+      {/* Aurora blobs — parallax layer 1 (far back, slowest) */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 -z-10"
+        style={{ x: layer1X, y: layer1Y }}
+      >
         <div
           className="aurora-blob left-[-10%] top-[-10%] h-[55vh] w-[55vh]"
           style={{ background: "var(--aurora-1)" }}
@@ -43,15 +84,19 @@ export function Hero() {
           className="aurora-blob bottom-[-10%] left-[30%] h-[40vh] w-[40vh]"
           style={{ background: "var(--aurora-2)" }}
         />
-      </div>
+      </motion.div>
 
-      {/* Animated grid */}
-      <div aria-hidden className="absolute inset-0 -z-10 bg-grid opacity-50" />
+      {/* Animated grid — parallax layer 2 */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-grid opacity-50"
+        style={{ x: layer2X, y: layer2Y }}
+      />
 
-      {/* Three.js canvas */}
+      {/* Three.js canvas — scroll-driven scene */}
       <div aria-hidden className="absolute inset-0 -z-5">
         <Suspense fallback={null}>
-          <HeroScene />
+          <HeroScene scrollProgress={scrollProgressRef} />
         </Suspense>
       </div>
 
@@ -81,7 +126,7 @@ export function Hero() {
       </div>
 
       <motion.div
-        style={{ y, opacity, scale }}
+        style={{ y, opacity, scale, x: layer3X, y: layer3Y }}
         className="relative z-10 mx-auto w-full max-w-7xl"
       >
         <div className="grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">

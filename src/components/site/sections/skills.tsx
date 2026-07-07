@@ -248,13 +248,19 @@ export function Skills() {
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
+                  {/* ponytail: drag + spring-back stands in for full physics; swap in matter-js if gravity is ever wanted */}
                   {skills[cat].map((s) => (
-                    <span
+                    <motion.span
                       key={s}
-                      className="rounded-md border border-border bg-card/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                      drag
+                      dragSnapToOrigin
+                      dragTransition={{ bounceStiffness: 500, bounceDamping: 18 }}
+                      whileDrag={{ scale: 1.2, zIndex: 10 }}
+                      whileHover={{ scale: 1.08 }}
+                      className="relative cursor-grab rounded-md border border-border bg-card/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground active:cursor-grabbing"
                     >
                       {s}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
               </motion.div>

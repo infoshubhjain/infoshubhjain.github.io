@@ -4,6 +4,7 @@ import { type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { FadeIn } from "./animated-text";
+import { Scramble } from "./scramble";
 
 type SectionHeadingProps = {
   eyebrow: string;
@@ -36,7 +37,7 @@ export function SectionHeading({
           {/* Code-style file path chip */}
           <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 font-mono text-[11px] font-medium tracking-tight">
             <span className="text-muted-foreground">/</span>
-            <span className="text-primary">{eyebrow.toLowerCase().replace(/\s+/g, "_")}</span>
+            <Scramble className="text-primary">{eyebrow.toLowerCase().replace(/\s+/g, "_")}</Scramble>
             <span className="text-muted-foreground/70">.tsx</span>
           </div>
           {fileLabel && (

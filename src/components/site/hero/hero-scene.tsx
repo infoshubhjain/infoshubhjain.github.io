@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { MeshDistortMaterial, Float, Icosahedron, Points, PointMaterial } from "@react-three/drei";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Mesh } from "three";
 import type { Points as ThreePoints } from "three";
 import * as THREE from "three";
@@ -27,6 +27,10 @@ function CoreOrb({ scrollProgress }: { scrollProgress: React.MutableRefObject<nu
   const wire = useRef<Mesh>(null);
   const outerWire = useRef<Mesh>(null);
   const group = useRef<THREE.Group>(null);
+  // Interaction state as refs — avoids re-renders, read inside useFrame.
+  const hovered = useRef(false);
+  const pulse = useRef(0);
+  const { pointer } = useThree();
 
   useFrame((state, delta) => {
     const p = scrollProgress.current; // 0 → 1
@@ -49,17 +53,32 @@ function CoreOrb({ scrollProgress }: { scrollProgress: React.MutableRefObject<nu
     //   p < 0.4  → solid orb prominent
     //   p 0.4–0.7 → wireframes take over
     //   p > 0.7  → everything dissolves
+    // Click pulse decays back to rest.
+    pulse.current = Math.max(0, pulse.current - delta * 2.5);
+
     if (group.current) {
       const dissolve = THREE.MathUtils.clamp((p - 0.6) / 0.4, 0, 1);
-      group.current.scale.setScalar(1 - dissolve * 0.4);
+      group.current.scale.setScalar((1 - dissolve * 0.4) * (1 + pulse.current * 0.15));
       group.current.position.z = -dissolve * 3;
+      // Orb leans gently toward the cursor.
+      group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, pointer.x * 0.5, delta * 2);
+      group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, pointer.y * 0.3, delta * 2);
     }
 
     // Material opacity shifts.
     if (mesh.current) {
-      const mat = mesh.current.material as THREE.Material & { opacity: number; transparent: boolean };
+      const mat = mesh.current.material as THREE.Material & {
+        opacity: number;
+        transparent: boolean;
+        distort: number;
+        emissiveIntensity: number;
+      };
       mat.transparent = true;
       mat.opacity = THREE.MathUtils.clamp(1 - p * 1.5, 0, 1);
+      // Hover + click excite the distortion and glow.
+      const excite = (hovered.current ? 1 : 0) + pulse.current;
+      mat.distort = THREE.MathUtils.lerp(mat.distort, 0.35 + excite * 0.25, delta * 4);
+      mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity, 0.35 + excite * 0.55, delta * 4);
     }
     if (wire.current) {
       const mat = wire.current.material as THREE.Material & { opacity: number; transparent: boolean };
@@ -77,7 +96,13 @@ function CoreOrb({ scrollProgress }: { scrollProgress: React.MutableRefObject<nu
   return (
     <group ref={group}>
       <Float speed={1.4} rotationIntensity={0.4} floatIntensity={0.6}>
-        <Icosahedron ref={mesh} args={[1.35, 4]}>
+        <Icosahedron
+          ref={mesh}
+          args={[1.35, 4]}
+          onPointerOver={() => (hovered.current = true)}
+          onPointerOut={() => (hovered.current = false)}
+          onClick={() => (pulse.current = 1)}
+        >
           <MeshDistortMaterial
             color="#0a3b2e"
             emissive="#10d9a3"
@@ -109,7 +134,7 @@ function ParticleField({
   scrollProgress: React.MutableRefObject<number>;
 }) {
   const ref = useRef<ThreePoints>(null);
-  const matRef = useRef<THREE.PointMaterial>(null);
+  const matRef = useRef<THREE.PointsMaterial>(null);
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -223,12 +248,34 @@ function CameraRig({
 }
 /* eslint-enable react-hooks/immutability */
 
-export function HeroScene({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
+export function HeroScene({
+  scrollProgress,
+  eventSource,
+}: {
+  scrollProgress: React.MutableRefObject<number>;
+  /** Element to listen for pointer events on — lets the orb react even though content overlays the canvas. */
+  eventSource?: React.RefObject<HTMLElement | null>;
+}) {
+  // Stop the render loop entirely once the hero is scrolled out of view.
+  const wrapper = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    if (!wrapper.current) return;
+    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    io.observe(wrapper.current);
+    return () => io.disconnect();
+  }, []);
+
   return (
+    <div ref={wrapper} className="absolute inset-0">
     <Canvas
       camera={{ position: [0, 0, 6], fov: 50 }}
       dpr={[1, 1.8]}
+      frameloop={visible ? "always" : "never"}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      eventSource={eventSource as React.RefObject<HTMLElement> | undefined /* null-current ref is fine at runtime */}
+      eventPrefix="client"
       className="!absolute inset-0"
     >
       <fog attach="fog" args={["#06060a", 6, 18]} />
@@ -237,5 +284,6 @@ export function HeroScene({ scrollProgress }: { scrollProgress: React.MutableRef
       <CoreOrb scrollProgress={scrollProgress} />
       <ParticleField count={1400} scrollProgress={scrollProgress} />
     </Canvas>
+    </div>
   );
 }

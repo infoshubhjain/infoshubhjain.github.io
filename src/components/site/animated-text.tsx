@@ -12,7 +12,7 @@ type AnimatedTextProps = {
   stagger?: number;
   /** Animate per-word instead of per-line. */
   perWord?: boolean;
-  as?: "h1" | "h2" | "h3" | "p" | "span";
+  as?: "h1" | "h2" | "h3" | "p" | "span" | "div";
 };
 
 const container: Variants = {

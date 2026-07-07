@@ -18,7 +18,6 @@ import {
   Briefcase,
   Users,
   Sparkles,
-  Trophy,
   Mail,
   Github,
   Linkedin,
@@ -195,8 +194,6 @@ function iconForNav(id: string) {
       return <Users className="h-4 w-4" />;
     case "skills":
       return <Sparkles className="h-4 w-4" />;
-    case "achievements":
-      return <Trophy className="h-4 w-4" />;
     case "contact":
       return <Mail className="h-4 w-4" />;
     default:

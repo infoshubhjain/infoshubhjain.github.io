@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowUp, Github, Linkedin, Mail, Heart } from "lucide-react";
 import { profile, navItems } from "@/lib/portfolio-data";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
+import { Scramble } from "./scramble";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -52,7 +53,7 @@ export function Footer() {
           {/* Quick nav */}
           <div>
             <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              navigate
+              <Scramble>navigate</Scramble>
             </div>
             <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
               {navItems.map((n) => (
@@ -71,7 +72,7 @@ export function Footer() {
           {/* Contact */}
           <div>
             <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              contact
+              <Scramble>contact</Scramble>
             </div>
             <ul className="space-y-2 text-sm">
               <li>

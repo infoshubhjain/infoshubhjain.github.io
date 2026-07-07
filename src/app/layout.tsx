@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
-import { ThemeProvider } from "@/components/site/theme-provider";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
 import { projects, research, books } from "@/lib/portfolio-data";
 
 const geistSans = Geist({
@@ -24,7 +24,7 @@ const display = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
 });
 
-const SITE_URL = "https://shubhjain.dev";
+const SITE_URL = "https://infoshubhjain.github.io";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -181,24 +181,6 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
         ))}
-        {/* Pre-hydration theme script — prevents flash of wrong theme */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var stored = localStorage.getItem('theme');
-                  var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-                  var theme = stored || (prefersLight ? 'light' : 'dark');
-                  if (theme === 'light') document.documentElement.classList.remove('dark');
-                  else document.documentElement.classList.add('dark');
-                } catch (e) {
-                  document.documentElement.classList.add('dark');
-                }
-              })();
-            `,
-          }}
-        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${display.variable} antialiased bg-background text-foreground`}

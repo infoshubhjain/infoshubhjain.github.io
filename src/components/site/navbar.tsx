@@ -12,6 +12,7 @@ import { navItems, profile } from "@/lib/portfolio-data";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
 import { cn } from "@/lib/utils";
 import { Magnetic } from "./magnetic";
+import { Scramble } from "./scramble";
 import { ThemeToggle } from "./theme-toggle";
 
 export function Navbar({
@@ -123,7 +124,7 @@ export function Navbar({
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
-                <span className="relative">{item.label}</span>
+                <Scramble className="relative">{item.label}</Scramble>
               </button>
             ))}
           </div>

@@ -29,8 +29,14 @@ export function LoadingScreen() {
   const [progress, setProgress] = useState(0);
   const [done, setDone] = useState(false);
 
+  // Boot sequence plays once per tab session; refreshes fade straight to content.
   useEffect(() => {
-    if (reduced) return;
+    if (sessionStorage.getItem("booted")) setDone(true);
+    else sessionStorage.setItem("booted", "1");
+  }, []);
+
+  useEffect(() => {
+    if (reduced || done) return;
 
     // Stream boot messages.
     const messageTimers: ReturnType<typeof setTimeout>[] = [];
@@ -60,7 +66,7 @@ export function LoadingScreen() {
       cancelAnimationFrame(raf);
       messageTimers.forEach(clearTimeout);
     };
-  }, [reduced]);
+  }, [reduced, done]);
 
   const show = !reduced && !done;
 

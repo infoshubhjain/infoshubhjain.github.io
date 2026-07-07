@@ -178,9 +178,12 @@ export function BinaryStream({
   className?: string;
 }) {
   const lines = Array.from({ length: rows }, (_, i) => {
-    const chars = Array.from({ length: cols }, () =>
-      Math.random() > 0.5 ? "1" : "0"
-    ).join("");
+    // ponytail: deterministic LCG instead of Math.random — server and client must render identical bits
+    let seed = (i + 1) * 2654435761;
+    const chars = Array.from({ length: cols }, () => {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return (seed >> 16) & 1 ? "1" : "0";
+    }).join("");
     const hex = parseInt(chars, 2).toString(16).padStart(Math.ceil(cols / 4), "0");
     return { bin: chars, hex, opacity: 0.15 + (i / rows) * 0.5 };
   });

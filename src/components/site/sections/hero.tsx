@@ -8,6 +8,7 @@ import { AnimatedText } from "../animated-text";
 import { Magnetic } from "../magnetic";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
 import { Typewriter, TerminalCursor, BinaryStream, RotatingTypewriter } from "../terminal";
+import { useIsTouch, usePrefersReducedMotion } from "@/lib/hooks/use-media-query";
 
 const HeroScene = lazy(() =>
   import("../hero/hero-scene").then((m) => ({ default: m.HeroScene }))
@@ -15,6 +16,11 @@ const HeroScene = lazy(() =>
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
+  // Skip the three.js scene on phones (battery/jank) and for reduced motion —
+  // a static CSS orb stands in, and the three.js bundle never loads.
+  const isTouch = useIsTouch();
+  const reduced = usePrefersReducedMotion();
+  const show3D = !isTouch && !reduced;
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -93,11 +99,23 @@ export function Hero() {
         style={{ x: layer2X, y: layer2Y }}
       />
 
-      {/* Three.js canvas — scroll-driven scene */}
-      <div aria-hidden className="absolute inset-0 -z-5">
-        <Suspense fallback={null}>
-          <HeroScene scrollProgress={scrollProgressRef} />
-        </Suspense>
+      {/* Three.js canvas — scroll-driven scene (desktop only; static orb on touch/reduced-motion) */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-5">
+        {show3D ? (
+          <Suspense fallback={null}>
+            <HeroScene scrollProgress={scrollProgressRef} eventSource={ref} />
+          </Suspense>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <div
+              className="h-[48vmin] w-[48vmin] rounded-full opacity-70"
+              style={{
+                background:
+                  "radial-gradient(circle at 36% 32%, color-mix(in oklch, var(--primary) 42%, transparent), color-mix(in oklch, var(--accent) 16%, transparent) 55%, transparent 72%)",
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Vignette so text stays readable */}
@@ -126,7 +144,7 @@ export function Hero() {
       </div>
 
       <motion.div
-        style={{ y, opacity, scale, x: layer3X, y: layer3Y }}
+        style={{ opacity, scale, x: layer3X, y: layer3Y }}
         className="relative z-10 mx-auto w-full max-w-7xl"
       >
         <div className="grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">

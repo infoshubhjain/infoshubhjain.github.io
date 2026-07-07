@@ -17,6 +17,7 @@ import { SectionShell, SectionHeading } from "../section-heading";
 import { projects, type Project } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
 import { CaseStudyModal } from "../case-study-modal";
+import { DotMatrix } from "../dot-matrix";
 
 const CASE_STUDY_IDS = ["adaptive-learning", "bert-compliance", "sigaida"];
 
@@ -274,6 +275,8 @@ function ProjectCard({
             "radial-gradient(600px circle at 50% 0%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 60%)",
         }}
       />
+      {/* Dot-matrix cursor reveal */}
+      <DotMatrix className="z-[1]" />
 
       <div className="relative">
         {/* Project preview image */}

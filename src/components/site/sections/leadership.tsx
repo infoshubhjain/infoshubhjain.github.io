@@ -11,9 +11,10 @@ import {
   PenLine,
   HandHeart,
   ChevronDown,
+  Trophy,
 } from "lucide-react";
 import { SectionShell, SectionHeading } from "../section-heading";
-import { leadership, volunteerRoles } from "@/lib/portfolio-data";
+import { leadership, volunteerRoles, achievements } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
 
 const CATEGORY_META: Record<
@@ -122,6 +123,42 @@ export function Leadership() {
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {v.contribution}
               </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recognition wall (folded in from the former Awards section) */}
+      <div id="achievements" className="mt-12 scroll-mt-24">
+        <div className="mb-5 flex items-center gap-3">
+          <Trophy className="h-4 w-4 text-primary" />
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+            recognition_wall
+          </span>
+          <span className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {achievements.map((a, i) => (
+            <motion.div
+              key={a.title}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.4, delay: (i % 3) * 0.05 }}
+              className="group rounded-xl border border-border bg-card/40 p-4 backdrop-blur-md transition-colors hover:border-primary/30"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="font-display text-sm font-semibold leading-tight text-foreground">
+                  {a.title}
+                </h3>
+                <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+                  {a.category}
+                </span>
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">{a.issuer}</div>
+              <span className="mt-2 inline-block rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                {a.value}
+              </span>
             </motion.div>
           ))}
         </div>

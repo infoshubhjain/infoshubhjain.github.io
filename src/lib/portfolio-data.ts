@@ -54,56 +54,6 @@ export const about = {
     { label: "Trees planted", value: 18000, suffix: "+" },
     { label: "Readers reached", value: 50000, suffix: "+" },
   ],
-  timeline: [
-    {
-      year: "2026",
-      title: "CS Peer Mentor & CS 124 Tutor",
-      org: "Siebel Center, UIUC",
-      description:
-        "Delivered 80+ one-on-one sessions across CS 124, 128, 173, and 225. Built pattern-based explanations for high-friction topics in Kotlin, OOP, type systems, and data structures.",
-      tag: "Teaching",
-    },
-    {
-      year: "2025",
-      title: "Founder-class CS Researcher & Engineer",
-      org: "UIUC — Llama Naturals / REVAMP",
-      description:
-        "Owned the data layer of a DistilBERT compliance classifier and shipped an adaptive multi-agent learning platform with a from-scratch Bayesian Knowledge Tracing engine.",
-      tag: "Research",
-    },
-    {
-      year: "2024",
-      title: "Junior AI & NLP Lead Researcher",
-      org: "Exam Lounge",
-      description:
-        "Led a 31-intern Agile team, lifted exam-model accuracy by 15%, cut critical production errors by 40%, and earned Intern of the Month in 3 of 4 months.",
-      tag: "Leadership",
-    },
-    {
-      year: "2024",
-      title: "Published Author & Patent Holder",
-      org: "IJETAE / ISBN",
-      description:
-        "Published two peer-reviewed papers on conversational AI, filed an IoT precision-agriculture patent, and authored 'IoT in Agriculture: Revolutionizing Indian Farming'.",
-      tag: "Research",
-    },
-    {
-      year: "2023",
-      title: "Founder & President",
-      org: "AI & STEM Club · Project Uthaan",
-      description:
-        "Founded the city's first AI/STEM lab (80+ members, $7K+ funding) and led Project Uthaan ($24K raised, 8 classrooms built, 2,200+ educated across 6 cities).",
-      tag: "Leadership",
-    },
-    {
-      year: "2029",
-      title: "B.S. Computer Science",
-      org: "University of Illinois Urbana-Champaign",
-      description:
-        "Dean's List · James Scholar. CGPA 3.83 / 4.0. Focused on AI/ML, systems, and rigorous CS foundations.",
-      tag: "Education",
-    },
-  ],
 };
 
 export const skills = {

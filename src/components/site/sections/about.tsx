@@ -14,7 +14,7 @@ export function About() {
 
       <SectionHeading
         eyebrow="About"
-        fileLabel="02 · mission · vision · timeline"
+        fileLabel="02 · mission · vision"
         title={
           <>
             A builder operating at the intersection of{" "}
@@ -63,17 +63,6 @@ export function About() {
             />
           ))}
         </div>
-      </div>
-
-      {/* Timeline */}
-      <div className="mt-16">
-        <div className="mb-6 flex items-center gap-3">
-          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-            journey
-          </span>
-          <span className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-        </div>
-        <Timeline />
       </div>
 
       {/* Languages */}
@@ -218,91 +207,6 @@ function StatCounter({
         {label}
       </div>
     </motion.div>
-  );
-}
-
-function Timeline() {
-  return (
-    <div className="relative">
-      {/* Vertical line */}
-      <div
-        aria-hidden
-        className="absolute left-[18px] top-2 bottom-2 w-px bg-gradient-to-b from-primary/60 via-border to-transparent sm:left-[22px]"
-      />
-      <ol className="space-y-3">
-        {about.timeline.map((item, i) => (
-          <TimelineItem key={`${item.year}-${item.title}`} item={item} index={i} />
-        ))}
-      </ol>
-    </div>
-  );
-}
-
-function TimelineItem({
-  item,
-  index,
-}: {
-  item: (typeof about.timeline)[number];
-  index: number;
-}) {
-  const ref = useRef<HTMLLIElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  const [open, setOpen] = useState(false);
-
-  return (
-    <motion.li
-      ref={ref}
-      initial={{ opacity: 0, x: -16 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      className="relative pl-12 sm:pl-16"
-    >
-      {/* Node */}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="absolute left-0 top-1.5 flex h-9 w-9 items-center justify-center rounded-full border border-primary/40 bg-background text-[10px] font-bold text-primary transition-all hover:glow-primary sm:h-11 sm:w-11"
-        aria-expanded={open}
-        aria-label={`Toggle ${item.title}`}
-      >
-        {item.year}
-      </button>
-
-      <div
-        className={cn(
-          "rounded-2xl border bg-card/40 p-5 backdrop-blur-md transition-all",
-          open ? "border-primary/40" : "border-border hover:border-primary/20"
-        )}
-      >
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="font-display text-lg font-semibold text-foreground">
-            {item.title}
-          </h3>
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            {item.org}
-          </span>
-        </div>
-        <div className="mt-2">
-          <span className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">
-            {item.tag}
-          </span>
-        </div>
-        <motion.div
-          initial={false}
-          animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="overflow-hidden"
-        >
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            {item.description}
-          </p>
-        </motion.div>
-        {!open && (
-          <p className="mt-2 line-clamp-1 text-xs text-muted-foreground/80">
-            {item.description}
-          </p>
-        )}
-      </div>
-    </motion.li>
   );
 }
 

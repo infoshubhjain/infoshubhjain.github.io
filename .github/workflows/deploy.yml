@@ -20,7 +20,7 @@ jobs:
 
       - run: npm install
 
-      - run: GH_PAGES=1 npm run build
+      - run: GH_PAGES=1 npx next build
 
       - uses: peaceiris/actions-gh-pages@v4
         with:

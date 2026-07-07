@@ -62,12 +62,21 @@ export const metadata: Metadata = {
     title: "Shubh Jain — AI Systems · Research · Engineering · Leadership",
     description:
       "Computer Science @ UIUC. Building ambitious AI systems, conducting research, and shipping real products.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Shubh Jain — AI Systems · Research · Engineering · Leadership",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Shubh Jain — AI Systems · Research · Engineering",
     description:
       "Computer Science @ UIUC. Building ambitious AI systems, conducting research, and shipping real products.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,

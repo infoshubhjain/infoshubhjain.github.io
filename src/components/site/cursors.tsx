@@ -151,8 +151,8 @@ function DefaultCursor() {
           animate={{
             width: hovering ? 64 : 36,
             height: hovering ? 64 : 36,
-            backgroundColor: hovering ? "rgba(16,217,163,0.12)" : "rgba(16,217,163,0.04)",
-            borderColor: hovering ? "rgba(16,217,163,0.80)" : "rgba(16,217,163,0.45)",
+            backgroundColor: hovering ? "color-mix(in oklch, var(--primary) 12%, transparent)" : "color-mix(in oklch, var(--primary) 4%, transparent)",
+            borderColor: hovering ? "color-mix(in oklch, var(--primary) 80%, transparent)" : "color-mix(in oklch, var(--primary) 45%, transparent)",
           }}
           transition={{ type: "spring", stiffness: 280, damping: 24 }}
           style={{ translateX: "-50%", translateY: "-50%" }}
@@ -224,7 +224,7 @@ function BlobCursor() {
         <motion.div
           className="rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(16,217,163,0.7) 0%, rgba(16,217,163,0.2) 60%, transparent 100%)",
+            background: "radial-gradient(circle, color-mix(in oklch, var(--primary) 70%, transparent) 0%, color-mix(in oklch, var(--primary) 20%, transparent) 60%, transparent 100%)",
             translateX: "-50%",
             translateY: "-50%",
             scaleX: stretch,
@@ -390,7 +390,7 @@ function CrosshairCursor() {
         animate={{
           width: hovering ? 32 : 20,
           height: hovering ? 32 : 20,
-          backgroundColor: hovering ? "rgba(16,217,163,0.1)" : "transparent",
+          backgroundColor: hovering ? "color-mix(in oklch, var(--primary) 10%, transparent)" : "transparent",
         }}
       >
         {/* Corner ticks */}

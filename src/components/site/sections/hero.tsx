@@ -7,7 +7,7 @@ import { heroCopy, profile } from "@/lib/portfolio-data";
 import { AnimatedText } from "../animated-text";
 import { Magnetic } from "../magnetic";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
-import { Typewriter, TerminalCursor, BinaryStream, RotatingTypewriter } from "../terminal";
+import { BinaryStream, RotatingTypewriter } from "../terminal";
 import { useIsTouch, usePrefersReducedMotion } from "@/lib/hooks/use-media-query";
 
 const HeroScene = lazy(() =>

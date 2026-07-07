@@ -13,6 +13,7 @@ import {
   Code2,
   ArrowRight,
 } from "lucide-react";
+import Image from "next/image";
 import { type Project } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
 import { ArchitectureDiagram } from "./architecture-diagram";
@@ -165,10 +166,13 @@ export function CaseStudyModal({
             <div className="overflow-hidden rounded-3xl liquid-glass-strong border border-border shadow-2xl">
               {/* Hero image */}
               <div className="relative h-64 overflow-hidden sm:h-80">
-                <img
+                <Image
                   src={`/projects/${project.id}.png`}
                   alt={project.title}
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 70vw"
+                  className="object-cover"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 

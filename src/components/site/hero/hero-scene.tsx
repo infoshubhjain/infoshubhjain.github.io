@@ -278,7 +278,7 @@ export function HeroScene({
       eventPrefix="client"
       className="!absolute inset-0"
     >
-      <fog attach="fog" args={["#06060a", 6, 18]} />
+      <fog attach="fog" args={["#0a0a0f", 6, 18]} />
       <MouseLights />
       <CameraRig scrollProgress={scrollProgress} />
       <CoreOrb scrollProgress={scrollProgress} />

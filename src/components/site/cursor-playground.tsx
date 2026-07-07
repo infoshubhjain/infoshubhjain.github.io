@@ -75,6 +75,15 @@ export function CursorPlayground({ open, onClose }: { open: boolean; onClose: ()
     Promise.resolve().then(() => setActive(getStoredCursorVariant()));
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
   const handleSelect = (variant: CursorVariant) => {
     setActive(variant);
     setCursorVariant(variant);

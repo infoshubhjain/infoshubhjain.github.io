@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, lazy, useMemo, useState } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import {
   Search,
@@ -15,9 +15,12 @@ import {
 } from "lucide-react";
 import { SectionShell, SectionHeading } from "../section-heading";
 import { projects, type Project } from "@/lib/portfolio-data";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { CaseStudyModal } from "../case-study-modal";
-import { DotMatrix } from "../dot-matrix";
+const CaseStudyModal = lazy(() =>
+  import("../case-study-modal").then((m) => ({ default: m.CaseStudyModal }))
+);
+
 
 const CASE_STUDY_IDS = ["adaptive-learning", "bert-compliance", "sigaida"];
 
@@ -40,7 +43,7 @@ export function Projects() {
   const [query, setQuery] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [sort, setSort] = useState<SortId>("featured");
-  const [openId, setOpenId] = useState<string | null>(projects[0]?.id ?? null);
+  const [openId, setOpenId] = useState<string | null>(null);
   const [caseStudyProject, setCaseStudyProject] = useState<Project | null>(null);
 
   const filtered = useMemo(() => {
@@ -200,10 +203,12 @@ export function Projects() {
       </LayoutGroup>
 
       {/* Case study modal */}
-      <CaseStudyModal
-        project={caseStudyProject}
-        onClose={() => setCaseStudyProject(null)}
-      />
+      <Suspense>
+        <CaseStudyModal
+          project={caseStudyProject}
+          onClose={() => setCaseStudyProject(null)}
+        />
+      </Suspense>
 
       {filtered.length === 0 && (
         <div className="mt-12 flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
@@ -275,17 +280,17 @@ function ProjectCard({
             "radial-gradient(600px circle at 50% 0%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 60%)",
         }}
       />
-      {/* Dot-matrix cursor reveal */}
-      <DotMatrix className="z-[1]" />
+
 
       <div className="relative">
         {/* Project preview image */}
         <div className="relative h-40 overflow-hidden sm:h-44">
-          <img
+          <Image
             src={`/projects/${project.id}.png`}
             alt={project.title}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
+            fill
+            sizes="(max-width: 640px) 100vw, 50vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
           {/* Featured badge overlays image */}

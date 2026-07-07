@@ -27,13 +27,11 @@ export function LoadingScreen() {
   const reduced = usePrefersReducedMotion();
   const [visibleMessages, setVisibleMessages] = useState<number>(0);
   const [progress, setProgress] = useState(0);
-  const [done, setDone] = useState(false);
-
-  // Boot sequence plays once per tab session; refreshes fade straight to content.
-  useEffect(() => {
-    if (sessionStorage.getItem("booted")) setDone(true);
-    else sessionStorage.setItem("booted", "1");
-  }, []);
+  const [done, setDone] = useState(() => {
+    if (typeof window !== "undefined" && sessionStorage.getItem("booted")) return true;
+    if (typeof window !== "undefined") sessionStorage.setItem("booted", "1");
+    return false;
+  });
 
   useEffect(() => {
     if (reduced || done) return;

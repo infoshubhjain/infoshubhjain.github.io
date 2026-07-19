@@ -7,11 +7,13 @@ import type { TeamId } from "@/lib/prototype-theme";
 /**
  * Hidden F1 easter eggs. Type a code (or the Konami code) anywhere:
  *   forza → Ferrari · wings → Red Bull · box → team radio · drs / p1 / vroom
- *   ↑↑↓↓←→←→ b a → "DRS deployed" pace mode
- * Most also blip the throttle (revs the engine if it's on, spikes telemetry).
+ *   hotlap / quali or ↑↑↓↓←→←→ b a → a full qualifying hot lap
+ * Most also blip the throttle (revs the engine if it's on, spikes telemetry);
+ * the hot lap drives the telemetry through a whole lap (speedo/gears/DRS sweep).
  */
 
 const KONAMI = "ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a";
+const HOT_LAP_MS = 6500;
 
 type Egg = { seq: string; msg: string; team?: TeamId; rev?: boolean };
 const EGGS: Egg[] = [
@@ -41,12 +43,38 @@ export function EasterEggs({ speedRef, team }: { speedRef: React.MutableRefObjec
     let letters = "";
     let konami: string[] = [];
     let hideTimer: ReturnType<typeof setTimeout>;
+    let lapRaf = 0;
+    let lapping = false;
 
-    const fire = (m: string, rev: boolean) => {
+    const fire = (m: string, rev: boolean, hold = 2200) => {
       setMsg(m);
       if (rev) speedRef.current = 1;
       clearTimeout(hideTimer);
-      hideTimer = setTimeout(() => setMsg(null), 2200);
+      hideTimer = setTimeout(() => setMsg(null), hold);
+    };
+
+    // Drive the telemetry through a whole qualifying lap: ramp onto the throttle,
+    // lift + brake for corners, DRS on the straights, then cross the line P1.
+    const hotLap = () => {
+      if (lapping) return;
+      lapping = true;
+      setMsg("🟣 HOT LAP — PUSH PUSH PUSH");
+      clearTimeout(hideTimer);
+      const start = performance.now();
+      const step = () => {
+        const t = (performance.now() - start) / HOT_LAP_MS; // 0..1
+        if (t >= 1) {
+          lapping = false;
+          fire("🏁 1:16.182 — PURPLE LAP · P1", false, 2800);
+          return;
+        }
+        const ramp = Math.min(1, t * 5); // launch out of the last corner
+        // sinusoidal corners over the lap; stays high on the straights
+        const lap = 0.74 + 0.26 * Math.sin(t * Math.PI * 6);
+        speedRef.current = Math.max(speedRef.current, ramp * Math.min(1, lap));
+        lapRaf = requestAnimationFrame(step);
+      };
+      lapRaf = requestAnimationFrame(step);
     };
 
     const onKey = (e: KeyboardEvent) => {
@@ -56,13 +84,18 @@ export function EasterEggs({ speedRef, team }: { speedRef: React.MutableRefObjec
 
       konami = [...konami, e.key].slice(-10);
       if (konami.join(",") === KONAMI) {
-        fire("🏁 DRS DEPLOYED — PACE MODE", true);
+        hotLap();
         konami = [];
         return;
       }
 
       if (e.key.length === 1) {
         letters = (letters + e.key.toLowerCase()).slice(-12);
+        if (letters.endsWith("hotlap") || letters.endsWith("quali")) {
+          hotLap();
+          letters = "";
+          return;
+        }
         for (const egg of EGGS) {
           if (letters.endsWith(egg.seq)) {
             const m = egg.team && egg.team !== team ? `${egg.msg} · (wrong garage!)` : egg.msg;
@@ -78,6 +111,7 @@ export function EasterEggs({ speedRef, team }: { speedRef: React.MutableRefObjec
     return () => {
       window.removeEventListener("keydown", onKey);
       clearTimeout(hideTimer);
+      cancelAnimationFrame(lapRaf);
     };
   }, [speedRef, team]);
 

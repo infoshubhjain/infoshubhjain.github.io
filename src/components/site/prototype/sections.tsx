@@ -556,6 +556,76 @@ export function PitWall() {
   );
 }
 
+/** Team-radio transmission form. Static-export friendly: composes a mailto on
+ *  submit, with a radio "crackle" (scrambling glyph line + status transitions). */
+function RadioForm() {
+  const [from, setFrom] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"open" | "tx" | "sent">("open");
+  const [noise, setNoise] = useState("");
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim() || status === "tx") return;
+    setStatus("tx");
+    const glyphs = "▁▂▃▅▇█░▒▓/\\|=+*·";
+    let ticks = 0;
+    const iv = setInterval(() => {
+      setNoise(Array.from({ length: 20 }, () => glyphs[Math.floor(Math.random() * glyphs.length)]).join(""));
+      if (++ticks > 9) {
+        clearInterval(iv);
+        const subject = encodeURIComponent(`Radio from ${from.trim() || "the grid"}`);
+        const body = encodeURIComponent(`${message.trim()}${from.trim() ? `\n\n— ${from.trim()}` : ""}`);
+        window.location.href = `mailto:${driver.email}?subject=${subject}&body=${body}`;
+        setStatus("sent");
+        setNoise("");
+        setTimeout(() => setStatus("open"), 4000);
+      }
+    }, 70);
+  };
+
+  const header =
+    status === "sent" ? "copy that — message received" : status === "tx" ? "transmitting…" : "radio channel open";
+  const btn = status === "sent" ? "Get in there! ✓" : status === "tx" ? "Box, box…" : "Transmit →";
+
+  return (
+    <form onSubmit={submit} className="pt-glass rounded-xl border p-6" style={{ borderColor: P.rosso }}>
+      <div className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: P.rosso }}>
+        <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: P.rosso }} />
+        {header}
+      </div>
+      <input
+        value={from}
+        onChange={(e) => setFrom(e.target.value)}
+        placeholder="Your name / team"
+        className="mb-3 w-full rounded-lg border bg-transparent px-3 py-2 font-mono text-sm outline-none focus:border-white/40"
+        style={{ borderColor: P.line, color: P.white }}
+      />
+      <textarea
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        rows={4}
+        placeholder="> transmit your message, driver…"
+        className="w-full resize-none rounded-lg border bg-transparent px-3 py-2 font-mono text-sm outline-none focus:border-white/40"
+        style={{ borderColor: P.line, color: P.white }}
+      />
+      <div className="mt-2 h-4 truncate font-mono text-xs" style={{ color: P.rosso }}>
+        {noise}
+      </div>
+      <button
+        type="submit"
+        className={`${anton.className} mt-2 w-full rounded-lg py-3 text-xl uppercase tracking-wide transition-transform hover:-translate-y-0.5`}
+        style={{ background: P.rosso, color: P.onPrimary }}
+      >
+        {btn}
+      </button>
+      <p className="mt-3 font-mono text-[11px]" style={{ color: P.muted }}>
+        Opens your mail client — or radio in direct at {driver.email}
+      </p>
+    </form>
+  );
+}
+
 export function Radio() {
   return (
     <Shell id="radio">
@@ -592,31 +662,16 @@ export function Radio() {
           </div>
         </Reveal>
         <Reveal delay={0.1}>
-          <div className="pt-glass rounded-xl border p-6" style={{ borderColor: P.rosso }}>
-            <div className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: P.rosso }}>
-              <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: P.rosso }} />
-              radio channel open
-            </div>
-            <a
-              href={`mailto:${driver.email}`}
-              className={`${anton.className} block text-4xl uppercase transition-transform hover:translate-x-1 sm:text-5xl`}
-              style={{ color: P.white }}
-            >
-              Send it →
-            </a>
-            <p className="mt-4 text-sm" style={{ color: P.muted }}>
-              {driver.tagline}
-            </p>
-            <a
-              href={driver.resumeUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
-              style={{ background: P.rosso, color: P.onPrimary }}
-            >
-              ↓ Download press kit — résumé
-            </a>
-          </div>
+          <RadioForm />
+          <a
+            href={driver.resumeUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+            style={{ borderColor: P.line, color: P.white }}
+          >
+            ↓ Download press kit — résumé
+          </a>
         </Reveal>
       </div>
     </Shell>
@@ -636,6 +691,12 @@ export function Podium() {
           </div>
           <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.25em]" style={{ color: P.muted }}>
             Chequered flag · built with Next.js · Three.js · Framer Motion
+          </p>
+          <p className="mt-2 font-mono text-[11px]" style={{ color: P.muted }}>
+            <span style={{ color: P.rosso }}>Radio codes</span> — scroll = throttle · type{" "}
+            <span style={{ color: P.white }}>hotlap</span>, <span style={{ color: P.white }}>quali</span>,{" "}
+            <span style={{ color: P.white }}>forza</span>, <span style={{ color: P.white }}>wings</span>,{" "}
+            <span style={{ color: P.white }}>box</span> anywhere, or the Konami code (↑↑↓↓←→←→ B A) for a hot lap.
           </p>
           <p className="mt-2 max-w-md text-[10px] leading-relaxed" style={{ color: P.muted }}>
             3D cars:{" "}

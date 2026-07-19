@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,67335,96812,e=>{"use strict";var t=e.i(1950);e.s(["extend",()=>t.e],67335);let s=parseInt(e.i(90072).REVISION.replace(/\D+/g,""));e.s(["version",0,s],96812)}]);

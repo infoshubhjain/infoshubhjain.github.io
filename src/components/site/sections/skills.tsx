@@ -5,14 +5,18 @@ import { motion, useInView } from "framer-motion";
 import { SectionShell, SectionHeading } from "../section-heading";
 import { skills } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/lib/hooks/use-media-query";
+import { SkillsConstellation3D, type ConstellationNode } from "../skills-constellation";
 
 const CATEGORY_META: Record<string, { color: string; angle: number }> = {
   Languages: { color: "#10d9a3", angle: 0 },
   Frameworks: { color: "#10d9a3", angle: 30 },
   "AI & ML": { color: "#10d9a3", angle: 60 },
+  "Computer Vision": { color: "#06b6d4", angle: 75 },
   "Backend & APIs": { color: "#a855f7", angle: 90 },
   "Cloud & DevOps": { color: "#a855f7", angle: 120 },
   Frontend: { color: "#06b6d4", angle: 150 },
+  "AI/NLP Pipeline": { color: "#10d9a3", angle: 165 },
   Research: { color: "#10d9a3", angle: 180 },
   "Data & Visualization": { color: "#06b6d4", angle: 210 },
   Cybersecurity: { color: "#a855f7", angle: 240 },
@@ -23,8 +27,19 @@ export function Skills() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
+  const reducedMotion = usePrefersReducedMotion();
 
   const categories = Object.keys(skills);
+
+  const constellationNodes: ConstellationNode[] = useMemo(
+    () =>
+      categories.map((cat) => ({
+        id: cat,
+        color: (CATEGORY_META[cat] ?? { color: "#10d9a3" }).color,
+        count: skills[cat].length,
+      })),
+    [categories]
+  );
 
   // Build constellation node positions.
   const { nodes, links } = useMemo(() => {
@@ -36,8 +51,8 @@ export function Skills() {
 
     categories.forEach((cat, i) => {
       const angle = (i / categories.length) * Math.PI * 2 - Math.PI / 2;
-      const x = cx + Math.cos(angle) * radius;
-      const y = cy + Math.sin(angle) * radius;
+      const x = Math.round((cx + Math.cos(angle) * radius) * 1000) / 1000;
+      const y = Math.round((cy + Math.sin(angle) * radius) * 1000) / 1000;
       const meta = CATEGORY_META[cat] ?? { color: "#10d9a3", angle: 0 };
       nodes.push({ id: cat, x, y, color: meta.color, count: skills[cat].length });
       links.push({ from: { x: cx, y: cy }, to: { x, y }, key: `${cat}-center` });
@@ -76,6 +91,13 @@ export function Skills() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="relative aspect-square w-full rounded-2xl border border-border bg-card/30 p-4 backdrop-blur-md"
         >
+          {!reducedMotion ? (
+            <SkillsConstellation3D
+              nodes={constellationNodes}
+              active={activeCategory}
+              onHover={setActiveCategory}
+            />
+          ) : (
           <svg
             viewBox="0 0 100 100"
             className="h-full w-full"
@@ -100,26 +122,40 @@ export function Skills() {
               strokeWidth="0.2"
             />
 
-            {/* Links */}
-            {links.map((l) => (
-              <line
-                key={l.key}
-                x1={l.from.x}
-                y1={l.from.y}
-                x2={l.to.x}
-                y2={l.to.y}
-                stroke={
-                  activeCategory && l.key === `${activeCategory}-center`
-                    ? "var(--primary)"
-                    : "color-mix(in oklch, var(--foreground) 12%, transparent)"
-                }
-                strokeWidth={activeCategory && l.key === `${activeCategory}-center` ? 0.5 : 0.25}
-                strokeOpacity={activeCategory && l.key !== `${activeCategory}-center` ? 0.2 : 1}
-                className="transition-all duration-300"
-              />
-            ))}
+            {/* Links with data-flow dots */}
+            {links.map((l) => {
+              const isActive = activeCategory && l.key === `${activeCategory}-center`;
+              return (
+                <g key={l.key}>
+                  <line
+                    x1={l.from.x}
+                    y1={l.from.y}
+                    x2={l.to.x}
+                    y2={l.to.y}
+                    stroke={
+                      isActive
+                        ? "var(--primary)"
+                        : "color-mix(in oklch, var(--foreground) 12%, transparent)"
+                    }
+                    strokeWidth={isActive ? 0.5 : 0.25}
+                    strokeOpacity={activeCategory && !isActive ? 0.2 : 1}
+                    className="transition-all duration-300"
+                  />
+                  {/* Data-flow dot along active links */}
+                  {isActive && (
+                    <circle r="0.6" fill="var(--primary)" opacity="0.8">
+                      <animateMotion
+                        dur="2s"
+                        repeatCount="indefinite"
+                        path={`M${l.from.x},${l.from.y} L${l.to.x},${l.to.y}`}
+                      />
+                    </circle>
+                  )}
+                </g>
+              );
+            })}
 
-            {/* Center node */}
+            {/* Center node with slow orbit */}
             <g>
               <circle
                 cx="50"
@@ -128,7 +164,16 @@ export function Skills() {
                 fill="var(--background)"
                 stroke="var(--primary)"
                 strokeWidth="0.5"
-              />
+              >
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 50 50"
+                  to="360 50 50"
+                  dur="20s"
+                  repeatCount="indefinite"
+                />
+              </circle>
               <circle cx="50" cy="50" r="3" fill="var(--primary)" className="animate-pulse" />
               <text
                 x="50"
@@ -202,10 +247,11 @@ export function Skills() {
               );
             })}
           </svg>
+          )}
 
           {/* Hint */}
-          <div className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-            hover_to_focus
+          <div className="pointer-events-none absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            {reducedMotion ? "hover_to_focus" : "drag_to_orbit · hover_to_focus"}
           </div>
         </motion.div>
 

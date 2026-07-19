@@ -76,8 +76,8 @@
   --accent: oklch(0.5 0.22 300);
   --accent-foreground: oklch(0.99 0 0);
   --destructive: oklch(0.55 0.24 27);
-  --border: oklch(0.78 0.008 250 / 45%);
-  --input: oklch(0.78 0.008 250 / 40%);
+  --border: oklch(0.72 0.01 250 / 60%);
+  --input: oklch(0.72 0.01 250 / 55%);
   --ring: oklch(0.45 0.16 165);
 
   --chart-1: oklch(0.5 0.18 165);
@@ -89,6 +89,12 @@
   --aurora-1: oklch(0.6 0.18 165 / 30%);
   --aurora-2: oklch(0.55 0.2 200 / 25%);
   --aurora-3: oklch(0.55 0.25 300 / 22%);
+
+  /* Opaque gradient stops for .text-aurora — must stay readable, so NOT the
+     translucent blob tokens above. Tuned for contrast on the light canvas. */
+  --aurora-text-1: oklch(0.5 0.17 165);
+  --aurora-text-2: oklch(0.49 0.19 210);
+  --aurora-text-3: oklch(0.49 0.23 300);
 
   --sidebar: oklch(0.97 0.004 240 / 85%);
   --sidebar-foreground: oklch(0.12 0.02 250);
@@ -143,6 +149,11 @@
   --aurora-1: oklch(0.7 0.2 165 / 35%);
   --aurora-2: oklch(0.65 0.22 200 / 30%);
   --aurora-3: oklch(0.6 0.25 300 / 25%);
+
+  /* Opaque, luminous gradient stops for .text-aurora on the dark canvas. */
+  --aurora-text-1: oklch(0.82 0.17 165);
+  --aurora-text-2: oklch(0.78 0.19 210);
+  --aurora-text-3: oklch(0.74 0.22 300);
 
   --sidebar: oklch(0.1 0.012 240 / 80%);
   --sidebar-foreground: oklch(0.97 0.005 240);
@@ -227,10 +238,10 @@
   .text-aurora {
     background: linear-gradient(
       100deg,
-      var(--aurora-1),
-      var(--aurora-2),
-      var(--aurora-3),
-      var(--aurora-1)
+      var(--aurora-text-1),
+      var(--aurora-text-2),
+      var(--aurora-text-3),
+      var(--aurora-text-1)
     );
     background-size: 300% 100%;
     -webkit-background-clip: text;
@@ -409,6 +420,28 @@
     );
     background-size: 200% 100%;
     animation: shimmer-pan 2.2s linear infinite;
+  }
+
+  /* Prototype liquid glass (Apple-style frosted surface, palette-tinted) */
+  .pt-glass {
+    background: var(--pt-glass, rgba(20, 20, 22, 0.4));
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.3),
+      0 20px 50px -24px rgba(0, 0, 0, 0.65);
+  }
+
+  /* Smooth team-mode color morph on the prototype only */
+  .pt-root,
+  .pt-root *:not(canvas) {
+    transition:
+      background-color 0.45s ease,
+      color 0.45s ease,
+      border-color 0.45s ease,
+      box-shadow 0.45s ease,
+      fill 0.45s ease;
   }
 
   /* Font display utility */

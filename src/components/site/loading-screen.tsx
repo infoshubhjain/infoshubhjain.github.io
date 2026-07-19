@@ -27,14 +27,21 @@ export function LoadingScreen() {
   const reduced = usePrefersReducedMotion();
   const [visibleMessages, setVisibleMessages] = useState<number>(0);
   const [progress, setProgress] = useState(0);
-  const [done, setDone] = useState(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem("booted")) return true;
-    if (typeof window !== "undefined") sessionStorage.setItem("booted", "1");
-    return false;
-  });
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (reduced || done) return;
+    // Check sessionStorage after mount to avoid hydration mismatch
+    if (sessionStorage.getItem("booted")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDone(true);
+      return;
+    }
+    sessionStorage.setItem("booted", "1");
+
+    if (reduced) {
+      setDone(true);
+      return;
+    }
 
     // Stream boot messages.
     const messageTimers: ReturnType<typeof setTimeout>[] = [];

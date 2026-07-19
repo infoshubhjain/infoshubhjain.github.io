@@ -276,11 +276,12 @@ function PublicationCard({
           <AnimatePresence initial={false}>
             {open && (
               <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ height: 0, opacity: 0, rotateX: -5 }}
+                animate={{ height: "auto", opacity: 1, rotateX: 0 }}
+                exit={{ height: 0, opacity: 0, rotateX: -5 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 className="overflow-hidden"
+                style={{ transformPerspective: 800 }}
               >
                 <p className="mt-4 text-sm leading-relaxed text-foreground/90">
                   {abstract}

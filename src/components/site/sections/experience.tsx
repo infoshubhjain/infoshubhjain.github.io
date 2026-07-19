@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Building2, Calendar, ChevronDown, MapPin, TrendingUp } from "lucide-react";
 import { SectionShell, SectionHeading } from "../section-heading";
@@ -16,6 +16,12 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export function Experience() {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: scrollLineProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 0.8", "end 0.6"],
+  });
+
   return (
     <SectionShell id="experience" className="relative overflow-hidden">
       <div aria-hidden className="absolute inset-0 -z-10">
@@ -40,11 +46,16 @@ export function Experience() {
         }
       />
 
-      <div className="mt-12 relative">
-        {/* Vertical line */}
-        <div
+      <div ref={timelineRef} className="mt-12 relative">
+        {/* Animated vertical line — draws itself as you scroll */}
+        <motion.div
           aria-hidden
-          className="absolute left-[22px] top-2 bottom-2 w-px bg-gradient-to-b from-primary/60 via-border to-transparent sm:left-[26px]"
+          className="absolute left-[22px] top-2 bottom-2 w-px sm:left-[26px]"
+          style={{
+            background: "linear-gradient(to bottom, var(--primary), var(--border), transparent)",
+            scaleY: scrollLineProgress,
+            transformOrigin: "top",
+          }}
         />
 
         <ol className="space-y-4">
@@ -79,7 +90,10 @@ function ExperienceItem({
       {/* Node */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="absolute left-0 top-1 flex h-11 w-11 items-center justify-center rounded-xl border border-primary/40 bg-background text-primary transition-all hover:glow-primary sm:h-[52px] sm:w-[52px]"
+        className={cn(
+          "absolute left-0 top-1 flex h-11 w-11 items-center justify-center rounded-xl border border-primary/40 bg-background text-primary transition-all sm:h-[52px] sm:w-[52px]",
+          index === 0 ? "glow-primary animate-pulse-glow" : "hover:glow-primary"
+        )}
         aria-expanded={open}
         aria-label={`Toggle ${job.role}`}
       >

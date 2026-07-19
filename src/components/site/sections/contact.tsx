@@ -16,6 +16,7 @@ import {
 import { SectionShell } from "../section-heading";
 import { profile } from "@/lib/portfolio-data";
 import { Magnetic } from "../magnetic";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 type FormState = {
@@ -323,9 +324,20 @@ function Field({
   type?: string;
   required?: boolean;
 }) {
+  const [focused, setFocused] = useState(false);
+  const hasValue = value.length > 0;
+  const isFloating = focused || hasValue;
+
   return (
-    <div>
-      <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+    <div className="relative">
+      <label
+        className={cn(
+          "absolute left-3.5 transition-all duration-200 pointer-events-none z-10",
+          isFloating
+            ? "top-1.5 text-[10px] font-medium text-primary"
+            : "top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
+        )}
+      >
         {label}
         {required && <span className="ml-1 text-primary">*</span>}
       </label>
@@ -333,10 +345,28 @@ function Field({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        placeholder={isFloating ? placeholder : ""}
         required={required}
-        className="h-11 w-full rounded-xl border border-border bg-background/40 px-3.5 text-sm text-foreground placeholder:text-muted-foreground backdrop-blur-md focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30"
+        className={cn(
+          "h-12 w-full rounded-xl border bg-background/40 px-3.5 pt-5 pb-1 text-sm text-foreground placeholder:text-muted-foreground backdrop-blur-md transition-all duration-200",
+          focused
+            ? "border-primary/60 ring-2 ring-primary/20 shadow-[0_0_20px_-4px_var(--primary)]"
+            : "border-border hover:border-primary/30"
+        )}
       />
+      {/* Animated focus border glow */}
+      {focused && (
+        <motion.div
+          layoutId="field-glow"
+          className="pointer-events-none absolute inset-0 rounded-xl border border-primary/40"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        />
+      )}
     </div>
   );
 }

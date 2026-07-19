@@ -49,11 +49,14 @@ export function setCursorVariant(variant: CursorVariant) {
 export function CustomCursor() {
   const isTouch = useIsTouch();
   const reduced = usePrefersReducedMotion();
-  const [variant, setVariant] = useState<CursorVariant>("default");
+  const [variant, setVariant] = useState<CursorVariant>("gooey");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Defer to microtask to avoid synchronous setState in effect body.
-    Promise.resolve().then(() => setVariant(getStoredCursorVariant()));
+    // ponytail: intentional mount guard — localStorage can only be read client-side, post-hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+    setVariant(getStoredCursorVariant());
     const handler = (e: Event) => {
       setVariant((e as CustomEvent<CursorVariant>).detail);
     };
@@ -61,7 +64,7 @@ export function CustomCursor() {
     return () => window.removeEventListener("cursor-variant-change", handler);
   }, []);
 
-  if (isTouch || reduced) return null;
+  if (isTouch || reduced || !mounted) return null;
 
   return (
     <>
@@ -86,11 +89,19 @@ function useMouseTracking() {
   const [hovering, setHovering] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
   const [hidden, setHidden] = useState(true);
+  const rafRef = useRef(0);
+  const posRef = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
+      posRef.current = { x: e.clientX, y: e.clientY };
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(() => {
+          x.set(posRef.current.x);
+          y.set(posRef.current.y);
+          rafRef.current = 0;
+        });
+      }
       setHidden(false);
 
       const target = e.target as HTMLElement | null;
@@ -115,12 +126,13 @@ function useMouseTracking() {
 
     const leave = () => setHidden(true);
 
-    window.addEventListener("mousemove", move);
+    window.addEventListener("mousemove", move, { passive: true });
     document.addEventListener("mouseleave", leave);
 
     return () => {
       window.removeEventListener("mousemove", move);
       document.removeEventListener("mouseleave", leave);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [x, y]);
 
@@ -133,8 +145,8 @@ function useMouseTracking() {
 
 function DefaultCursor() {
   const { x, y, hovering, label, hidden } = useMouseTracking();
-  const ringX = useSpring(x, { stiffness: 380, damping: 32, mass: 0.6 });
-  const ringY = useSpring(y, { stiffness: 380, damping: 32, mass: 0.6 });
+  const ringX = useSpring(x, { stiffness: 200, damping: 30, mass: 1.0 });
+  const ringY = useSpring(y, { stiffness: 200, damping: 30, mass: 1.0 });
 
   return (
     <div
@@ -186,8 +198,8 @@ function DefaultCursor() {
 
 function BlobCursor() {
   const { x, y, hovering, hidden } = useMouseTracking();
-  const ringX = useSpring(x, { stiffness: 350, damping: 28, mass: 0.8 });
-  const ringY = useSpring(y, { stiffness: 350, damping: 28, mass: 0.8 });
+  const ringX = useSpring(x, { stiffness: 180, damping: 28, mass: 1.0 });
+  const ringY = useSpring(y, { stiffness: 180, damping: 28, mass: 1.0 });
   const [velocity, setVelocity] = useState({ x: 0, y: 0 });
   const lastPos = useRef({ x: 0, y: 0, t: 0 });
 
@@ -420,8 +432,8 @@ function CrosshairCursor() {
 
 function GooeyCursor() {
   const { x, y, hovering, hidden } = useMouseTracking();
-  const ringX = useSpring(x, { stiffness: 300, damping: 25, mass: 0.5 });
-  const ringY = useSpring(y, { stiffness: 300, damping: 25, mass: 0.5 });
+  const ringX = useSpring(x, { stiffness: 200, damping: 30, mass: 1.2 });
+  const ringY = useSpring(y, { stiffness: 200, damping: 30, mass: 1.2 });
 
   return (
     <>
@@ -473,8 +485,8 @@ function GooeyCursor() {
 
 function GlitchCursor() {
   const { x, y, hovering, hidden } = useMouseTracking();
-  const ringX = useSpring(x, { stiffness: 400, damping: 30 });
-  const ringY = useSpring(y, { stiffness: 400, damping: 30 });
+  const ringX = useSpring(x, { stiffness: 200, damping: 30, mass: 1.0 });
+  const ringY = useSpring(y, { stiffness: 200, damping: 30, mass: 1.0 });
   const [velocity, setVelocity] = useState(0);
   const lastPos = useRef({ x: 0, t: 0 });
 

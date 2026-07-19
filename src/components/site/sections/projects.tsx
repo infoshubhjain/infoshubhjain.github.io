@@ -1,7 +1,7 @@
 "use client";
 
-import { Suspense, lazy, useMemo, useState } from "react";
-import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { Suspense, lazy, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence, LayoutGroup, useScroll, useTransform } from "framer-motion";
 import {
   Search,
   Github,
@@ -17,6 +17,8 @@ import { SectionShell, SectionHeading } from "../section-heading";
 import { projects, type Project } from "@/lib/portfolio-data";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { TiltCard } from "../tilt-card";
+import { ChromaticCard } from "../chromatic-card";
 const CaseStudyModal = lazy(() =>
   import("../case-study-modal").then((m) => ({ default: m.CaseStudyModal }))
 );
@@ -113,6 +115,9 @@ export function Projects() {
           </>
         }
       />
+
+      {/* Horizontal scroll gallery for featured projects */}
+      <FeaturedGallery />
 
       {/* Controls */}
       <div className="mt-10 flex flex-col gap-4">
@@ -260,17 +265,19 @@ function ProjectCard({
   const hasCaseStudy = CASE_STUDY_IDS.includes(project.id);
 
   return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, scale: 0.96 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+    <ChromaticCard
       className={cn(
         "group relative overflow-hidden rounded-2xl liquid-glass transition-all",
         open ? "ring-1 ring-primary/40" : "hover:ring-1 hover:ring-primary/30"
       )}
     >
+      <motion.article
+        layout
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
       {/* Spotlight */}
       <div
         aria-hidden
@@ -285,12 +292,10 @@ function ProjectCard({
       <div className="relative">
         {/* Project preview image */}
         <div className="relative h-40 overflow-hidden sm:h-44">
-          <Image
-            src={`/projects/${project.id}.png`}
-            alt={project.title}
-            fill
+          <ProjectImage
+            project={project}
             sizes="(max-width: 640px) 100vw, 50vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
           {/* Featured badge overlays image */}
@@ -466,6 +471,39 @@ function ProjectCard({
         </div>
       </div>
     </motion.article>
+    </ChromaticCard>
+  );
+}
+
+/** Project image with graceful fallback when the screenshot file is missing. */
+function ProjectImage({
+  project,
+  sizes,
+  className,
+}: {
+  project: Project;
+  sizes: string;
+  className?: string;
+}) {
+  const [imgError, setImgError] = useState(false);
+
+  if (imgError) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 via-primary/5 to-accent/20">
+        <span className="font-mono text-xs text-muted-foreground/60">{project.category}</span>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={`/projects/${project.id}.png`}
+      alt={project.title}
+      fill
+      sizes={sizes}
+      className={cn("object-cover transition-transform duration-700", className)}
+      onError={() => setImgError(true)}
+    />
   );
 }
 
@@ -476,6 +514,75 @@ function DetailBlock({ label, body }: { label: string; body: string }) {
         {label}
       </div>
       <p className="text-sm leading-relaxed text-foreground/90">{body}</p>
+    </div>
+  );
+}
+
+const featuredProjects = projects.filter((p) => p.featured);
+
+function FeaturedGallery() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+  const x = useTransform(scrollYProgress, [0, 1], ["5%", "-15%"]);
+
+  return (
+    <div ref={containerRef} className="mt-10 overflow-hidden">
+      <div className="mb-4 flex items-center gap-3">
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+          featured_work
+        </span>
+        <span className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+      </div>
+      <motion.div style={{ x }} className="flex gap-5 pb-4">
+        {featuredProjects.map((p, i) => (
+          <motion.div
+            key={p.id}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="w-[340px] shrink-0 sm:w-[400px]"
+          >
+            <TiltCard>
+              <div className="group relative overflow-hidden rounded-2xl liquid-glass transition-all hover:ring-1 hover:ring-primary/30">
+                <div className="relative h-48 overflow-hidden">
+                  <ProjectImage project={p} sizes="400px" className="group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                  <div className="absolute left-4 top-4 flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-background/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur-md">
+                      <Sparkles className="h-2.5 w-2.5" /> Featured
+                    </span>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="mb-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {p.category} · {p.year}
+                  </div>
+                  <h3 className="font-display text-lg font-semibold leading-tight text-foreground">
+                    {p.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+                    {p.oneLiner}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {p.tech.slice(0, 4).map((t) => (
+                      <span
+                        key={t}
+                        className="rounded-md border border-border bg-card/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </TiltCard>
+          </motion.div>
+        ))}
+      </motion.div>
     </div>
   );
 }

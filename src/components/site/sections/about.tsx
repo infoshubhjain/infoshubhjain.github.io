@@ -106,7 +106,7 @@ export function About() {
           </p>
           <div className="mt-5 space-y-3">
             <DetailRow label="Expected Graduation" value="May 2029" />
-            <DetailRow label="CGPA" value="3.83 / 4.0" highlight />
+            <DetailRow label="CGPA" value="3.81 / 4.0" highlight />
             <DetailRow label="Honors" value="Dean's List · James Scholar" highlight />
             <DetailRow label="Location" value="Urbana-Champaign, IL" />
           </div>

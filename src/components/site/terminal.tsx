@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 /**
  * A terminal-style blinking cursor. Pure CSS animation, no JS state.
  */
-export function TerminalCursor({ className }: { className?: string }) {
+function TerminalCursor({ className }: { className?: string }) {
   return (
     <span
       className={`inline-block w-[0.6ch] bg-primary align-middle ml-1 ${className ?? ""}`}
@@ -16,69 +16,6 @@ export function TerminalCursor({ className }: { className?: string }) {
       }}
       aria-hidden
     />
-  );
-}
-
-/**
- * Types out the given text character-by-character, then shows a blinking cursor.
- * Respects prefers-reduced-motion (shows full text immediately, no cursor blink).
- */
-export function Typewriter({
-  text,
-  speed = 70,
-  delay = 0,
-  className,
-  cursor = true,
-  onComplete,
-}: {
-  text: string;
-  speed?: number;
-  delay?: number;
-  className?: string;
-  cursor?: boolean;
-  onComplete?: () => void;
-}) {
-  const [display, setDisplay] = useState("");
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      setDisplay(text);
-      setDone(true);
-      onComplete?.();
-      return;
-    }
-
-    let i = 0;
-    let timer: ReturnType<typeof setTimeout>;
-
-    const startTimer = setTimeout(() => {
-      const tick = () => {
-        if (i >= text.length) {
-          setDone(true);
-          onComplete?.();
-          return;
-        }
-        i++;
-        setDisplay(text.slice(0, i));
-        timer = setTimeout(tick, speed);
-      };
-      tick();
-    }, delay);
-
-    return () => {
-      clearTimeout(startTimer);
-      clearTimeout(timer);
-    };
-  }, [text, speed, delay, onComplete]);
-
-  return (
-    <span className={className}>
-      {display}
-      {cursor && !done && <span className="opacity-60">▋</span>}
-      {cursor && done && <TerminalCursor />}
-    </span>
   );
 }
 

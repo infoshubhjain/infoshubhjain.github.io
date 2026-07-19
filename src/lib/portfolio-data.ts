@@ -32,7 +32,7 @@ export const heroCopy = {
   description:
     "CS @ UIUC. I design multi-agent learning architectures, train transformers from scratch, ship full-stack products to production, and lead research that reaches tens of thousands of readers. Equal parts engineer, researcher, and builder.",
   stats: [
-    { label: "CGPA", value: "3.83", suffix: "/4.0" },
+    { label: "CGPA", value: "3.81", suffix: "/4.0" },
     { label: "Research papers", value: "2", suffix: " published" },
     { label: "Books authored", value: "2", suffix: " ISBN" },
     { label: "Volunteers led", value: "200", suffix: "+" },
@@ -47,7 +47,7 @@ export const about = {
   vision:
     "The next decade of AI will not be won by bigger models alone. It will be won by people who can connect rigorous research, careful systems engineering, and the human contexts where the technology actually lives. I am building toward that intersection.",
   stats: [
-    { label: "Years coding", value: 6, suffix: "+" },
+    { label: "Years coding", value: 7, suffix: "+" },
     { label: "Websites shipped", value: 40, suffix: "+" },
     { label: "Volunteers coordinated", value: 200, suffix: "+" },
     { label: "Lives impacted", value: 2300, suffix: "+" },
@@ -65,16 +65,24 @@ export const skills = {
   ],
   "AI & ML": [
     "Multi-Agent Orchestration", "Bayesian Knowledge Tracing", "Transformers", "DistilBERT", "LSTMs",
-    "ReAct Loops", "RAG", "Embeddings", "Information Gain Heuristics",
+    "ReAct Loops", "RAG", "Embeddings", "Information Gain Heuristics", "FAISS HNSW", "BM25/FTS5",
+  ],
+  "Computer Vision": [
+    "MediaPipe HandLandmarker", "TensorFlow.js", "Real-time gesture recognition", "Landmark smoothing",
+    "Temporal confidence accumulation", "GPU/CPU fallback inference",
   ],
   "Backend & APIs": [
-    "FastAPI", "REST", "OAuth2", "Pydantic v2", "Supabase", "PostgreSQL", "SQLite", "pgvector", "Row-Level Security",
+    "FastAPI", "REST", "OAuth2", "Pydantic v2", "Supabase", "PostgreSQL", "SQLite", "pgvector", "Row-Level Security", "MCP",
   ],
   "Cloud & DevOps": [
     "Google Cloud Run", "Vercel", "Docker", "Docker Compose", "GitHub Actions CI/CD", "Selenium", "Playwright",
   ],
   "Frontend": [
     "Next.js App Router", "Framer Motion", "Three.js / R3F", "Radix UI", "shadcn/ui", "Monaco Editor", "KaTeX", "p5.js",
+  ],
+  "AI/NLP Pipeline": [
+    "Whisper STT", "Gemini/GPT prompt pipelines", "ElevenLabs TTS", "Multi-model orchestration",
+    "ASL gloss conversion", "Context/bigram score fusion",
   ],
   "Research": [
     "Mixed-methods evaluation", "Quantitative & qualitative analysis", "Common-sense reasoning benchmarks",
@@ -88,7 +96,7 @@ export const skills = {
     "Network hardening", "School website & network admin",
   ],
   "Tools": [
-    "Git", "Linux", "Bun", "npm", "Vite", "Postman", "Linear", "Figma", "Notion", "Supabase Studio",
+    "Git", "Linux", "Bun", "npm", "Vite", "Postman", "Linear", "Figma", "Notion", "Supabase Studio", "tree-sitter",
   ],
 };
 
@@ -112,6 +120,57 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    id: "mnemostack",
+    title: "Mnemostack — Graph-Aware Code Retrieval",
+    oneLiner:
+      "Local MCP daemon that retrieves full dependency chains for AI coding assistants via hybrid search.",
+    description:
+      "A local MCP code-memory daemon that retrieves full dependency chains (callers + callees), not isolated files, for AI coding assistants. Engineered hybrid retrieval fusing FAISS HNSW with SQLite FTS5/BM25, Reciprocal Rank Fusion, 2-hop BFS call-graph expansion, and multi-signal re-ranking across semantic, recency, and dependency dimensions.",
+    problem:
+      "AI coding assistants typically retrieve isolated files by text similarity, missing cross-file dependency context. This leads to incomplete suggestions that don't understand how code connects across a project.",
+    solution:
+      "Built a local MCP server with AST chunking via tree-sitter across 6 language extensions, hybrid FAISS + BM25 retrieval fused with RRF (k=60), 2-hop BFS call-graph expansion on CALLS/IMPORTS_FROM edges, and multi-signal re-ranking at 0.6 semantic · 0.25 recency · 0.15 dependency with a 60-minute recency half-life.",
+    impact: [
+      "Graph-aware retrieval: 2-hop BFS expansion surfaces cross-file deps 1–2 hops away",
+      "Hybrid search: FAISS HNSW + FTS5/BM25 fused with RRF (k=60) and 3× top_k over-fetch",
+      "AST chunking for 6 extensions (Python / JS / TS / JSX / TSX) with fallback chunking",
+      "8 MCP tools shipped, 150+ tests across ~5.6k lines of Python",
+    ],
+    timeline: "Jun 2026 – Aug 2026",
+    tags: ["AI", "Search", "Developer Tools", "Systems"],
+    tech: ["Python", "tree-sitter", "FAISS HNSW", "SQLite FTS5/BM25", "RRF", "MCP"],
+    github: "https://github.com/Switchblack-Labs/Mnemostack",
+    category: "AI",
+    year: 2026,
+    featured: true,
+  },
+  {
+    id: "astrasign",
+    title: "AstraSign — Real-Time ASL ↔ Speech Translator",
+    oneLiner:
+      "Bidirectional ASL ↔ speech translator with ~30 FPS dual-hand tracking, 3D avatars, and multi-model AI pipeline.",
+    description:
+      "A full-stack web app with 2 translation modes (sign→speech and speech→sign), separating React/TS client pipelines from a modular FastAPI backend. Processes live video at ~30 FPS using MediaPipe HandLandmarker, classifies signs via a browser TensorFlow.js model, and renders ASL with Three.js 3D avatars. Orchestrates a multi-model pipeline: Whisper STT → Gemini English→ASL gloss → sign lookup → ElevenLabs TTS.",
+    problem:
+      "ASL users and spoken-language users lack real-time bidirectional translation tools. Existing solutions are one-way, high-latency, or require specialized hardware. Browser-based CV inference must balance accuracy with the ~33ms frame budget.",
+    solution:
+      "Built a hybrid architecture: on-device MediaPipe + TensorFlow.js for low-latency gesture recognition, cloud NLP/TTS for quality. Implemented landmark smoothing, temporal confidence accumulation, and context/bigram score fusion to stabilize predictions. Designed 10+ REST endpoints across 6 route modules with a 262-sign database.",
+    impact: [
+      "~30 FPS dual-hand tracking with 21 landmarks × 3 features per frame",
+      "3D avatar rendering with Three.js / R3F (3 avatars, 4 hand meshes, 8 GLB animations)",
+      "Multi-model pipeline: Whisper → Gemini → sign lookup → ElevenLabs TTS",
+      "262-sign database with O(1) word→sign lookup and batch query APIs",
+    ],
+    timeline: "Feb 2026",
+    tags: ["AI", "Computer Vision", "Accessibility", "Full Stack", "3D"],
+    tech: ["React", "TypeScript", "FastAPI", "MediaPipe", "TensorFlow.js", "Three.js", "Whisper", "Gemini", "ElevenLabs"],
+    demo: "https://astrasign-f8d8832c.aedify.ai/",
+    github: "https://github.com/AashnaAnand25/AstraSign",
+    category: "AI",
+    year: 2026,
+    featured: true,
+  },
   {
     id: "adaptive-learning",
     title: "AI-Powered Adaptive Learning Platform",
@@ -291,6 +350,52 @@ export const projects: Project[] = [
 
 export const experience = [
   {
+    role: "Lead Software Engineer — Mnemostack",
+    org: "Switchblack Labs",
+    period: "Jun 2026 – Aug 2026",
+    location: "Remote",
+    type: "Engineering",
+    summary:
+      "Built a graph-aware code retrieval MCP daemon for AI coding assistants with hybrid search and 2-hop BFS expansion.",
+    points: [
+      "Architected a local MCP code-memory daemon retrieving full dependency chains (callers + callees) for AI coding assistants.",
+      "Engineered hybrid retrieval: FAISS HNSW + SQLite FTS5/BM25, fused with RRF (k=60) and 3× top_k over-fetch.",
+      "Implemented 2-hop BFS call-graph expansion on CALLS/IMPORTS_FROM edges for cross-file dependency context.",
+      "Built AST chunking with tree-sitter across 6 extensions (Python / JS / TS / JSX / TSX) with fallback chunking.",
+      "Shipped 8 MCP tools with 150+ tests across ~5.6k lines of Python.",
+    ],
+    tech: ["Python", "tree-sitter", "FAISS HNSW", "SQLite FTS5/BM25", "RRF", "MCP"],
+    metrics: [
+      { value: "8", label: "MCP tools shipped" },
+      { value: "150+", label: "tests" },
+      { value: "5.6k", label: "LOC Python" },
+      { value: "2-hop", label: "BFS expansion" },
+    ],
+  },
+  {
+    role: "Lead Software Engineer — AstraSign",
+    org: "AstraSign",
+    period: "Feb 2026",
+    location: "Remote",
+    type: "Engineering",
+    summary:
+      "Built a real-time bidirectional ASL ↔ speech translator with 3D avatars and multi-model AI pipeline.",
+    points: [
+      "Architected full-stack web app with 2 translation modes, 30+ React components, and 10+ REST endpoints across 6 route modules.",
+      "Processed live video at ~30 FPS using MediaPipe HandLandmarker with TensorFlow.js classifier (68→128/64/32 dense layers).",
+      "Rendered interactive 3D avatars with Three.js / React Three Fiber (3 avatars, 4 hand meshes, 8 GLB animations).",
+      "Orchestrated multi-model pipeline: Whisper STT → Gemini English→ASL gloss → sign lookup → ElevenLabs TTS.",
+      "Curated 262-sign database with O(1) word→sign lookup and batch query APIs.",
+    ],
+    tech: ["React", "TypeScript", "FastAPI", "MediaPipe", "TensorFlow.js", "Three.js", "Whisper", "Gemini", "ElevenLabs"],
+    metrics: [
+      { value: "~30", label: "FPS dual-hand tracking" },
+      { value: "262", label: "sign database" },
+      { value: "10+", label: "REST endpoints" },
+      { value: "8", label: "GLB animations" },
+    ],
+  },
+  {
     role: "Machine Learning Engineer — BERT Ad Compliance Classifier",
     org: "Llama Naturals × REVAMP UIUC",
     period: "Jan 2025 – May 2026",
@@ -416,6 +521,23 @@ export const experience = [
       { value: "87%", label: "BiLSTM accuracy" },
       { value: "200+", label: "daily chatbot inquiries" },
       { value: "10K+", label: "reviews analyzed" },
+    ],
+  },
+  {
+    role: "AI & ML Intern",
+    org: "YBI Foundation",
+    period: "2024",
+    location: "Remote",
+    type: "Internship",
+    summary:
+      "Intensive one-month practical AI/ML program covering hands-on model building and deployment.",
+    points: [
+      "Completed an intensive one-month practical AI/ML program with hands-on projects.",
+      "Applied machine learning techniques to real-world datasets and problems.",
+    ],
+    tech: ["Python", "Machine Learning"],
+    metrics: [
+      { value: "1", label: "month intensive" },
     ],
   },
   {

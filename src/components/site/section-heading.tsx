@@ -1,10 +1,12 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { FadeIn } from "./animated-text";
 import { Scramble } from "./scramble";
+import { TextScramble } from "./text-scramble";
 
 type SectionHeadingProps = {
   eyebrow: string;
@@ -24,8 +26,19 @@ export function SectionHeading({
   align = "left",
   className,
 }: SectionHeadingProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.9", "start 0.4"],
+  });
+  const titleY = useTransform(scrollYProgress, [0, 1], [40, 0]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 1]);
+  const descY = useTransform(scrollYProgress, [0, 1], [30, 0]);
+  const descOpacity = useTransform(scrollYProgress, [0.1, 0.7], [0, 1]);
+
   return (
     <div
+      ref={ref}
       className={cn(
         "flex flex-col gap-4",
         align === "center" && "items-center text-center",
@@ -48,23 +61,23 @@ export function SectionHeading({
         </div>
       </FadeIn>
 
-      <FadeIn delay={0.08}>
-        <h2 className="font-display text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-          {title}
-        </h2>
-      </FadeIn>
+      <motion.h2
+        style={{ y: titleY, opacity: titleOpacity }}
+        className="font-display text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl"
+      >
+        {title}
+      </motion.h2>
 
       {description && (
-        <FadeIn delay={0.16}>
-          <p
-            className={cn(
-              "max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg",
-              align === "center" && "mx-auto"
-            )}
-          >
-            {description}
-          </p>
-        </FadeIn>
+        <motion.p
+          style={{ y: descY, opacity: descOpacity }}
+          className={cn(
+            "max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg",
+            align === "center" && "mx-auto"
+          )}
+        >
+          {description}
+        </motion.p>
       )}
     </div>
   );

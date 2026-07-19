@@ -5,7 +5,9 @@ import { useRef, Suspense, lazy, useState, useEffect } from "react";
 import { ArrowDownRight, FileDown, Github, Linkedin, Terminal } from "lucide-react";
 import { heroCopy, profile } from "@/lib/portfolio-data";
 import { AnimatedText } from "../animated-text";
+import { TextScramble } from "../text-scramble";
 import { Magnetic } from "../magnetic";
+import { MorphingBlob } from "../morphing-blob";
 import { scrollToSection } from "@/lib/hooks/use-smooth-scroll";
 import { BinaryStream, RotatingTypewriter } from "../terminal";
 import { useIsTouch, usePrefersReducedMotion } from "@/lib/hooks/use-media-query";
@@ -72,24 +74,13 @@ export function Hero() {
       onMouseLeave={handleMouseLeave}
       className="relative flex min-h-[100svh] items-center overflow-hidden px-5 pt-24 sm:px-8"
     >
-      {/* Aurora blobs — parallax layer 1 (far back, slowest) */}
+      {/* Generative morphing blob — parallax layer 1 (far back, slowest) */}
       <motion.div
         aria-hidden
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 -z-10 overflow-hidden"
         style={{ x: layer1X, y: layer1Y }}
       >
-        <div
-          className="aurora-blob left-[-10%] top-[-10%] h-[55vh] w-[55vh]"
-          style={{ background: "var(--aurora-1)" }}
-        />
-        <div
-          className="aurora-blob right-[-15%] top-[20%] h-[45vh] w-[45vh]"
-          style={{ background: "var(--aurora-3)" }}
-        />
-        <div
-          className="aurora-blob bottom-[-10%] left-[30%] h-[40vh] w-[40vh]"
-          style={{ background: "var(--aurora-2)" }}
-        />
+        <MorphingBlob className="absolute inset-0" />
       </motion.div>
 
       {/* Animated grid — parallax layer 2 */}
@@ -182,9 +173,14 @@ export function Hero() {
 
             {/* THE NAME — big, sharp, with typing cursor */}
             <h1 className="font-display text-balance text-6xl font-bold leading-[0.92] tracking-tight sm:text-7xl md:text-8xl xl:text-[7rem]">
-              <span className="block text-foreground text-glow-primary">
-                SHUBH JAIN
-              </span>
+              <TextScramble
+                text="SHUBH JAIN"
+                as="span"
+                className="block text-foreground text-glow-primary"
+                delay={0.5}
+                duration={1.5}
+                stagger={0.03}
+              />
               <span className="mt-2 block font-mono text-2xl font-medium text-primary sm:text-3xl md:text-4xl">
                 <RotatingTypewriter
                   phrases={[
@@ -374,7 +370,7 @@ function TerminalHUD() {
           <TerminalRow label="role" value="CS @ UIUC" />
           <TerminalRow label="focus" value="AI · Systems · Research" />
           <TerminalRow label="grad" value="May 2029" />
-          <TerminalRow label="cgpa" value="3.83 / 4.0" highlight />
+          <TerminalRow label="cgpa" value="3.81 / 4.0" highlight />
           <TerminalRow label="honors" value="Dean's List · James Scholar" />
           <TerminalRow
             label="pubs"

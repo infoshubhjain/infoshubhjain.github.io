@@ -608,7 +608,7 @@ export function Radio() {
               {driver.tagline}
             </p>
             <a
-              href="/resume.pdf"
+              href={driver.resumeUrl}
               target="_blank"
               rel="noreferrer"
               className="mt-6 inline-flex items-center gap-2 rounded-lg px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"

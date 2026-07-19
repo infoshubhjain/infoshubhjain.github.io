@@ -5,7 +5,7 @@ import { ContactShadows, MeshReflectorMaterial, useGLTF } from "@react-three/dre
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
-import type { Palette } from "@/lib/prototype-theme";
+import { PALETTES, type Palette } from "@/lib/prototype-theme";
 
 /**
  * "Lights Out" — the active team's real F1 car (Ferrari F1-75 / Red Bull RB18,
@@ -15,6 +15,12 @@ import type { Palette } from "@/lib/prototype-theme";
  */
 
 const DRACO_PATH = "/draco/";
+// Preload + Draco-decode both liveries at module load (during the start-lights
+// loader) so the real car — not the procedural fallback — drives in on launch.
+Object.values(PALETTES).forEach((p) => useGLTF.preload(p.three.model, DRACO_PATH));
+// Fixed flattering three-quarter — the reduced-motion resting angle (otherwise
+// the car turntables continuously, accelerating with scroll; see CarRig).
+const YAW_CENTER = -0.9;
 
 type Colors = Palette["three"];
 type SpeedRef = React.MutableRefObject<number>;
@@ -124,7 +130,7 @@ function GltfCar({ path }: { path: string }) {
     return root;
   }, [scene]);
 
-  return <primitive object={model} rotation={[0, Math.PI * 0.15, 0]} />;
+  return <primitive object={model} />;
 }
 
 /** Falls back to the procedural car if a model fails to load. Keyed by path so it resets on team switch. */
@@ -140,11 +146,22 @@ class CarErrorBoundary extends Component<{ fallback: ReactNode; children: ReactN
 
 function CarRig({ c, speedRef, modelPath, reduced }: { c: Colors; speedRef: SpeedRef; modelPath: string; reduced: boolean }) {
   const g = useRef<THREE.Group>(null);
+  const entrance = useRef(0);
   useFrame((state, delta) => {
     if (!g.current) return;
     const t = state.clock.getElapsedTime();
-    // Slow turntable + idle bob (premium product-shot feel; also hides model orientation).
-    if (!reduced) g.current.rotation.y += delta * (0.12 + speedRef.current * 0.5);
+    // Drive-in: after "lights out" the car sweeps in from off-screen right.
+    entrance.current = Math.min(1, entrance.current + delta / 1.4);
+    const e = reduced ? 1 : 1 - Math.pow(1 - entrance.current, 3); // easeOutCubic
+    g.current.position.x = (1 - e) * 15;
+    // Continuous turntable whose speed tracks scroll (scroll = throttle): a slow
+    // idle spin that accelerates as you move down the page. Reduced-motion holds
+    // a fixed flattering three-quarter.
+    if (reduced) {
+      g.current.rotation.y = YAW_CENTER;
+    } else {
+      g.current.rotation.y += delta * (0.35 + speedRef.current * 6);
+    }
     g.current.position.y = reduced ? 0 : Math.sin(t * 2) * 0.01;
   });
   const fallback = <ProceduralCar c={c} speedRef={speedRef} />;
@@ -159,14 +176,15 @@ function CarRig({ c, speedRef, modelPath, reduced }: { c: Colors; speedRef: Spee
   );
 }
 
-function Grid({ c, speedRef }: { c: Colors; speedRef: SpeedRef }) {
+function Grid({ c, speedRef, reduced, mobile }: { c: Colors; speedRef: SpeedRef; reduced: boolean; mobile: boolean }) {
   const dashes = useRef<THREE.Group>(null);
   const COUNT = 14;
   const SPAN = 42;
   const spacing = SPAN / COUNT;
   useFrame((_, delta) => {
     if (!dashes.current) return;
-    const move = (2 + speedRef.current * 60) * delta;
+    // No idle scroll under reduced-motion; only the user's own scroll drives it.
+    const move = ((reduced ? 0 : 2) + speedRef.current * 60) * delta;
     dashes.current.children.forEach((ch) => {
       ch.position.x += move;
       if (ch.position.x > 12) ch.position.x -= SPAN;
@@ -177,8 +195,8 @@ function Grid({ c, speedRef }: { c: Colors; speedRef: SpeedRef }) {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[80, 40]} />
         <MeshReflectorMaterial
-          resolution={1024}
-          blur={[400, 120]}
+          resolution={mobile ? 512 : 1024}
+          blur={mobile ? [200, 60] : [400, 120]}
           mixBlur={1}
           mixStrength={18}
           depthScale={1.1}
@@ -209,17 +227,23 @@ function Grid({ c, speedRef }: { c: Colors; speedRef: SpeedRef }) {
 
 /* eslint-disable react-hooks/immutability -- R3F supports direct camera mutation inside useFrame */
 function CameraDrift({ reduced }: { reduced: boolean }) {
-  const { camera, pointer } = useThree();
+  const { camera } = useThree();
   const intro = useRef(0);
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
     intro.current = Math.min(1, intro.current + delta / 2.4);
     const e = 1 - Math.pow(1 - intro.current, 3);
-    const baseX = 5.2 + (reduced ? 0 : pointer.x * 0.9);
-    const baseY = 2.3 + (reduced ? 0 : pointer.y * 0.5) + Math.sin(t * 0.6) * 0.05;
-    const tx = THREE.MathUtils.lerp(9.5, baseX, e);
-    const ty = THREE.MathUtils.lerp(5.5, baseY, e);
-    const tz = THREE.MathUtils.lerp(9.5, 6.5, e);
+    // Camera holds a stable elevated 3/4 frame; only the car tracks the cursor
+    // (CarRig). A gentle idle bob keeps the shot alive. As the hero scrolls away,
+    // the camera pulls back + rises so the car recedes cinematically (the scene
+    // then pauses once content covers it).
+    const scroll = reduced ? 0 : Math.min(1, (typeof window !== "undefined" ? window.scrollY / window.innerHeight : 0));
+    const es = scroll * scroll; // ease-in: holds, then accelerates away
+    const baseX = 5.2;
+    const baseY = 2.3 + (reduced ? 0 : Math.sin(t * 0.6) * 0.05);
+    const tx = THREE.MathUtils.lerp(9.5, baseX, e) + es * 2.2;
+    const ty = THREE.MathUtils.lerp(5.5, baseY, e) + es * 3.2;
+    const tz = THREE.MathUtils.lerp(9.5, 6.5, e) + es * 5.5;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, tx, delta * 2.4);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, ty, delta * 2.4);
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, tz, delta * 2.4);
@@ -234,10 +258,13 @@ export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: Speed
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (!wrapper.current) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting));
-    io.observe(wrapper.current);
-    return () => io.disconnect();
+    // The canvas is fixed full-screen, so an IntersectionObserver would always
+    // report "visible". Pause the render loop by scroll instead: once the hero is
+    // scrolled past, the opaque sections cover the canvas — stop rendering it.
+    const onScroll = () => setVisible(window.scrollY < window.innerHeight * 1.15);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const fog = useMemo(() => new THREE.Fog(colors.canvas, 13, 34), [colors.canvas]);
@@ -254,7 +281,7 @@ export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: Speed
         <color attach="background" args={[colors.canvas]} />
         <primitive attach="fog" object={fog} />
 
-        <ambientLight intensity={0.4} />
+        <ambientLight intensity={0.5} />
         <directionalLight
           castShadow
           position={[6, 10, 4]}
@@ -263,12 +290,14 @@ export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: Speed
           shadow-mapSize={[2048, 2048]}
           shadow-bias={-0.0002}
         />
-        <directionalLight position={[-8, 3, -6]} intensity={1.2} color={colors.edge} />
+        <directionalLight position={[-8, 3, -6]} intensity={2} color={colors.edge} />
+        {/* Front fill so the car stays lit as it yaws to track the cursor. */}
+        <directionalLight position={[2, 4, 9]} intensity={1.1} color="#fff3ea" />
         <pointLight position={[0, 3, 5]} intensity={10} color={colors.accent} distance={20} />
         <pointLight position={[-3, 1, -3]} intensity={14} color={colors.bodyDk} distance={16} />
 
         <CarRig c={colors} speedRef={speedRef} modelPath={colors.model} reduced={reduced} />
-        <Grid c={colors} speedRef={speedRef} />
+        <Grid c={colors} speedRef={speedRef} reduced={reduced} mobile={mobile} />
         <ContactShadows position={[0, 0.015, 0]} opacity={0.6} scale={22} blur={2.4} far={6} color="#000000" />
         <CameraDrift reduced={reduced} />
 

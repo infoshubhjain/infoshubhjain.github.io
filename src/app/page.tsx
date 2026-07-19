@@ -47,6 +47,35 @@ function CinematicOverlay() {
 }
 
 
+/** F1 "swipe" flash on team change — a skewed colour panel in the incoming
+ *  team's colour sweeps across and fades, branding the swap. Remounted via a
+ *  changing `key` so each toggle replays it. */
+function TeamWipe({ team }: { team: TeamId }) {
+  const p = PALETTES[team];
+  return (
+    <motion.div
+      className="pointer-events-none fixed inset-0 z-[60] flex items-center justify-center overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: [0, 1, 1, 0] }}
+      transition={{ duration: 0.72, times: [0, 0.22, 0.5, 1], ease: "easeInOut" }}
+    >
+      <motion.div
+        className="absolute inset-y-0 -left-1/4 w-[150%] -skew-x-12"
+        style={{ background: p.vars["--pt-primary"] }}
+        initial={{ x: "-30%" }}
+        animate={{ x: ["-30%", "0%", "30%"] }}
+        transition={{ duration: 0.72, ease: [0.76, 0, 0.24, 1] }}
+      />
+      <span
+        className={`${anton.className} relative text-[12vw] uppercase leading-none`}
+        style={{ color: p.vars["--pt-on-primary"] }}
+      >
+        {p.label}
+      </span>
+    </motion.div>
+  );
+}
+
 function TeamToggle({ team, onChange }: { team: TeamId; onChange: (t: TeamId) => void }) {
   return (
     <div className="pointer-events-auto pt-glass fixed left-1/2 top-4 z-30 flex -translate-x-1/2 items-center gap-1.5 rounded-full border p-1.5 sm:top-6" style={{ borderColor: "rgba(255,255,255,0.14)" }}>
@@ -85,9 +114,13 @@ export default function Home() {
     if (saved === "ferrari" || saved === "redbull") setTeam(saved);
   }, []);
 
+  // `flash.n` is a nonce that remounts TeamWipe so its animation replays.
+  const [flash, setFlash] = useState<{ team: TeamId; n: number } | null>(null);
   const changeTeam = (t: TeamId) => {
+    if (t === team) return;
     setTeam(t);
     localStorage.setItem("pt-team", t);
+    if (!reduced) setFlash((f) => ({ team: t, n: (f?.n ?? 0) + 1 }));
   };
 
   const palette = PALETTES[team];
@@ -150,6 +183,7 @@ export default function Home() {
       <CircuitMap />
       <EngineAudio speedRef={speedRef} />
       <TeamToggle team={team} onChange={changeTeam} />
+      {flash && <TeamWipe key={flash.n} team={flash.team} />}
       <EasterEggs speedRef={speedRef} team={team} />
 
       {/* Broadcast chrome — hidden on phones (toggle carries the team identity there) */}
@@ -213,7 +247,7 @@ export default function Home() {
               View the work <ArrowRight className="h-4 w-4" />
             </button>
             <a
-              href="/resume.pdf"
+              href={driver.resumeUrl}
               target="_blank"
               rel="noreferrer"
               className="pt-glass inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"

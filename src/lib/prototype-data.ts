@@ -16,6 +16,9 @@ export const driver = {
   email: "shubhj3@illinois.edu",
   github: "https://github.com/infoshubhjain",
   linkedin: "https://www.linkedin.com/in/infoshubhjain/",
+  // Résumé is an external link (Google Drive / Dropbox) so updating the file
+  // there keeps the site current with no redeploy. Replace with your share link.
+  resumeUrl: "https://drive.google.com/file/d/1U3oReqdlwml0lJItc7a57zbN2a1BMrwx/view?usp=sharing",
 };
 
 export const seasonStats: { label: string; value: string; sub: string }[] = [

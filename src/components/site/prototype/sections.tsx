@@ -1,8 +1,10 @@
 "use client";
 
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { anton, serif } from "@/lib/prototype-fonts";
+import { RaceDebrief } from "./race-debrief";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import {
   driver,
   seasonStats,
@@ -95,42 +97,51 @@ function Heading({ children }: { children: ReactNode }) {
   );
 }
 
-function AnimatedStat({ value, label, sub, delay }: { value: string; label: string; sub: string; delay: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  const [display, setDisplay] = useState("0");
-
-  useEffect(() => {
-    if (!inView) return;
-    const m = value.match(/^([^\d]*)([\d.]+)(.*)$/);
-    if (!m) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDisplay(value);
-      return;
-    }
-    const [, pre, num, post] = m;
-    const target = parseFloat(num);
-    const decimals = num.includes(".") ? num.split(".")[1].length : 0;
-    const start = performance.now();
-    const dur = 1100 + delay * 400;
-    let raf = 0;
-    const tick = (t: number) => {
-      const k = Math.min(1, (t - start) / dur);
-      const eased = 1 - Math.pow(1 - k, 3);
-      setDisplay(`${pre}${(target * eased).toFixed(decimals)}${post}`);
-      if (k < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, value, delay]);
-
+/** One rolling digit — a 0-9 reel that settles on the target (odometer/trip-meter feel). */
+function DigitReel({ target, delay }: { target: number; delay: number }) {
   return (
-    <div ref={ref} className="pt-glass rounded-lg border p-4" style={{ borderColor: P.line }}>
+    <span className="inline-block overflow-hidden" style={{ height: "1em", lineHeight: 1, verticalAlign: "bottom" }}>
+      <motion.span
+        className="flex flex-col"
+        initial={{ y: "0em" }}
+        whileInView={{ y: `-${target}em` }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {Array.from({ length: 10 }).map((_, n) => (
+          <span key={n} style={{ height: "1em", lineHeight: 1 }}>
+            {n}
+          </span>
+        ))}
+      </motion.span>
+    </span>
+  );
+}
+
+function Odometer({ value, baseDelay = 0 }: { value: string; baseDelay?: number }) {
+  return (
+    <span className="inline-flex tabular-nums" style={{ lineHeight: 1 }}>
+      {[...value].map((ch, i) =>
+        /\d/.test(ch) ? (
+          <DigitReel key={i} target={Number(ch)} delay={baseDelay + i * 0.06} />
+        ) : (
+          <span key={i} className="inline-block" style={{ height: "1em", lineHeight: 1, verticalAlign: "bottom" }}>
+            {ch}
+          </span>
+        )
+      )}
+    </span>
+  );
+}
+
+function AnimatedStat({ value, label, sub, delay }: { value: string; label: string; sub: string; delay: number }) {
+  return (
+    <div className="pt-glass rounded-lg border p-4" style={{ borderColor: P.line }}>
       <div className="font-mono text-[9px] uppercase tracking-[0.28em]" style={{ color: P.muted }}>
         {label}
       </div>
-      <div className={`${anton.className} mt-1 text-4xl tabular-nums`} style={{ color: P.white }}>
-        {display}
+      <div className={`${anton.className} mt-1 text-4xl`} style={{ color: P.white }}>
+        <Odometer value={value} baseDelay={delay} />
       </div>
       <div className="mt-0.5 text-xs" style={{ color: P.muted }}>
         {sub}
@@ -144,7 +155,7 @@ function AnimatedStat({ value, label, sub, delay }: { value: string; label: stri
 export function Driver() {
   return (
     <Shell id="driver">
-      <SectorTag n="Sector 1" label="The Driver" />
+      <SectorTag n="Paddock" label="The Driver" />
       <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr]">
         <Reveal>
           <Heading>
@@ -183,24 +194,66 @@ export function Driver() {
 
 const POS_COLOR: Record<string, string> = { P1: "#ffd000", P2: "#c7ccd1", P3: "#cd7f32" };
 
-function WinCard({ win, i }: { win: Win; i: number }) {
-  const [open, setOpen] = useState(false);
+/** Cursor-tracking specular sheen + subtle 3D tilt (Apple-style). Writes CSS vars directly (no re-render). */
+function useCardFx() {
+  const ref = useRef<HTMLElement>(null);
+  const onMouseMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    el.style.setProperty("--mx", `${px * 100}%`);
+    el.style.setProperty("--my", `${py * 100}%`);
+    el.style.setProperty("--rx", `${(0.5 - py) * 5}deg`);
+    el.style.setProperty("--ry", `${(px - 0.5) * 5}deg`);
+  };
+  const reset = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
+  };
+  return { ref, onMouseMove, reset };
+}
+
+function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => void }) {
+  const [hover, setHover] = useState(false);
+  const fx = useCardFx();
   return (
     <Reveal delay={(i % 2) * 0.08}>
-      <motion.article
-        whileHover={{ y: -4 }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        className="pt-glass group relative h-full overflow-hidden rounded-xl border p-6 transition-colors"
-        style={{ borderColor: open ? P.rosso : P.line }}
+      <article
+        ref={fx.ref as React.RefObject<HTMLElement>}
+        onMouseEnter={() => setHover(true)}
+        onMouseMove={fx.onMouseMove}
+        onMouseLeave={() => {
+          setHover(false);
+          fx.reset();
+        }}
+        onClick={() => onOpen(win)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen(win)}
+        className="pt-glass group relative h-full cursor-pointer overflow-hidden rounded-xl border p-6"
+        style={{
+          borderColor: hover ? P.rosso : P.line,
+          transform: "perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))",
+          transformStyle: "preserve-3d",
+          transition: "transform 0.25s ease, border-color 0.3s ease",
+          "--ty": hover ? "-4px" : "0px",
+        } as React.CSSProperties}
+        aria-label={`Open debrief for ${win.name}`}
       >
+        {/* cursor-tracking specular sheen */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{ background: "radial-gradient(300px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.10), transparent 55%)" }}
+        />
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span
-                className={`${anton.className} text-2xl`}
-                style={{ color: POS_COLOR[win.pos] ?? P.white }}
-              >
+              <span className={`${anton.className} text-2xl`} style={{ color: POS_COLOR[win.pos] ?? P.white }}>
                 {win.pos}
               </span>
               <span className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: P.muted }}>
@@ -212,29 +265,18 @@ function WinCard({ win, i }: { win: Win; i: number }) {
             </h3>
           </div>
           {win.featured && (
-            <span
-              className="rounded px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider"
-              style={{ background: P.rosso, color: P.onPrimary }}
-            >
+            <span className="rounded px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider" style={{ background: P.rosso, color: P.onPrimary }}>
               Win
             </span>
           )}
         </div>
 
         <p className="mt-3 text-sm leading-relaxed" style={{ color: "#cfcdc7" }}>
-          <span style={{ color: P.giallo }}>Circuit · </span>
           {win.circuit}
         </p>
-        <p className="mt-2 text-sm leading-relaxed" style={{ color: P.muted }}>
-          <span style={{ color: P.giallo }}>Setup · </span>
-          {win.setup}
-        </p>
 
-        <div className="mt-4 flex items-center gap-2 font-mono text-[11px]" style={{ color: P.white }}>
-          <span
-            className="rounded px-1.5 py-0.5"
-            style={{ background: "rgba(46,229,107,0.15)", color: "#2ee56b" }}
-          >
+        <div className="mt-4 flex items-center gap-2 font-mono text-[11px]">
+          <span className="rounded px-1.5 py-0.5" style={{ background: "rgba(46,229,107,0.15)", color: "#2ee56b" }}>
             ⚑ FL
           </span>
           <span style={{ color: "#cfcdc7" }}>{win.gap}</span>
@@ -242,60 +284,113 @@ function WinCard({ win, i }: { win: Win; i: number }) {
 
         <div className="mt-4 flex flex-wrap gap-1.5">
           {win.tech.map((t) => (
-            <span
-              key={t}
-              className="rounded border px-2 py-0.5 font-mono text-[10px]"
-              style={{ borderColor: P.line, color: P.muted }}
-            >
+            <span key={t} className="rounded border px-2 py-0.5 font-mono text-[10px]" style={{ borderColor: P.line, color: P.muted }}>
               {t}
             </span>
           ))}
         </div>
 
-        {(win.demo || win.github) && (
-          <div className="mt-4 flex gap-4 font-mono text-[11px] uppercase tracking-wider">
-            {win.demo && (
-              <a href={win.demo} target="_blank" rel="noreferrer" style={{ color: P.rosso }}>
-                ↗ demo
-              </a>
-            )}
-            {win.github && (
-              <a href={win.github} target="_blank" rel="noreferrer" style={{ color: P.muted }}>
-                ↗ source
-              </a>
-            )}
-          </div>
-        )}
-        {/* checkered accent on hover */}
+        {/* footer: debrief affordance + quick links (links stop card click) */}
+        <div className="mt-5 flex items-center justify-between border-t pt-4" style={{ borderColor: P.line }}>
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-wider" style={{ color: P.rosso }}>
+            View debrief →
+          </span>
+          {win.links.length > 0 && (
+            <div className="flex gap-3 font-mono text-[10px] uppercase tracking-wider">
+              {win.links.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="transition-colors hover:opacity-80"
+                  style={{ color: l.kind === "demo" ? P.giallo : P.muted }}
+                >
+                  ↗ {l.kind}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div
           className="pointer-events-none absolute inset-x-0 bottom-0 h-1 origin-left transition-transform duration-300"
-          style={{ background: P.rosso, transform: open ? "scaleX(1)" : "scaleX(0)" }}
+          style={{ background: P.rosso, transform: hover ? "scaleX(1)" : "scaleX(0)" }}
         />
-      </motion.article>
+      </article>
     </Reveal>
   );
 }
 
 export function Wins() {
+  const [selected, setSelected] = useState<Win | null>(null);
+  const mobile = useMediaQuery("(max-width: 768px)");
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
+  const [dist, setDist] = useState(0);
+
+  useEffect(() => {
+    if (mobile) return;
+    const measure = () => {
+      const t = trackRef.current;
+      if (t) setDist(Math.max(0, t.scrollWidth - window.innerWidth + 64));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [mobile]);
+
+  const x = useTransform(scrollYProgress, [0.06, 0.94], [0, -dist]);
+
+  const header = (
+    <>
+      <SectorTag n="Pit Lane" label="Race Wins — the projects" purple />
+      <Heading>
+        Things I&apos;ve <span style={{ color: P.rosso }}>shipped</span> at the{" "}
+        <span className={`${serif.className} normal-case italic`}>limit.</span>
+      </Heading>
+      <p className="mt-5 max-w-2xl text-lg" style={{ color: P.muted }}>
+        Down the pit lane — every build is a race result. Tap any car for the full debrief.
+      </p>
+    </>
+  );
+
+  if (mobile) {
+    return (
+      <Shell id="wins">
+        {header}
+        <div className="mt-8 grid gap-4">
+          {wins.map((w, i) => (
+            <WinCard key={w.id} win={w} i={i} onOpen={setSelected} />
+          ))}
+        </div>
+        <RaceDebrief win={selected} onClose={() => setSelected(null)} />
+      </Shell>
+    );
+  }
+
+  const vh = 120 + wins.length * 26; // taller section → more scroll to traverse the lane
   return (
-    <Shell id="wins">
-      <SectorTag n="Sector 2" label="Race Wins — Projects" purple />
-      <Reveal>
-        <Heading>
-          Things I&apos;ve <span style={{ color: P.rosso }}>shipped</span> at the{" "}
-          <span className={`${serif.className} normal-case italic`}>limit.</span>
-        </Heading>
-        <p className="mt-6 max-w-2xl text-lg" style={{ color: P.muted }}>
-          Every project is a race result — the problem is the circuit, the approach is the setup, and the
-          measured impact is the gap to the field.
-        </p>
-      </Reveal>
-      <div className="mt-10 grid gap-4 md:grid-cols-2">
-        {wins.map((w, i) => (
-          <WinCard key={w.id} win={w} i={i} />
-        ))}
+    <section
+      ref={sectionRef}
+      id="wins"
+      className="relative z-10"
+      style={{ height: `${vh}vh`, background: "var(--pt-panel)", borderTop: "1px solid var(--pt-line)" }}
+    >
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 md:px-16">{header}</div>
+        <motion.div ref={trackRef} style={{ x }} className="mt-10 flex gap-5 pl-5 pr-[32vw] will-change-transform sm:pl-8 md:pl-16">
+          {wins.map((w, i) => (
+            <div key={w.id} className="w-[400px] shrink-0">
+              <WinCard win={w} i={i} onOpen={setSelected} />
+            </div>
+          ))}
+        </motion.div>
       </div>
-    </Shell>
+      <RaceDebrief win={selected} onClose={() => setSelected(null)} />
+    </section>
   );
 }
 
@@ -303,7 +398,7 @@ export function Directives() {
   const badge: Record<string, string> = { Patent: P.giallo, Paper: P.rosso, Book: "#a855f7" };
   return (
     <Shell id="directives">
-      <SectorTag n="Sector 3" label="Technical Directives — Research" />
+      <SectorTag n="R&D Bay" label="Research & publications" />
       <Reveal>
         <Heading>
           Published from the <span style={{ color: P.rosso }}>R&amp;D</span> bay.
@@ -384,7 +479,7 @@ export function Standings() {
 export function Setup() {
   return (
     <Shell id="setup">
-      <SectorTag n="Sector 5" label="Car Setup — Skills" />
+      <SectorTag n="Car Setup" label="The skill sheet" />
       <Reveal>
         <Heading>
           The <span style={{ color: P.rosso }}>build sheet.</span>
@@ -425,7 +520,7 @@ export function Setup() {
 export function PitWall() {
   return (
     <Shell id="pitwall">
-      <SectorTag n="Sector 6" label="The Pit Wall — Leadership" purple />
+      <SectorTag n="Pit Wall" label="Leadership & impact" purple />
       <Reveal>
         <Heading>
           Calling the <span style={{ color: P.rosso }}>strategy.</span>
@@ -512,6 +607,15 @@ export function Radio() {
             <p className="mt-4 text-sm" style={{ color: P.muted }}>
               {driver.tagline}
             </p>
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+              style={{ background: P.rosso, color: P.onPrimary }}
+            >
+              ↓ Download press kit — résumé
+            </a>
           </div>
         </Reveal>
       </div>

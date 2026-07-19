@@ -18,9 +18,20 @@ const EGGS: Egg[] = [
   { seq: "forza", msg: "🐎 FORZA FERRARI", team: "ferrari", rev: true },
   { seq: "wings", msg: "🐂 IT GIVES YOU WINGS", team: "redbull", rev: true },
   { seq: "box", msg: "📻 BOX BOX BOX", rev: false },
-  { seq: "drs", msg: "🟢 DRS ENABLED", rev: true },
+  { seq: "drs", msg: "🟢 DRS ENABLED — SEND IT", rev: true },
   { seq: "p1", msg: "🏆 P1 — CHEQUERED FLAG", rev: false },
   { seq: "vroom", msg: "🏎️ FULL THROTTLE", rev: true },
+  // deep-fan radio classics
+  { seq: "bwoah", msg: "🧊 BWOAH. — KIMI", rev: false },
+  { seq: "hammertime", msg: "🔨 IT'S HAMMER TIME", rev: true },
+  { seq: "multi21", msg: "🅰️ MULTI 21, SEB.", rev: false },
+  { seq: "lightsout", msg: "🚦 IT'S LIGHTS OUT AND AWAY WE GO", rev: true },
+  { seq: "purple", msg: "🟣 PURPLE SECTOR — FASTEST OF ANYONE", rev: false },
+  { seq: "planb", msg: "📻 PLAN B. PLAN B.", rev: false },
+  { seq: "deg", msg: "🛞 DEG'S HIGH — BOX THIS LAP", rev: false },
+  { seq: "tea", msg: "☕ LEAVE ME ALONE, I KNOW WHAT I'M DOING", rev: false },
+  { seq: "checo", msg: "🇲🇽 ¡ÁNDALE, CHECO!", rev: true },
+  { seq: "gp2", msg: "😤 GP2 ENGINE. GP2!", rev: false },
 ];
 
 export function EasterEggs({ speedRef, team }: { speedRef: React.MutableRefObject<number>; team: TeamId }) {

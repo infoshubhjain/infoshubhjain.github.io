@@ -29,7 +29,7 @@ const SITE_URL = "https://infoshubhjain.github.io";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Shubh Jain — AI Systems · Research · Engineering · Leadership",
+    default: "Shubh Jain — AI Systems Engineer, built at the limit",
     template: "%s · Shubh Jain",
   },
   description:

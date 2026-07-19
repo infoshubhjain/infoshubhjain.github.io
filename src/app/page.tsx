@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll } from "framer-motion";
+import { Github, Linkedin, Mail, FileDown, ArrowRight } from "lucide-react";
 import { F1Scene } from "@/components/site/prototype/f1-scene";
 import { TelemetryHud } from "@/components/site/prototype/telemetry-hud";
 import {
   Driver,
   Wins,
   Directives,
-  Standings,
   Setup,
   PitWall,
   Radio,
@@ -17,6 +17,9 @@ import {
 import { EngineAudio } from "@/components/site/prototype/engine-audio";
 import { Telemetry } from "@/components/site/prototype/telemetry-charts";
 import { EasterEggs } from "@/components/site/prototype/easter-eggs";
+import { StrategyBoard } from "@/components/site/prototype/timeline";
+import { CircuitMap } from "@/components/site/prototype/circuit-map";
+import { TimingTower } from "@/components/site/prototype/timing-tower";
 import { anton, serif, grotesk } from "@/lib/prototype-fonts";
 import { driver, seasonStats } from "@/lib/prototype-data";
 import { usePrefersReducedMotion, useMediaQuery } from "@/lib/hooks/use-media-query";
@@ -105,14 +108,14 @@ function LapRail() {
 
 function TeamToggle({ team, onChange }: { team: TeamId; onChange: (t: TeamId) => void }) {
   return (
-    <div className="pointer-events-auto pt-glass fixed right-5 bottom-28 z-30 flex items-center gap-1 rounded-full border p-1 sm:right-8 sm:bottom-32" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+    <div className="pointer-events-auto pt-glass fixed left-1/2 top-4 z-30 flex -translate-x-1/2 items-center gap-1.5 rounded-full border p-1.5 sm:top-6" style={{ borderColor: "rgba(255,255,255,0.14)" }}>
       {(["ferrari", "redbull"] as TeamId[]).map((t) => {
         const active = team === t;
         return (
           <button
             key={t}
             onClick={() => onChange(t)}
-            className="rounded-full px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.15em] transition-colors"
+            className="rounded-full px-6 py-2.5 font-mono text-sm font-bold uppercase tracking-[0.18em] transition-colors"
             style={{
               background: active ? "var(--pt-primary)" : "transparent",
               color: active ? "var(--pt-on-primary)" : "var(--pt-muted)",
@@ -131,7 +134,7 @@ export default function Home() {
   const reduced = usePrefersReducedMotion();
   const mobile = useMediaQuery("(max-width: 768px)");
   const [launched, setLaunched] = useState(false);
-  const [team, setTeam] = useState<TeamId>("ferrari");
+  const [team, setTeam] = useState<TeamId>("redbull");
   const speedRef = useRef(0);
   useSmoothScroll();
 
@@ -147,6 +150,14 @@ export default function Home() {
   };
 
   const palette = PALETTES[team];
+
+  const goTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const lenis = (window as unknown as { __lenis?: { scrollTo: (t: HTMLElement, o?: object) => void } }).__lenis;
+    if (lenis) lenis.scrollTo(el, { offset: -20 });
+    else el.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     let raf = 0;
@@ -174,12 +185,20 @@ export default function Home() {
 
   return (
     <main className={`pt-root ${grotesk.className}`} style={{ ...palette.vars, background: CARBON, color: WHITE } as React.CSSProperties}>
+      {/* Liquid-glass refraction filter (referenced by .pt-glass backdrop-filter) */}
+      <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
+        <filter id="glassRefract" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.006 0.011" numOctaves="2" seed="7" result="n" />
+          <feGaussianBlur in="n" stdDeviation="1.2" result="sn" />
+          <feDisplacementMap in="SourceGraphic" in2="sn" scale="9" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
       {!launched && <StartLights onDone={() => setLaunched(true)} />}
 
       <F1Scene speedRef={speedRef} reduced={reduced} colors={palette.three} mobile={mobile} />
       <CinematicOverlay />
       <TelemetryHud speedRef={speedRef} />
-      <LapRail />
+      <CircuitMap />
       <EngineAudio speedRef={speedRef} />
       <TeamToggle team={team} onChange={changeTeam} />
       <EasterEggs speedRef={speedRef} team={team} />
@@ -188,7 +207,7 @@ export default function Home() {
       <div className="pointer-events-none fixed inset-0 z-20">
         <div className="absolute left-5 top-5 flex items-center gap-3 sm:left-8 sm:top-8">
           <span className={`${anton.className} text-lg uppercase`} style={{ color: ROSSO }}>
-            SCUDERIA <span style={{ color: WHITE }}>·{driver.number}</span>
+            {palette.label} <span style={{ color: WHITE }}>·{driver.number}</span>
           </span>
           <span className="h-4 w-px bg-white/20" />
           <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/50">
@@ -215,25 +234,64 @@ export default function Home() {
           <p className="mt-8 max-w-xl text-lg leading-relaxed sm:text-2xl" style={{ color: "#d6d4ce" }}>
             {driver.tagline} <span className={`${serif.className} italic`}>Built from first principles.</span>
           </p>
-          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-xs uppercase tracking-[0.2em]" style={{ color: MUTED }}>
-            {seasonStats.slice(0, 4).map((s) => (
-              <span key={s.label}>
-                <span style={{ color: WHITE }}>{s.value}</span> · {s.sub}
-              </span>
-            ))}
+          {/* Credentials */}
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs uppercase tracking-[0.18em]" style={{ color: MUTED }}>
+            <span><span style={{ color: WHITE }}>CS @ UIUC</span> · grad May 2029</span>
+            <span><span style={{ color: WHITE }}>3.83</span> CGPA</span>
+            <span style={{ color: GIALLO }}>Dean&apos;s List · James Scholar</span>
           </div>
-          <div className="mt-14 font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: GIALLO }}>
+          {/* Primary CTAs */}
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => goTo("wins")}
+              className="inline-flex items-center gap-2 rounded-xl px-5 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+              style={{ background: ROSSO, color: "var(--pt-on-primary)" }}
+            >
+              View the work <ArrowRight className="h-4 w-4" />
+            </button>
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="pt-glass inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+              style={{ borderColor: "var(--pt-line)", color: WHITE }}
+            >
+              <FileDown className="h-4 w-4" /> Résumé
+            </a>
+            <div className="flex items-center gap-2">
+              {[
+                { Icon: Github, href: driver.github, label: "GitHub" },
+                { Icon: Linkedin, href: driver.linkedin, label: "LinkedIn" },
+                { Icon: Mail, href: `mailto:${driver.email}`, label: "Email" },
+              ].map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
+                  className="pt-glass flex h-11 w-11 items-center justify-center rounded-xl border transition-transform hover:-translate-y-0.5"
+                  style={{ borderColor: "var(--pt-line)", color: WHITE }}
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+          <div className="mt-12 font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: GIALLO }}>
             ↓ &nbsp;scroll to accelerate — telemetry is live
           </div>
         </div>
       </section>
 
-      <Driver />
+      {/* Recruiter-optimized: work → skills → data → experience → research → about → leadership → contact */}
+      <TimingTower />
       <Wins />
-      <Directives />
-      <Standings />
       <Setup />
-      <Telemetry colors={palette.three} />
+      <Telemetry />
+      <StrategyBoard />
+      <Directives />
+      <Driver />
       <PitWall />
       <Radio />
       <Podium />

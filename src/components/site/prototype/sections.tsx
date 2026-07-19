@@ -37,7 +37,7 @@ export function Shell({ id, children }: { id: string; children: ReactNode }) {
   return (
     <section
       id={id}
-      className="relative z-10 overflow-hidden px-5 py-24 pb-36 backdrop-blur-md sm:px-8 sm:py-32 md:px-16"
+      className="relative z-10 overflow-hidden px-5 py-24 pb-36 sm:px-8 sm:py-32 md:px-16"
       style={{ background: P.panel }}
     >
       {/* Racing line draws across the top as the section arrives. */}
@@ -681,7 +681,7 @@ export function Radio() {
 export function Podium() {
   return (
     <footer
-      className="relative z-10 px-5 py-16 backdrop-blur-md sm:px-8 md:px-16"
+      className="relative z-10 px-5 py-16 sm:px-8 md:px-16"
       style={{ background: P.carbon, borderTop: `2px solid ${P.rosso}` }}
     >
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">

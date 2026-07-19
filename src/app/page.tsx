@@ -21,6 +21,7 @@ import { StrategyBoard } from "@/components/site/prototype/timeline";
 import { CircuitMap } from "@/components/site/prototype/circuit-map";
 import { TimingTower } from "@/components/site/prototype/timing-tower";
 import { F1Loader } from "@/components/site/prototype/f1-loader";
+import { GridRun } from "@/components/site/prototype/grid-run";
 import { anton, serif, grotesk } from "@/lib/prototype-fonts";
 import { driver, seasonStats } from "@/lib/prototype-data";
 import { usePrefersReducedMotion, useMediaQuery } from "@/lib/hooks/use-media-query";
@@ -105,6 +106,7 @@ export default function Home() {
   const mobile = useMediaQuery("(max-width: 768px)");
   const [launched, setLaunched] = useState(false);
   const [team, setTeam] = useState<TeamId>("redbull");
+  const [racing, setRacing] = useState(false);
   const speedRef = useRef(0);
   useSmoothScroll();
 
@@ -169,6 +171,11 @@ export default function Home() {
       </svg>
       <AnimatePresence>
         {!launched && <F1Loader key="f1-loader" onDone={() => setLaunched(true)} />}
+      </AnimatePresence>
+
+      {/* F1 endless-runner minigame — launched from the hero Drive button */}
+      <AnimatePresence>
+        {racing && <GridRun key="grid-run" team={team} onExit={() => setRacing(false)} />}
       </AnimatePresence>
 
       {/* Mount the heavy 3D scene only after the loader — keeps the launch sequence
@@ -245,6 +252,14 @@ export default function Home() {
               style={{ background: ROSSO, color: "var(--pt-on-primary)" }}
             >
               View the work <ArrowRight className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setRacing(true)}
+              className="pt-glass group inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+              style={{ borderColor: GIALLO, color: WHITE }}
+            >
+              <span style={{ color: GIALLO }}>▶</span> Drive
+              <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] tracking-normal text-white/60 group-hover:text-white/90">GAME</span>
             </button>
             <a
               href={driver.resumeUrl}

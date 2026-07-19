@@ -115,7 +115,7 @@ export function EngineAudio({ speedRef }: { speedRef: SpeedRef }) {
   return (
     <button
       onClick={() => (on ? stop() : start())}
-      className="pt-glass pointer-events-auto fixed bottom-28 left-5 z-30 flex items-center gap-2 rounded-full border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors sm:bottom-32 sm:left-8"
+      className="pt-glass pointer-events-auto fixed bottom-28 left-5 z-30 hidden items-center gap-2 rounded-full border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors sm:flex sm:bottom-32 sm:left-8"
       style={{
         borderColor: on ? "var(--pt-primary)" : "rgba(245,243,238,0.2)",
         color: on ? "var(--pt-primary)" : "rgba(245,243,238,0.65)",

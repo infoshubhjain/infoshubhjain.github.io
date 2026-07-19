@@ -509,6 +509,12 @@
   to { transform: translateX(-50%); }
 }
 
+/* Scene crossfade-in after the loader */
+@keyframes ptFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes conic-rotate {
   to { --conic-angle: 360deg; transform: rotate(360deg); }
 }

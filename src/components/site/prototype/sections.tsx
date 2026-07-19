@@ -37,18 +37,18 @@ export function Shell({ id, children }: { id: string; children: ReactNode }) {
   return (
     <section
       id={id}
-      className="relative z-10 overflow-hidden px-5 py-24 backdrop-blur-md sm:px-8 sm:py-32 md:px-16"
-      style={{ background: P.panel, borderTop: `1px solid ${P.line}` }}
+      className="relative z-10 overflow-hidden px-5 py-24 pb-36 backdrop-blur-md sm:px-8 sm:py-32 md:px-16"
+      style={{ background: P.panel }}
     >
-      {/* Racing wipe — a rosso panel sweeps off as the section enters view. */}
+      {/* Racing line draws across the top as the section arrives. */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[2]"
-        initial={{ x: "0%" }}
-        whileInView={{ x: "101%" }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.75, ease: [0.85, 0, 0.15, 1] }}
-        style={{ background: P.rosso }}
+        className="pointer-events-none absolute inset-x-0 top-0 h-px origin-left"
+        style={{ background: `linear-gradient(90deg, ${P.rosso}, transparent)` }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true, margin: "-90px" }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
       />
       <div className="relative z-[1] mx-auto w-full max-w-6xl">{children}</div>
     </section>
@@ -75,10 +75,10 @@ export function SectorTag({ n, label, purple }: { n: string; label: string; purp
 function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 26 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-70px" }}
+      transition={{ duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
       {children}

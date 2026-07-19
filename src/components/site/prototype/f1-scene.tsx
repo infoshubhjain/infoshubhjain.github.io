@@ -233,17 +233,14 @@ function CameraDrift({ reduced }: { reduced: boolean }) {
     const t = state.clock.getElapsedTime();
     intro.current = Math.min(1, intro.current + delta / 2.4);
     const e = 1 - Math.pow(1 - intro.current, 3);
-    // Camera holds a stable elevated 3/4 frame; only the car tracks the cursor
-    // (CarRig). A gentle idle bob keeps the shot alive. As the hero scrolls away,
-    // the camera pulls back + rises so the car recedes cinematically (the scene
-    // then pauses once content covers it).
-    const scroll = reduced ? 0 : Math.min(1, (typeof window !== "undefined" ? window.scrollY / window.innerHeight : 0));
-    const es = scroll * scroll; // ease-in: holds, then accelerates away
+    // Camera holds a stable elevated 3/4 frame (the car turntables in CarRig).
+    // No scroll pull-back: the car stays framed so it reads as a blurred
+    // background behind the semi-transparent sections all the way down the page.
     const baseX = 5.2;
     const baseY = 2.3 + (reduced ? 0 : Math.sin(t * 0.6) * 0.05);
-    const tx = THREE.MathUtils.lerp(9.5, baseX, e) + es * 2.2;
-    const ty = THREE.MathUtils.lerp(5.5, baseY, e) + es * 3.2;
-    const tz = THREE.MathUtils.lerp(9.5, 6.5, e) + es * 5.5;
+    const tx = THREE.MathUtils.lerp(9.5, baseX, e);
+    const ty = THREE.MathUtils.lerp(5.5, baseY, e);
+    const tz = THREE.MathUtils.lerp(9.5, 6.5, e);
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, tx, delta * 2.4);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, ty, delta * 2.4);
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, tz, delta * 2.4);
@@ -258,13 +255,13 @@ export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: Speed
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    // The canvas is fixed full-screen, so an IntersectionObserver would always
-    // report "visible". Pause the render loop by scroll instead: once the hero is
-    // scrolled past, the opaque sections cover the canvas — stop rendering it.
-    const onScroll = () => setVisible(window.scrollY < window.innerHeight * 1.15);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    // The car shows through the semi-transparent sections as a background all the
+    // way down, so keep rendering while scrolling; only pause the loop when the
+    // tab is hidden (battery/CPU).
+    const onVis = () => setVisible(!document.hidden);
+    document.addEventListener("visibilitychange", onVis);
+    onVis();
+    return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
   const fog = useMemo(() => new THREE.Fog(colors.canvas, 13, 34), [colors.canvas]);

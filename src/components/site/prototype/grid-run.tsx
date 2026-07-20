@@ -84,6 +84,10 @@ function PlayerModel({ path }: { path: string }) {
   const model = useMemo(() => {
     const root = scene.clone(true);
     root.traverse((o) => { if ((o as THREE.Mesh).isMesh) o.castShadow = true; });
+    // Bake the facing rotation BEFORE measuring, so the centering accounts for it
+    // (rotating after centering shifts an off-origin model off-centre).
+    root.rotation.set(0, PLAYER_YAW, 0);
+    root.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(root);
     const size = new THREE.Vector3();
     const center = new THREE.Vector3();
@@ -94,7 +98,7 @@ function PlayerModel({ path }: { path: string }) {
     root.position.set(-center.x * scale, -box.min.y * scale + 0.02, -center.z * scale);
     return root;
   }, [scene]);
-  return <primitive object={model} rotation={[0, PLAYER_YAW, 0]} />;
+  return <primitive object={model} />;
 }
 
 /** A single-lane red/white striped barrier to dodge. */

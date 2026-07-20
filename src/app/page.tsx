@@ -246,58 +246,55 @@ export default function Home() {
             <span><span style={{ color: WHITE }}>3.83</span> CGPA</span>
             <span style={{ color: GIALLO }}>Dean&apos;s List · James Scholar</span>
           </div>
-          </div>{/* /left column */}
-          {/* CTAs — Résumé + Drive are the two focal actions; the rest is secondary. */}
-          <div className="flex flex-col items-stretch gap-3 lg:w-80 lg:shrink-0">
-            {/* Résumé — biggest, boldest */}
+          {/* Primary CTAs */}
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => goTo("wins")}
+              className="inline-flex items-center gap-2 rounded-xl px-5 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+              style={{ background: ROSSO, color: "var(--pt-on-primary)" }}
+            >
+              View the work <ArrowRight className="h-4 w-4" />
+            </button>
             <a
               href={driver.resumeUrl}
               target="_blank"
               rel="noreferrer"
-              className={`${anton.className} group flex items-center justify-between gap-3 rounded-2xl px-6 py-4 text-2xl uppercase tracking-wide shadow-lg transition-transform hover:-translate-y-0.5`}
-              style={{ background: ROSSO, color: "var(--pt-on-primary)" }}
+              className="pt-glass inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+              style={{ borderColor: "var(--pt-line)", color: WHITE }}
             >
-              <span className="flex items-center gap-3"><FileDown className="h-6 w-6" /> Résumé</span>
-              <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
+              <FileDown className="h-4 w-4" /> Résumé
             </a>
-            {/* Drive — same prominence, the game */}
+            <div className="flex items-center gap-2">
+              {[
+                { Icon: Github, href: driver.github, label: "GitHub" },
+                { Icon: Linkedin, href: driver.linkedin, label: "LinkedIn" },
+                { Icon: Mail, href: `mailto:${driver.email}`, label: "Email" },
+              ].map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
+                  className="pt-glass flex h-11 w-11 items-center justify-center rounded-xl border transition-transform hover:-translate-y-0.5"
+                  style={{ borderColor: "var(--pt-line)", color: WHITE }}
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+          </div>{/* /left column */}
+          {/* Drive — the one prominent standalone action */}
+          <div className="flex lg:w-72 lg:shrink-0">
             <button
               onClick={() => setRacing(true)}
-              className={`${anton.className} group flex items-center justify-between gap-3 rounded-2xl px-6 py-4 text-2xl uppercase tracking-wide shadow-lg transition-transform hover:-translate-y-0.5`}
+              className={`${anton.className} group flex w-full items-center justify-between gap-3 rounded-2xl px-6 py-5 text-2xl uppercase tracking-wide shadow-lg transition-transform hover:-translate-y-0.5`}
               style={{ background: GIALLO, color: "var(--pt-canvas)" }}
             >
               <span className="flex items-center gap-3"><span className="text-xl leading-none">▶</span> Drive</span>
               <span className="rounded-md bg-black/20 px-2 py-1 font-mono text-[10px] font-bold tracking-normal">GAME</span>
             </button>
-            {/* Secondary — less focus */}
-            <div className="mt-1 flex items-center justify-between gap-2">
-              <button
-                onClick={() => goTo("wins")}
-                className="pt-glass inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
-                style={{ borderColor: "var(--pt-line)", color: WHITE }}
-              >
-                View the work <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-              <div className="flex items-center gap-2">
-                {[
-                  { Icon: Github, href: driver.github, label: "GitHub" },
-                  { Icon: Linkedin, href: driver.linkedin, label: "LinkedIn" },
-                  { Icon: Mail, href: `mailto:${driver.email}`, label: "Email" },
-                ].map(({ Icon, href, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={label}
-                    className="pt-glass flex h-10 w-10 items-center justify-center rounded-xl border transition-transform hover:-translate-y-0.5"
-                    style={{ borderColor: "var(--pt-line)", color: WHITE }}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </a>
-                ))}
-              </div>
-            </div>
           </div>
           </div>{/* /hero two-column */}
           <div className="mt-12 font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: GIALLO }}>

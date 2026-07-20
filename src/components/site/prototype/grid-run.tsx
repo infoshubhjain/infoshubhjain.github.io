@@ -21,8 +21,9 @@ type Palette = (typeof PALETTES)[TeamId];
  */
 
 const DRACO_PATH = "/draco/";
-// Tuned so the car's nose points down-track (away from the chase cam).
-const PLAYER_YAW = 0;
+// Tuned so the car's nose points down-track (away from the chase cam) — we chase
+// the rear of the car, not its face.
+const PLAYER_YAW = Math.PI;
 const LANES = [-2.3, 0, 2.3];
 const MIN_SPEED = 24;
 const MAX_SPEED = 94;

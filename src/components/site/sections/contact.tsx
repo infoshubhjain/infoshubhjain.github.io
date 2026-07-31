@@ -147,7 +147,7 @@ export function Contact() {
               <a
                 href={profile.resumeUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card/40 px-6 py-4 text-sm font-semibold text-foreground backdrop-blur-md transition-all hover:border-primary/50"
                 data-cursor-label="PDF"
               >
@@ -168,7 +168,7 @@ export function Contact() {
               key={s.label}
               href={s.href}
               target={s.href.startsWith("http") ? "_blank" : undefined}
-              rel="noreferrer"
+              rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

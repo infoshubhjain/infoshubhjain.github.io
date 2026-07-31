@@ -30,3 +30,32 @@ Stage Summary:
 - All CV content represented: education, 7 projects, 7 experiences, 2 papers, 2 books, 1 patent, 12 leadership roles, 3 volunteer roles, 12 achievements, 10 skill categories with ~60 skills, 2 languages.
 - Tech stack delivered: Next.js 16, TypeScript, Tailwind 4, shadcn/ui, framer-motion, three.js + R3F + drei, lenis, lucide-react. (GSAP installed but Framer Motion covered all animation needs — kept available for future use.)
 - Files persisted: 17 new component files under `src/components/site/`, 1 data file under `src/lib/`, 2 hook files under `src/lib/hooks/`, custom 404 at `src/app/not-found.tsx`, updated `layout.tsx` + `globals.css` + `page.tsx`, favicon.svg at `public/favicon.svg`.
+
+---
+
+## Update 2 — F1 redesign + resume refresh (Jul 31, 2026)
+
+Task: Rebuilt the portfolio as an F1 race-weekend theme (static export to GitHub Pages) and refreshed all content from the full résumé.
+
+### Site structure
+- **`/` — F1 homepage** (`src/app/page.tsx`, `src/lib/prototype-data.ts`, `src/components/site/prototype/*`): loading screen, 3D pit-wall scene (Ferrari/RB18, frameloop gated to hero visibility), scroll-driven telemetry HUD, Driver bio → Career Standings (experience) → Race Wins (projects) → Car Setup (skills) → Pit Wall (leadership) → R&D Bay (research) → timing tower → telemetry charts → strategy board → team radio (contact) → podium footer.
+- **`/prototype` — classic page**: original premium dark theme, same content, same section order.
+- Recruiter-optimized order on both pages: bio/education → experience → projects → skills → leadership → research → contact. All entries reverse-chronological with month–year spans.
+- Deploy: `GH_PAGES=1 npx next build` → static `out/` → GitHub Pages (branch `gh-pages`); `source` branch holds the code. CI: `.github/workflows/deploy.yml`.
+
+### Content changes
+- **Experience** (F1 standings + classic): added HDF Group SWE (May–Aug 2026) and QuantHQ SWE intern (May–Aug 2026); every stint now has 3–4 bullet points (data: `Stint.points`); standings team names link out (HDF Group, QuantHQ, MLH).
+- **Projects**: added QuantHQ Org Site (Astro 5) win; reordered all wins strictly newest-first (2026 ×5 → 2025 ×4).
+- **Leadership**: added MLH × Transcend Commit Fellow (2.5% acceptance, founding cohort) and Diwali on the Quad (Management Head) to F1 pit wall + classic page; MLH added to strategy-board timeline and achievements.
+- **Rancho Labs / YBI**: removed YBI Foundation entirely (classic experience entry deleted); Rancho Labs entry now reads "Rancho Labs · IIT Delhi" with IHFC mention (F1 standings + classic achievement).
+- **Education**: all copy now says "University of Illinois Urbana-Champaign" with "a top-5 CS program in the U.S." added to the Driver bio (F1) and About mission (classic).
+
+### Performance
+- `TelemetryHud`: rAF loop (6 setState/frame) now runs only while scrolling + 1.2 s settle, instead of forever → biggest idle-CPU win.
+- `AmbientParticles`: animation loop pauses when the tab is hidden (`visibilitychange`).
+- (Already in place: 3D scene `frameloop` gated to hero visibility, dpr cap, reduced-motion handling.)
+
+### Verification
+- `npm run lint`: clean. `GH_PAGES=1 npx next build`: EXIT 0 (routes `/`, `/prototype`, `/robots.txt`, `/sitemap.xml`).
+- Local preview: `python3 -m http.server 3000 --directory out`; both pages 200 with 0 console errors.
+- Browser-audited both pages: section order, links, new entries, bullets, YBI absence all confirmed.

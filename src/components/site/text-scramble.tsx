@@ -49,7 +49,7 @@ export function TextScramble({
         return;
       }
 
-      const result = resolveOrder.map(({ char, resolveAt }, i) => {
+      const result = resolveOrder.map(({ char, resolveAt }) => {
         if (char === " ") return " ";
         if (frame >= resolveAt) return char;
         return CHARS[Math.floor(Math.random() * CHARS.length)];

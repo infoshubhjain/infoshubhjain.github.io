@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { X, Github, ExternalLink, FileText, Flag, Target, Wrench } from "lucide-react";
 import { anton } from "@/lib/prototype-fonts";
 import type { Win } from "@/lib/prototype-data";
@@ -18,17 +19,25 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
     setMounted(true);
   }, []);
 
+  // `onClose` is usually an inline arrow, so keeping it in the deps re-ran the
+  // scroll lock on every parent render — releasing and re-taking it mid-scroll.
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    if (win) {
-      window.addEventListener("keydown", onKey);
-      document.body.style.overflow = "hidden";
-    }
+    if (!win) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeRef.current();
+    window.addEventListener("keydown", onKey);
+    // body overflow alone doesn't stop Lenis — it drives window scroll itself.
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    lenis?.stop();
+    document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
+      lenis?.start();
       document.body.style.overflow = "";
     };
-  }, [win, onClose]);
+  }, [win]);
 
   const ui = (
     <AnimatePresence>
@@ -50,6 +59,16 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
             onClick={(e) => e.stopPropagation()}
           >
             <div className="pt-glass overflow-hidden rounded-2xl border" style={{ borderColor: "var(--pt-line)" }}>
+              {win.image && (
+                <div className="relative h-48 w-full sm:h-64">
+                  <Image src={win.image} alt={`${win.name} screenshot`} fill sizes="900px" className="object-cover object-top" priority />
+                  <div
+                    aria-hidden
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(180deg, transparent 30%, var(--pt-panel))" }}
+                  />
+                </div>
+              )}
               {/* Header */}
               <div className="relative border-b p-6 sm:p-8" style={{ borderColor: "var(--pt-line)" }}>
                 <div className="absolute inset-x-0 top-0 h-1" style={{ background: "var(--pt-primary)" }} />
@@ -85,7 +104,7 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
                           key={l.href}
                           href={l.href}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 font-mono text-xs font-semibold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
                           style={
                             primary

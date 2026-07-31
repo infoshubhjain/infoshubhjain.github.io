@@ -422,9 +422,11 @@
     animation: shimmer-pan 2.2s linear infinite;
   }
 
-  /* Prototype liquid glass — Apple visionOS-style: refractive backdrop +
-     light-catching specular edges. Refraction (SVG displacement) is applied on
-     capable desktop browsers; everything degrades to rich frosted glass. */
+  /* Prototype liquid glass — frosted backdrop + light-catching specular edges.
+     ponytail: the SVG displacement refraction (url(#glassRefract)) was dropped —
+     ~40 glass surfaces each running feTurbulence + feDisplacementMap over their
+     backdrop was the page's biggest paint cost, for a difference you can't see
+     behind 16px of blur. Re-add on a single hero surface if the look is missed. */
   .pt-glass {
     background: var(--pt-glass, rgba(20, 20, 22, 0.4));
     backdrop-filter: blur(16px) saturate(195%) brightness(1.06);
@@ -436,15 +438,12 @@
       inset 0 -2px 3px -1px rgba(0, 0, 0, 0.45),
       0 24px 60px -28px rgba(0, 0, 0, 0.7);
   }
-  @media (min-width: 769px) {
-    .pt-glass {
-      backdrop-filter: url(#glassRefract) blur(13px) saturate(195%) brightness(1.06);
-    }
-  }
 
-  /* Smooth team-mode color morph on the prototype only */
-  .pt-root,
-  .pt-root *:not(canvas) {
+  /* Smooth team-mode color morph. Only while a livery swap is in flight — a
+     permanent `.pt-root *` transition makes every hover and scroll-driven style
+     change on the page animate, and forces a match against every node. */
+  .pt-morphing,
+  .pt-morphing *:not(canvas) {
     transition:
       background-color 0.45s ease,
       color 0.45s ease,

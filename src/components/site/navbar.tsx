@@ -209,7 +209,7 @@ export function Navbar({
                 <a
                   href={profile.github}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="block rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground"
                 >
                   GitHub ↗
@@ -217,7 +217,7 @@ export function Navbar({
                 <a
                   href={profile.linkedin}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="block rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground"
                 >
                   LinkedIn ↗

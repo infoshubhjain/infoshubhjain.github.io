@@ -1,10 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
-import { useRef, Suspense, lazy, useState, useEffect } from "react";
+import { useRef, Suspense, lazy, useEffect } from "react";
 import { ArrowDownRight, FileDown, Github, Linkedin, Terminal } from "lucide-react";
 import { heroCopy, profile } from "@/lib/portfolio-data";
-import { AnimatedText } from "../animated-text";
 import { TextScramble } from "../text-scramble";
 import { Magnetic } from "../magnetic";
 import { MorphingBlob } from "../morphing-blob";
@@ -27,7 +26,6 @@ export function Hero() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
 
@@ -255,7 +253,7 @@ export function Hero() {
                 <a
                   href={profile.resumeUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/40 px-5 py-3 font-mono text-sm font-semibold text-foreground backdrop-blur-md transition-all hover:border-accent/50 hover:bg-card/60"
                   data-cursor-label="PDF"
                 >
@@ -269,7 +267,7 @@ export function Hero() {
                   <a
                     href={profile.github}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     aria-label="GitHub"
                     className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card/40 text-muted-foreground transition-all hover:border-primary/40 hover:text-primary"
                   >
@@ -280,7 +278,7 @@ export function Hero() {
                   <a
                     href={profile.linkedin}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     aria-label="LinkedIn"
                     className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card/40 text-muted-foreground transition-all hover:border-primary/40 hover:text-primary"
                   >

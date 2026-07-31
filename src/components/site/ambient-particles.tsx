@@ -40,9 +40,22 @@ export function AmbientParticles({ count = 50 }: { count?: number }) {
     }));
 
     let raf = 0;
+    let running = true;
     const color = "oklch(0.78 0.18 165)";
 
+    const onVisibility = () => {
+      if (document.hidden && running) {
+        running = false;
+        cancelAnimationFrame(raf);
+      } else if (!document.hidden && !running) {
+        running = true;
+        raf = requestAnimationFrame(draw);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
     const draw = () => {
+      if (!running) return;
       ctx.clearRect(0, 0, w(), h());
 
       for (const p of particles) {
@@ -68,7 +81,9 @@ export function AmbientParticles({ count = 50 }: { count?: number }) {
     raf = requestAnimationFrame(draw);
 
     return () => {
+      running = false;
       cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("resize", resize);
     };
   }, [count]);

@@ -5,7 +5,7 @@ import { ContactShadows, MeshReflectorMaterial, useGLTF } from "@react-three/dre
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
-import { PALETTES, type Palette } from "@/lib/prototype-theme";
+import { PALETTES, savedTeam, type Palette } from "@/lib/prototype-theme";
 
 /**
  * "Lights Out" — the active team's real F1 car (Ferrari F1-75 / Red Bull RB18,
@@ -15,12 +15,20 @@ import { PALETTES, type Palette } from "@/lib/prototype-theme";
  */
 
 const DRACO_PATH = "/draco/";
-// Preload + Draco-decode both liveries at module load (during the start-lights
-// loader) so the real car — not the procedural fallback — drives in on launch.
-Object.values(PALETTES).forEach((p) => useGLTF.preload(p.three.model, DRACO_PATH));
+// Preload + Draco-decode at module load (during the start-lights loader) so the
+// real car — not the procedural fallback — drives in on launch. Only the livery
+// we're about to show: fetching both cost every visitor ~1.2 MB for a model most
+// never see. The other decodes on demand at the team toggle, behind the
+// procedural fallback.
+if (typeof window !== "undefined") useGLTF.preload(PALETTES[savedTeam()].three.model, DRACO_PATH);
 // Fixed flattering three-quarter — the reduced-motion resting angle (otherwise
 // the car turntables continuously, accelerating with scroll; see CarRig).
 const YAW_CENTER = -0.9;
+
+/** Cap the frame delta at ~2 frames. Whenever the loop is paused — hidden tab,
+ *  or scrolled below the hero — the next delta is the whole gap, which sends
+ *  every delta-scaled lerp and offset below flying. */
+const step = (delta: number) => Math.min(delta, 1 / 30);
 
 type Colors = Palette["three"];
 type SpeedRef = React.MutableRefObject<number>;
@@ -28,7 +36,7 @@ type SpeedRef = React.MutableRefObject<number>;
 function Wheel({ position, rim, tyre, speedRef }: { position: [number, number, number]; rim: string; tyre: string; speedRef: SpeedRef }) {
   const spin = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
-    if (spin.current) spin.current.rotation.y += (0.5 + speedRef.current * 22) * delta;
+    if (spin.current) spin.current.rotation.y += (0.5 + speedRef.current * 22) * step(delta);
   });
   return (
     <group position={position} rotation={[Math.PI / 2, 0, 0]}>
@@ -149,9 +157,10 @@ function CarRig({ c, speedRef, modelPath, reduced }: { c: Colors; speedRef: Spee
   const entrance = useRef(0);
   useFrame((state, delta) => {
     if (!g.current) return;
+    const d = step(delta);
     const t = state.clock.getElapsedTime();
     // Drive-in: after "lights out" the car sweeps in from off-screen right.
-    entrance.current = Math.min(1, entrance.current + delta / 1.4);
+    entrance.current = Math.min(1, entrance.current + d / 1.4);
     const e = reduced ? 1 : 1 - Math.pow(1 - entrance.current, 3); // easeOutCubic
     g.current.position.x = (1 - e) * 15;
     // Continuous turntable whose speed tracks scroll (scroll = throttle): a slow
@@ -160,7 +169,7 @@ function CarRig({ c, speedRef, modelPath, reduced }: { c: Colors; speedRef: Spee
     if (reduced) {
       g.current.rotation.y = YAW_CENTER;
     } else {
-      g.current.rotation.y += delta * (0.35 + speedRef.current * 6);
+      g.current.rotation.y += d * (0.35 + speedRef.current * 6);
     }
     g.current.position.y = reduced ? 0 : Math.sin(t * 2) * 0.01;
   });
@@ -184,7 +193,7 @@ function Grid({ c, speedRef, reduced, mobile }: { c: Colors; speedRef: SpeedRef;
   useFrame((_, delta) => {
     if (!dashes.current) return;
     // No idle scroll under reduced-motion; only the user's own scroll drives it.
-    const move = ((reduced ? 0 : 2) + speedRef.current * 60) * delta;
+    const move = ((reduced ? 0 : 2) + speedRef.current * 60) * step(delta);
     dashes.current.children.forEach((ch) => {
       ch.position.x += move;
       if (ch.position.x > 12) ch.position.x -= SPAN;
@@ -195,8 +204,8 @@ function Grid({ c, speedRef, reduced, mobile }: { c: Colors; speedRef: SpeedRef;
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[80, 40]} />
         <MeshReflectorMaterial
-          resolution={mobile ? 512 : 1024}
-          blur={mobile ? [200, 60] : [400, 120]}
+          resolution={mobile ? 512 : 768}
+          blur={mobile ? [200, 60] : [300, 90]}
           mixBlur={1}
           mixStrength={18}
           depthScale={1.1}
@@ -230,8 +239,9 @@ function CameraDrift({ reduced }: { reduced: boolean }) {
   const { camera } = useThree();
   const intro = useRef(0);
   useFrame((state, delta) => {
+    const d = step(delta);
     const t = state.clock.getElapsedTime();
-    intro.current = Math.min(1, intro.current + delta / 2.4);
+    intro.current = Math.min(1, intro.current + d / 2.4);
     const e = 1 - Math.pow(1 - intro.current, 3);
     // Camera holds a stable elevated 3/4 frame (the car turntables in CarRig).
     // No scroll pull-back: the car stays framed so it reads as a blurred
@@ -241,9 +251,9 @@ function CameraDrift({ reduced }: { reduced: boolean }) {
     const tx = THREE.MathUtils.lerp(9.5, baseX, e);
     const ty = THREE.MathUtils.lerp(5.5, baseY, e);
     const tz = THREE.MathUtils.lerp(9.5, 6.5, e);
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, tx, delta * 2.4);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, ty, delta * 2.4);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, tz, delta * 2.4);
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, tx, d * 2.4);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, ty, d * 2.4);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, tz, d * 2.4);
     camera.lookAt(0, 0.7, 0);
   });
   return null;
@@ -252,16 +262,17 @@ function CameraDrift({ reduced }: { reduced: boolean }) {
 
 export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: SpeedRef; reduced: boolean; colors: Colors; mobile: boolean }) {
   const wrapper = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(true);
+  // The car turntables behind the whole page, not just the hero — freezing it
+  // below the fold reads as a bug, so the loop runs the entire way down. Only a
+  // hidden tab pauses it, which nobody can see anyway. (Costs a reflector FBO +
+  // bloom pass per frame all the way down; that's the deliberate trade.)
+  const [live, setLive] = useState(true);
 
   useEffect(() => {
-    // The car shows through the semi-transparent sections as a background all the
-    // way down, so keep rendering while scrolling; only pause the loop when the
-    // tab is hidden (battery/CPU).
-    const onVis = () => setVisible(!document.hidden);
-    document.addEventListener("visibilitychange", onVis);
-    onVis();
-    return () => document.removeEventListener("visibilitychange", onVis);
+    const update = () => setLive(!document.hidden);
+    document.addEventListener("visibilitychange", update);
+    update();
+    return () => document.removeEventListener("visibilitychange", update);
   }, []);
 
   const fog = useMemo(() => new THREE.Fog(colors.canvas, 13, 34), [colors.canvas]);
@@ -272,7 +283,7 @@ export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: Speed
         shadows={!mobile}
         camera={{ position: [9.5, 5.5, 9.5], fov: 40 }}
         dpr={mobile ? [1, 1.3] : [1, 1.7]}
-        frameloop={visible ? "always" : "never"}
+        frameloop={live ? "always" : "demand"}
         gl={{ antialias: !mobile }}
       >
         <color attach="background" args={[colors.canvas]} />
@@ -284,7 +295,7 @@ export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: Speed
           position={[6, 10, 4]}
           intensity={2.8}
           color="#fff3ea"
-          shadow-mapSize={[2048, 2048]}
+          shadow-mapSize={[1024, 1024]}
           shadow-bias={-0.0002}
         />
         <directionalLight position={[-8, 3, -6]} intensity={2} color={colors.edge} />

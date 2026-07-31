@@ -32,7 +32,7 @@ export const heroCopy = {
   description:
     "CS @ UIUC. I design multi-agent learning architectures, train transformers from scratch, ship full-stack products to production, and lead research that reaches tens of thousands of readers. Equal parts engineer, researcher, and builder.",
   stats: [
-    { label: "CGPA", value: "3.81", suffix: "/4.0" },
+    { label: "CGPA", value: "3.83", suffix: "/4.0" },
     { label: "Research papers", value: "2", suffix: " published" },
     { label: "Books authored", value: "2", suffix: " ISBN" },
     { label: "Volunteers led", value: "200", suffix: "+" },
@@ -198,6 +198,31 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: "quanthq-site",
+    title: "QuantHQ — Organization Site",
+    oneLiner:
+      "Editorial Astro 5 static site with liquid-glass nav, canvas visualizations, and zero framework JS.",
+    description:
+      "The full public site for QuantHQ built as a static Astro 5 SSG — homepage, About, Research archive, Blog, Community, Contact — deployed to a custom domain via a GitHub Pages CI pipeline.",
+    problem:
+      "A research organization needs a public face that feels editorial and hand-crafted, not templated — without the weight of a client-side JS framework.",
+    solution:
+      "Built a ~2,900-line standalone homepage with an editorial design system (tri-voice typography, liquid-glass navigation, terminal chrome, gold accent via CSS custom properties). Interactive canvas visualizations — rotating globe, draggable force-directed graph, dashboard, ⌘K palette — in vanilla <script> tags.",
+    impact: [
+      "~2,900-line standalone homepage with tri-voice typography and liquid-glass navigation",
+      "Zero JS framework dependencies across all interactive visuals",
+      "Type-safe MDX content collections via Astro 5 glob() loader with Zod schemas",
+      "Full contrast audit, light/dark parity, prefers-reduced-motion support",
+    ],
+    timeline: "2026",
+    tags: ["Full Stack", "Design", "Static Site"],
+    tech: ["Astro 5", "Tailwind CSS 4", "MDX", "Canvas", "Zod", "GitHub Pages"],
+    demo: "https://quanthq.in",
+    category: "Full Stack",
+    year: 2026,
+    featured: false,
+  },
+  {
     id: "bert-compliance",
     title: "BERT Ad Compliance Classifier",
     oneLiner:
@@ -350,6 +375,52 @@ export const projects: Project[] = [
 
 export const experience = [
   {
+    role: "Software Engineer — HDF5 AI Sustainability Pipeline",
+    org: "The HDF Group",
+    period: "May 2026 – Aug 2026",
+    location: "Remote",
+    type: "Engineering",
+    summary:
+      "Built the LLM refactoring engine and dual-model consensus gate that verifies AI-generated diffs against the 25-year-old HDF5 C library.",
+    points: [
+      "Built the primary LLM refactoring engine (llm/primary.py, 457 LOC) generating git-format-patch-validated refactoring diffs with invariants enforcing no-new-API/no-new-export/no-new-file; prompt caching cut repeat-call cost ~80%.",
+      "Designed the multi-model consensus gate: Claude Sonnet and GPT-4o independently review every diff (both_approve / both_reject / disagree), with split verdicts routed to human review via a disagreements ledger.",
+      "Parallelized the dual-LLM gate with ThreadPoolExecutor, halving per-diff wall time; added a zero-API-cost faithfulness pre-check catching hallucinated RAG citations in ~1 ms.",
+      "Wrote an in-house cognitive-complexity calculator for C after finding upstream Lizard support missing (issue #432), plus Maintainability Index derived from existing token data.",
+      "Authored ~280 unit and mocked-E2E tests across the pipeline (14-person team repo, 809 total), contributing 80 commits and ~22K lines.",
+    ],
+    tech: ["Python", "Claude / GPT-4o APIs", "tree-sitter", "ChromaDB", "Lizard", "pytest"],
+    metrics: [
+      { value: "22K", label: "lines added" },
+      { value: "809", label: "repo tests" },
+      { value: "~80%", label: "LLM cost cut" },
+      { value: "~1ms", label: "citation pre-check" },
+    ],
+  },
+  {
+    role: "Software Engineering Intern — Alpha Engine",
+    org: "QuantHQ",
+    period: "May 2026 – Aug 2026",
+    location: "Remote",
+    type: "Engineering",
+    summary:
+      "Solo-built a deterministic multi-asset market research engine — 22 analyzers across 25+ data sources — and published its null backtest result instead of shipping an unvalidated claim.",
+    points: [
+      "Built a deterministic research engine spanning crypto, US equities, Indian equities, Indian F&O, and forex — 22 independent analyzers synthesized into directional signals with calibrated confidence and explicit invalidation prices.",
+      "Integrated 25+ market data sources (Binance, Yahoo, CoinGecko, Glassnode, FRED, OANDA, Dhan, AngelOne, NSE, RBI, Finnhub) behind a unified ingestion layer with caching, source-health tracking, and automatic failover.",
+      "Backtested 6,788 signals across 7 assets and 5 years via a no-lookahead replay of the live pipeline — measured +0.0% edge over direction-matched base rates and published the null result in FINDINGS.md.",
+      "Documented two measurement errors masquerading as alpha (including a +10% spurious edge from survivorship conditioning) as a reproducible methodology writeup.",
+      "Maintained 1,009 tests across 57 suites; CLI, HTTP API, and MCP server interfaces; Docker packaging; daily signal collection via GitHub Actions",
+    ],
+    tech: ["Python 3.10+", "FastAPI", "MCP", "Docker", "GitHub Actions"],
+    metrics: [
+      { value: "33K", label: "LOC, solo" },
+      { value: "22", label: "analyzers" },
+      { value: "25+", label: "data sources" },
+      { value: "1,009", label: "tests" },
+    ],
+  },
+  {
     role: "Lead Software Engineer — Mnemostack",
     org: "Switchblack Labs",
     period: "Jun 2026 – Aug 2026",
@@ -400,7 +471,7 @@ export const experience = [
     org: "Llama Naturals × REVAMP UIUC",
     period: "Jan 2025 – May 2026",
     location: "Urbana-Champaign, IL",
-    type: "Research",
+    type: "Engineering",
     summary:
       "Owned the data layer of a DistilBERT-based NLP system that classifies FDA/FTC advertising compliance violations across 15 regulatory categories.",
     points: [
@@ -524,23 +595,6 @@ export const experience = [
     ],
   },
   {
-    role: "AI & ML Intern",
-    org: "YBI Foundation",
-    period: "2024",
-    location: "Remote",
-    type: "Internship",
-    summary:
-      "Intensive one-month practical AI/ML program covering hands-on model building and deployment.",
-    points: [
-      "Completed an intensive one-month practical AI/ML program with hands-on projects.",
-      "Applied machine learning techniques to real-world datasets and problems.",
-    ],
-    tech: ["Python", "Machine Learning"],
-    metrics: [
-      { value: "1", label: "month intensive" },
-    ],
-  },
-  {
     role: "Freelance Web Developer",
     org: "Independent",
     period: "May 2023 – May 2025",
@@ -562,97 +616,102 @@ export const experience = [
 
 export const research = [
   {
-    title: "A Comparative Assessment of Advanced Conversational Agents: ChatGPT, Gemini, Perplexity, and Claude",
-    venue: "International Journal of Emerging Technology and Advanced Engineering (IJETAE)",
-    date: "June 2024",
-    type: "Journal Article",
-    topics: ["LLMs", "Evaluation", "Conversational AI"],
-    abstract:
-      "A comprehensive comparative analysis evaluating factual accuracy, relevance, completeness, coherence, creativity, and bias across four leading conversational AI models using a mixed-methods approach. Revealed significant performance variations: ChatGPT excels in creative text generation, Gemini demonstrates superior factual accuracy, while Perplexity and Claude show varying interpretability and bias levels.",
-    citation:
-      "Jain, S. (2024). A Comparative Assessment of Advanced Conversational Agents: ChatGPT, Gemini, Perplexity, and Claude. International Journal of Emerging Technology and Advanced Engineering.",
-    link: undefined as string | undefined,
+    title: "IoT & Precision Agriculture System",
+    venue: "Granted Patent",
+    year: "2024",
+    type: "Patent",
+    description: "Real-time soil / crop / water monitoring with automated irrigation and predictive analytics for sustainable farming in India.",
   },
   {
-    title:
-      "Investigation of the Performance of ChatGPT in Answering Common Sense-Based Questionnaires",
-    venue: "International Journal of Emerging Technology and Advanced Engineering (IJETAE)",
-    date: "September 2023",
-    type: "Journal Article",
-    topics: ["Common-sense Reasoning", "LLMs", "Evaluation"],
-    abstract:
-      "Developed a comprehensive questionnaire evaluating ChatGPT's common-sense reasoning abilities across diverse domains, identifying high error rates and inconsistencies in fundamental factual knowledge. Most downloaded high school-authored research paper in journal history; awarded Best Junior Author of the Year 2023 (USD 1,000).",
-    citation:
-      "Jain, S. (2023). Investigation of the Performance of ChatGPT in Answering Common Sense-Based Questionnaires. International Journal of Emerging Technology and Advanced Engineering.",
-    link: undefined as string | undefined,
+    title: "A Comparative Assessment of Advanced Conversational Agents",
+    venue: "IJETAE",
+    year: "2024",
+    type: "Paper",
+    description: "Mixed-methods evaluation of ChatGPT, Gemini, Perplexity & Claude across accuracy, coherence, creativity and bias.",
   },
-];
-
-export const books = [
   {
-    title: "Beyond the Black Box: Unlocking the Secrets of Explainable AI",
-    isbn: "B0F38TX4ZR",
-    date: "May 2025",
-    type: "Authored Book",
-    topics: ["Explainable AI", "Interpretability", "Ethics"],
-    abstract:
-      "Investigates the black-box problem in AI systems, presenting comprehensive methods including post-hoc interpretability, counterfactual reasoning, rule-based models, and surrogate modeling techniques. Applies Explainable AI techniques to real-world domains including healthcare diagnostics, financial risk assessment, and autonomous vehicle systems, while highlighting ethical, regulatory, and fairness considerations in AI deployment.",
-    citation:
-      "Jain, S. (2025). Beyond the Black Box: Unlocking the Secrets of Explainable AI. ISBN B0F38TX4ZR.",
-    link: undefined as string | undefined,
+    title: "Performance of ChatGPT on Common-Sense Questionnaires",
+    venue: "IJETAE",
+    year: "2023",
+    type: "Paper",
+    description: "Best Junior Author of the Year ($1,000) · most-downloaded high-school-authored paper in journal history.",
   },
   {
     title: "IoT in Agriculture: Revolutionizing Indian Farming",
-    isbn: "978-9394351950",
-    date: "November 2024",
-    type: "Authored Book",
-    topics: ["IoT", "Agriculture", "Sustainability"],
-    abstract:
-      "Explores IoT applications in Indian agriculture, addressing challenges of climate change, water scarcity, soil degradation, and crop productivity through comprehensive research and practical frameworks. Developed and documented practical frameworks for smart farming including sensor deployment, crop monitoring, predictive analytics, and automated alerts. Distributed 500+ copies to universities across India and recognized by the Governor of Madhya Pradesh for significant contribution to agricultural innovation.",
-    citation:
-      "Jain, S. (2024). IoT in Agriculture: Revolutionizing Indian Farming. ISBN 978-9394351950.",
-    link: undefined as string | undefined,
+    venue: "ISBN 978-9394351950",
+    year: "2024",
+    type: "Book",
+    description: "500+ copies distributed to universities; recognized by the Governor of Madhya Pradesh for agricultural innovation.",
   },
-];
-
-export const patents = [
   {
-    title: "IoT-Based Precision Agriculture System",
-    id: "Patent — IoT & Agriculture",
-    date: "June 2024",
-    abstract:
-      "A comprehensive IoT-based precision agriculture system enabling real-time monitoring of soil, crop, water, and environmental parameters to improve efficiency and reduce resource waste. Integrates sensor networks, automated irrigation control, and predictive analytics for optimized yield, water usage, and crop health management. Developed scalable frameworks contributing to sustainable farming and smart agriculture initiatives in India.",
+    title: "Beyond the Black Box: Unlocking Explainable AI",
+    venue: "ISBN B0F38TX4ZR",
+    year: "2025",
+    type: "Book",
+    description: "Post-hoc interpretability, counterfactuals & surrogate models applied to healthcare, finance and autonomous systems.",
+  },
+  {
+    title: "Junior Editor-in-Chief — MetroVaartha",
+    venue: "National Newspaper",
+    year: "2022-2023",
+    type: "Editorial",
+    description: "AI column reached 50k+ readers; led the technology section, managed junior editors and contributors.",
+  },
+  {
+    title: "Editor & Book Assistant",
+    venue: "Freelance",
+    year: "2023-2025",
+    type: "Editorial",
+    description: "Assisted in 10+ book projects; edited and proofread 300+ academic essays spanning technical, scientific, and academic topics.",
   },
 ];
 
 export const leadership = [
   {
-    role: "CS Peer Mentor",
-    org: "Siebel Center for Computer Science, UIUC",
-    period: "Jan 2026 – Present",
-    category: "Mentoring",
+    role: "Founder & President — Project Uthaan",
+    org: "Independent NGO",
+    period: "Dec 2022 – Dec 2025",
+    category: "Founder",
     summary:
-      "Delivered 80+ one-on-one academic support sessions across CS 124, 128, 173, and 225.",
+      "Built 8 classrooms, installed 100+ computers, educated 2,200+ across digital literacy and vocational programs.",
     points: [
-      "Adapted explanations in real time based on each student's specific point of confusion rather than delivering scripted walkthroughs.",
-      "Advised 80+ students on navigating the UIUC CS ecosystem: RSO discovery, internship sourcing, research access, course sequencing.",
-      "Identified recurring patterns of confusion and built clearer explanation frameworks for high-friction topics.",
+      "Raised $24,000+ in funding through grant proposals, corporate partnerships, and social outreach.",
+      "Directed 200+ volunteers across 6 cities with regional leaders and uniform program delivery.",
+      "Oversaw construction of 8 classrooms and installation of 100+ computers.",
+      "Designed programs benefiting 700+ women, 600+ children, and 300+ senior citizens.",
+      "Partnered with Techno Global University to expand educational access for underserved communities.",
     ],
-    impact: { value: "80+", label: "students mentored" },
+    impact: { value: "200+ volunteers · 6 cities · $24K", label: "impact" },
   },
   {
-    role: "CS 124 Assistant Tutor",
-    org: "University of Illinois Urbana-Champaign",
-    period: "Jan 2026 – Present",
-    category: "Teaching",
+    role: "Founder & President — AI and STEM Club",
+    org: "Independent",
+    period: "Mar 2023 – Mar 2025",
+    category: "Founder",
     summary:
-      "Delivered targeted tutoring on Kotlin, OOP, type systems, control flow, and data structure fundamentals.",
+      "Established the city's first AI & STEM lab and recording studio; 'Best Club Exhibition' among 50+ clubs.",
     points: [
-      "Supported students through homework problem sets and machine problems end-to-end — from problem decomposition to bug tracing.",
-      "Built a pattern-recognition approach identifying the 3-4 conceptual misunderstandings that cause most student errors.",
-      "Framed sessions around guided questioning rather than direct answers, pushing students to reason independently.",
+      "Established the city's first AI & STEM lab and professional recording studio with Raspberry Pi, Arduino, AI platforms, and audio production tools.",
+      "Built and led the school's largest student club (80+ members) with mentorship programs and project pipelines.",
+      "Developed an AI-powered chatbot for school operations, winning Best Club Exhibition among 50+ clubs.",
+      "Secured $7,000+ annual funding from sponsors and school grants.",
     ],
-    impact: { value: "CS 124", label: "course supported" },
+    impact: { value: "80+ members · $7K raised", label: "impact" },
+  },
+  {
+    role: "Secretary General & Committee Chair — MUN",
+    org: "Model United Nations",
+    period: "Feb 2022 – Nov 2024",
+    category: "Leadership",
+    summary:
+      "Chaired 8+ committees, ran conferences of 700+ delegates, trained junior secretariats.",
+    points: [
+      "Chaired 8+ committees, enforcing parliamentary procedure and managing debate flow.",
+      "Served as Secretary General for 2 large-scale MUNs with 700+ delegates.",
+      "Trained junior chairs and secretariat in minute-taking, roll calls, motions, and conflict resolution.",
+      "Participated in 35+ MUNs, winning 17 Best Delegate awards.",
+    ],
+    impact: { value: "35+ MUNs · 17 Best Delegate", label: "impact" },
   },
   {
     role: "Panels Head — UI-CON",
@@ -660,14 +719,74 @@ export const leadership = [
     period: "Oct 2025 – Feb 2026",
     category: "Event Management",
     summary:
-      "Led panel programming for a large-scale university comic convention with 2,000+ attendees.",
+      "Ran 20+ panels and 40+ guests across 8 event areas at a multi-day university convention.",
     points: [
       "Managed 60+ volunteers across panel operations, registration, crowd management, and guest coordination.",
       "Oversaw 20+ panels, workshops, and Q&A sessions with 40+ speakers, artists, and industry guests.",
       "Directed volunteer shift planning covering 250+ total volunteer hours.",
       "Handled live troubleshooting across 6+ simultaneous panels under tight time constraints.",
     ],
-    impact: { value: "2,000+", label: "attendees" },
+    impact: { value: "2,000+ attendees · 60+ volunteers", label: "impact" },
+  },
+  {
+    role: "Head of Operations — SBI Sustainability Drive",
+    org: "SBI × BHEL × NGOs",
+    period: "Jun 2023 – Jul 2023",
+    category: "Event Management",
+    summary:
+      "Led an 80-member team with SBI, BHEL and NGOs across 6 acres of reforestation.",
+    points: [
+      "Led and coordinated an 80-member team, liaising with SBI, BHEL, and local NGOs to execute a large-scale environmental initiative.",
+      "Raised $10,000+ and oversaw the plantation of 18,000+ trees (including 100+ native species) across 6 acres.",
+      "Managed media coverage, press releases, and community engagement, raising awareness and building partnerships for environmental sustainability.",
+    ],
+    impact: { value: "18,000+ trees · $10K", label: "impact" },
+  },
+  {
+    role: "Management Head — Diwali on the Quad",
+    org: "Indian Graduate Student Association, UIUC",
+    period: "October 2025",
+    category: "Event Management",
+    summary:
+      "Directed a 4-hour campus festival — 50+ tracked tasks, 10+ cultural performances, vendor and crowd-flow coordination.",
+    points: [
+      "Managed a 30+ member volunteer team across logistics, event setup, guest coordination, and on-site operations for a 4+ hour celebration.",
+      "Designed a centralized scheduling and task-management system overseeing 50+ operational tasks and timelines.",
+      "Oversaw end-to-end logistics for 10+ cultural performances, vendor communication, and 80+ volunteer hours.",
+    ],
+    impact: { value: "1,000+ attendees · 30+ volunteers", label: "impact" },
+  },
+  {
+    role: "CS Peer Mentor · CS 124 Tutor",
+    org: "UIUC Siebel",
+    period: "Jan 2026 – Present",
+    category: "Mentoring",
+    summary:
+      "One-on-one support across CS 124/128/173/225 — meeting each student at their exact point of confusion.",
+    points: [
+      "Adapted explanations in real time based on each student's specific point of confusion rather than delivering scripted walkthroughs.",
+      "Advised 80+ students on navigating the UIUC CS ecosystem: RSO discovery, internship sourcing, research access, course sequencing.",
+      "Identified recurring patterns of confusion and built clearer explanation frameworks for high-friction topics.",
+      "Supported students through homework problem sets and machine problems end-to-end — from problem decomposition to bug tracing.",
+      "Built a pattern-recognition approach identifying the 3-4 conceptual misunderstandings that cause most student errors.",
+      "Framed sessions around guided questioning rather than direct answers, pushing students to reason independently.",
+    ],
+    impact: { value: "80+ sessions", label: "impact" },
+  },
+  {
+    role: "Commit Fellow — Founding Cohort",
+    org: "MLH × Transcend Network",
+    period: "Jun 2026 – Jul 2026",
+    category: "Fellowship",
+    summary:
+      "Selected at a 2.5% acceptance rate for the inaugural founder-track cohort (30 fellows from Stanford, MIT, and the Ivy League).",
+    points: [
+      "Executed 24 lean experiments and 10 cold-outreach user interviews, synthesizing insights from 15 founder conversations.",
+      "Invalidated 3 core assumptions and pivoted the venture thesis toward a defensible, validated problem-solution narrative.",
+      "Advised founders and Transcend Fund GPs on B2B pricing strategy, AI integration, target demographics, and a potential acquisition deal.",
+      "Culminated in a comprehensive venture pitch presented to MLH × Transcend leadership.",
+    ],
+    impact: { value: "2.5%", label: "acceptance rate" },
   },
   {
     role: "Director of Board Development — SSUAB",
@@ -675,7 +794,7 @@ export const leadership = [
     period: "Aug 2025 – Present",
     category: "Leadership",
     summary:
-      "Planned skill-development events and authored a comprehensive report on undergraduate research and career services.",
+      "Board-wide professional development; authored comprehensive research & career services report.",
     points: [
       "Designed and authored a comprehensive report identifying opportunities for undergraduate research and career services improvement.",
       "Built relationships with faculty, university departments, and external stakeholders.",
@@ -684,68 +803,8 @@ export const leadership = [
     impact: { value: "Board-wide", label: "professional development" },
   },
   {
-    role: "Management Head — Diwali on the Quad",
-    org: "Indian Graduate Student Association, UIUC",
-    period: "October 2025",
-    category: "Event Management",
-    summary:
-      "Directed operational planning for a campus-wide Diwali festival with 1,000+ attendees.",
-    points: [
-      "Managed a 30+ member volunteer team across logistics, setup, guest coordination, and operations.",
-      "Designed a centralized scheduling and task-management system overseeing 50+ operational tasks.",
-      "Led outreach across 15+ student organizations and campus networks.",
-      "Oversaw 10+ cultural performances and 80+ volunteer hours.",
-    ],
-    impact: { value: "1,000+", label: "attendees" },
-  },
-  {
-    role: "Founder & President — AI and STEM Club",
-    org: "Independent",
-    period: "Mar 2023 – Mar 2025",
-    category: "Founder",
-    summary:
-      "Founded the city's first AI & STEM lab and led the school's largest student club (80+ members).",
-    points: [
-      "Established the city's first AI & STEM lab and professional recording studio with Raspberry Pi, Arduino, AI platforms, and audio production tools.",
-      "Built and led the school's largest student club (80+ members) with mentorship programs and project pipelines.",
-      "Developed an AI-powered chatbot for school operations, winning Best Club Exhibition among 50+ clubs.",
-      "Secured $7,000+ annual funding from sponsors and school grants.",
-    ],
-    impact: { value: "$7K+", label: "annual funding secured" },
-  },
-  {
-    role: "Founder & President — Project Uthaan",
-    org: "Independent NGO",
-    period: "Dec 2022 – Dec 2025",
-    category: "Founder",
-    summary:
-      "Raised $24,000+ in funding, directed 200+ volunteers across 6 cities, and educated 2,200+ participants.",
-    points: [
-      "Raised $24,000+ in funding through grant proposals, corporate partnerships, and social outreach.",
-      "Directed 200+ volunteers across 6 cities with regional leaders and uniform program delivery.",
-      "Oversaw construction of 8 classrooms and installation of 100+ computers.",
-      "Designed programs benefiting 700+ women, 600+ children, and 300+ senior citizens.",
-      "Partnered with Techno Global University to expand educational access for underserved communities.",
-    ],
-    impact: { value: "$24K+", label: "funds raised" },
-  },
-  {
-    role: "Head of Operations — SBI Sustainability Drive",
-    org: "SBI × BHEL × NGOs",
-    period: "Jun 2023 – Jul 2023",
-    category: "Event Management",
-    summary:
-      "Led an 80-member team, raised $10,000+, and oversaw the plantation of 18,000+ trees across 6 acres.",
-    points: [
-      "Led and coordinated an 80-member team, liaising with SBI, BHEL, and local NGOs.",
-      "Raised $10,000+ and oversaw plantation of 18,000+ trees (including 100+ native species) across 6 acres.",
-      "Managed media coverage, press releases, and community engagement.",
-    ],
-    impact: { value: "18,000+", label: "trees planted" },
-  },
-  {
     role: "ICT Captain — TSVS Student Council",
-    org: "Independent",
+    org: "TSVS Student Council",
     period: "Aug 2023 – Aug 2024",
     category: "Leadership",
     summary:
@@ -757,21 +816,6 @@ export const leadership = [
       "Recognized with School Colour for ICT — the only high-school recipient.",
     ],
     impact: { value: "School Colour", label: "for ICT (sole recipient)" },
-  },
-  {
-    role: "Secretary General & Committee Chair — MUN",
-    org: "Model United Nations",
-    period: "Feb 2022 – Nov 2024",
-    category: "Leadership",
-    summary:
-      "Chaired 8+ committees, served as Secretary General for 2 MUNs (700+ delegates), won 17 Best Delegate awards.",
-    points: [
-      "Chaired 8+ committees, enforcing parliamentary procedure and managing debate flow.",
-      "Served as Secretary General for 2 large-scale MUNs with 700+ delegates.",
-      "Trained junior chairs and secretariat in minute-taking, roll calls, motions, and conflict resolution.",
-      "Participated in 35+ MUNs, winning 17 Best Delegate awards.",
-    ],
-    impact: { value: "17×", label: "Best Delegate" },
   },
   {
     role: "Junior Editor-in-Chief — MetroVaartha",
@@ -799,6 +843,7 @@ export const leadership = [
       "Mentored 400+ underprivileged children with educational materials and personal guidance.",
       "Managed 90+ volunteers and organized community campaigns reaching 30,000+ individuals.",
       "Raised $1,500+ to fund education initiatives.",
+      "Participated in environmental drives including tree plantation campaigns and Green India initiatives.",
     ],
     impact: { value: "30,000+", label: "individuals reached" },
   },
@@ -821,34 +866,6 @@ export const volunteerRoles = [
 
 export const achievements = [
   {
-    title: "Best Junior Author of the Year 2023",
-    issuer: "IJETAE",
-    value: "USD 1,000",
-    category: "Research",
-    description: "Awarded for the most downloaded high school-authored research paper in journal history.",
-  },
-  {
-    title: "Patent — IoT Precision Agriculture",
-    issuer: "Patent Filing",
-    value: "1 patent",
-    category: "Research",
-    description: "Designed and patented a comprehensive IoT-based precision agriculture system for sustainable farming.",
-  },
-  {
-    title: "Author — 'Beyond the Black Box: Explainable AI'",
-    issuer: "ISBN B0F38TX4ZR",
-    value: "Book · May 2025",
-    category: "Publication",
-    description: "Authored a comprehensive book on Explainable AI methods across healthcare, finance, and autonomous systems.",
-  },
-  {
-    title: "Author — 'IoT in Agriculture: Revolutionizing Indian Farming'",
-    issuer: "ISBN 978-9394351950",
-    value: "500+ copies distributed",
-    category: "Publication",
-    description: "Distributed to universities across India; recognized by the Governor of Madhya Pradesh for contribution to agricultural innovation.",
-  },
-  {
     title: "Dean's List — UIUC",
     issuer: "University of Illinois Urbana-Champaign",
     value: "Academic Honors",
@@ -863,56 +880,28 @@ export const achievements = [
     description: "Selected for UIUC's prestigious James Scholar honors program recognizing outstanding academic achievement.",
   },
   {
+    title: "MLH Commit Fellow — Founding Cohort",
+    issuer: "Major League Hacking × Transcend Network",
+    value: "2.5% acceptance",
+    category: "Selection",
+    description: "One of 30 fellows selected from a global pool alongside Stanford, MIT, and Ivy League peers for the inaugural founder-track cohort.",
+  },
+  {
     title: "Intern of the Month — Exam Lounge",
     issuer: "Exam Lounge",
     value: "3 of 4 months",
     category: "Professional",
     description: "Awarded 3 times out of a 4-month internship for exceptional problem-solving and communication.",
   },
-  {
-    title: "School Colour for ICT — TSVS",
-    issuer: "TSVS",
-    value: "Sole recipient",
-    category: "Leadership",
-    description: "The only high school recipient of the School Colour for contributions to technology advancement and student empowerment.",
-  },
-  {
-    title: "17× Best Delegate — Model United Nations",
-    issuer: "MUN Circuit",
-    value: "17 awards · 35+ MUNs",
-    category: "Leadership",
-    description: "Won 17 Best Delegate awards across 35+ MUNs; served as Secretary General for 2 large-scale conferences (700+ delegates).",
-  },
-  {
-    title: "Best Club Exhibition — AI & STEM Club",
-    issuer: "Annual Fest",
-    value: "Among 50+ clubs",
-    category: "Leadership",
-    description: "Won Best Club Exhibition for the AI-powered chatbot developed to streamline school operations.",
-  },
-  {
-    title: "Recognized by the Governor of Madhya Pradesh",
-    issuer: "Government of Madhya Pradesh",
-    value: "State Recognition",
-    category: "Recognition",
-    description: "Recognized for significant contribution to agricultural innovation through the IoT in Agriculture book.",
-  },
-  {
-    title: "Selected — IIT Delhi IHFC × Rancho Labs Summer",
-    issuer: "IIT Delhi",
-    value: "Top 20 nationwide",
-    category: "Selection",
-    description: "Among 20 students selected nationwide for an intensive summer program at IIT Delhi's IHFC, mentored by Rancho Labs.",
-  },
 ];
 
 export const navItems = [
   { id: "home", label: "Home", shortcut: "1" },
   { id: "about", label: "About", shortcut: "2" },
-  { id: "projects", label: "Projects", shortcut: "3" },
-  { id: "research", label: "Research", shortcut: "4" },
-  { id: "experience", label: "Experience", shortcut: "5" },
-  { id: "leadership", label: "Leadership", shortcut: "6" },
-  { id: "skills", label: "Skills", shortcut: "7" },
+  { id: "experience", label: "Experience", shortcut: "3" },
+  { id: "projects", label: "Projects", shortcut: "4" },
+  { id: "research", label: "Research", shortcut: "5" },
+  { id: "skills", label: "Skills", shortcut: "6" },
+  { id: "leadership", label: "Leadership", shortcut: "7" },
   { id: "contact", label: "Contact", shortcut: "8" },
 ] as const;

@@ -23,7 +23,7 @@ export function About() {
         }
         description={
           <>
-            Computer Science at the University of Illinois Urbana-Champaign. I build
+            Computer Science at the University of Illinois Urbana-Champaign — a top-5 CS program in the U.S. I build
             ambitious AI systems, publish research, ship real products, and lead at scale.
             Leadership reinforces the engineering — never replaces it.
           </>

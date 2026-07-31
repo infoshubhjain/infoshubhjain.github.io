@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll } from "framer-motion";
 import { useRef } from "react";
 import { Building2, Calendar, ChevronDown, MapPin, TrendingUp } from "lucide-react";
 import { SectionShell, SectionHeading } from "../section-heading";
@@ -30,7 +30,7 @@ export function Experience() {
 
       <SectionHeading
         eyebrow="Experience"
-        fileLabel="05 · internships · research · engineering"
+        fileLabel="03 · internships · research · engineering"
         title={
           <>
             Internships, research, and engineering —{" "}
@@ -164,6 +164,15 @@ function ExperienceItem({
             ))}
           </div>
         )}
+
+        {/* Expand indicator */}
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="mt-4 flex items-center gap-2 text-xs font-medium text-primary transition-colors hover:text-primary/80"
+        >
+          <span>{open ? "Hide details" : "Show details"}</span>
+          <ChevronDown className={cn("h-3 w-3 transition-transform", open && "rotate-180")} />
+        </button>
 
         {/* Expandable points */}
         <AnimatePresence initial={false}>

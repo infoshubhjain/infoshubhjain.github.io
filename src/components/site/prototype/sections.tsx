@@ -1,7 +1,8 @@
 "use client";
 
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { anton, serif } from "@/lib/prototype-fonts";
 import { RaceDebrief } from "./race-debrief";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
@@ -14,7 +15,10 @@ import {
   standings,
   setup,
   pitWall,
+  crewStats,
+  volunteering,
   type Win,
+  type PitRole,
 } from "@/lib/prototype-data";
 
 // Values reference the team CSS vars set on the prototype root, so both
@@ -86,7 +90,7 @@ function Reveal({ children, delay = 0, className }: { children: ReactNode; delay
   );
 }
 
-function Heading({ children }: { children: ReactNode }) {
+export function Heading({ children }: { children: ReactNode }) {
   return (
     <h2
       className={`${anton.className} text-5xl uppercase leading-[0.9] tracking-[0.01em] sm:text-6xl md:text-7xl`}
@@ -155,7 +159,7 @@ function AnimatedStat({ value, label, sub, delay }: { value: string; label: stri
 export function Driver() {
   return (
     <Shell id="driver">
-      <SectorTag n="Paddock" label="The Driver" />
+      <SectorTag n="Paddock" label="The Driver (About)" />
       <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr]">
         <Reveal>
           <Heading>
@@ -221,7 +225,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
   const [hover, setHover] = useState(false);
   const fx = useCardFx();
   return (
-    <Reveal delay={(i % 2) * 0.08}>
+    <Reveal delay={(i % 2) * 0.08} className="h-full">
       <article
         ref={fx.ref as React.RefObject<HTMLElement>}
         onMouseEnter={() => setHover(true)}
@@ -234,7 +238,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
         role="button"
         tabIndex={0}
         onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen(win)}
-        className="pt-glass group relative h-full cursor-pointer overflow-hidden rounded-xl border p-6"
+        className="pt-glass group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border p-6"
         style={{
           borderColor: hover ? P.rosso : P.line,
           transform: "perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))",
@@ -250,6 +254,24 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{ background: "radial-gradient(300px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.10), transparent 55%)" }}
         />
+        {/* Screenshot — a recruiter should be able to see the thing, not just read
+            about it. Bleeds to the card edges by cancelling the p-6. */}
+        {win.image && (
+          <div className="relative -mx-6 -mt-6 mb-5 h-40 overflow-hidden" style={{ borderBottom: `1px solid ${P.line}` }}>
+            <Image
+              src={win.image}
+              alt={`${win.name} screenshot`}
+              fill
+              sizes="400px"
+              className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            />
+            <div
+              aria-hidden
+              className="absolute inset-0"
+              style={{ background: `linear-gradient(180deg, transparent 35%, ${P.panel})` }}
+            />
+          </div>
+        )}
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
@@ -291,7 +313,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
         </div>
 
         {/* footer: debrief affordance + quick links (links stop card click) */}
-        <div className="mt-5 flex items-center justify-between border-t pt-4" style={{ borderColor: P.line }}>
+        <div className="mt-auto flex items-center justify-between border-t pt-4" style={{ borderColor: P.line }}>
           <span className="font-mono text-[11px] font-semibold uppercase tracking-wider" style={{ color: P.rosso }}>
             View debrief →
           </span>
@@ -302,7 +324,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
                   key={l.href}
                   href={l.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
                   className="transition-colors hover:opacity-80"
                   style={{ color: l.kind === "demo" ? P.giallo : P.muted }}
@@ -346,7 +368,7 @@ export function Wins() {
 
   const header = (
     <>
-      <SectorTag n="Pit Lane" label="Race Wins — the projects" purple />
+      <SectorTag n="Pit Lane" label="Race Wins (Projects)" purple />
       <Heading>
         Things I&apos;ve <span style={{ color: P.rosso }}>shipped</span> at the{" "}
         <span className={`${serif.className} normal-case italic`}>limit.</span>
@@ -398,7 +420,7 @@ export function Directives() {
   const badge: Record<string, string> = { Patent: P.giallo, Paper: P.rosso, Book: "#a855f7" };
   return (
     <Shell id="directives">
-      <SectorTag n="R&D Bay" label="Research & publications" />
+      <SectorTag n="R&D Bay" label="Publications (Research)" />
       <Reveal>
         <Heading>
           Published from the <span style={{ color: P.rosso }}>R&amp;D</span> bay.
@@ -441,33 +463,49 @@ export function Directives() {
 export function Standings() {
   return (
     <Shell id="standings">
-      <SectorTag n="Sector 4" label="Career Standings — Experience" purple />
+      <SectorTag n="Sector 4" label="Career Standings (Experience)" purple />
       <Reveal>
         <Heading>
           The <span style={{ color: P.rosso }}>season</span> so far.
         </Heading>
       </Reveal>
-      <div className="mt-10">
+      <div className="mt-10 space-y-6">
         {standings.map((s, i) => (
           <Reveal key={s.team} delay={i * 0.04}>
             <div
-              className="grid grid-cols-[auto_1fr] items-baseline gap-4 border-b py-5 sm:grid-cols-[3rem_12rem_1fr]"
+              className="pt-glass rounded-xl border p-6"
               style={{ borderColor: P.line }}
             >
-              <span className={`${anton.className} text-3xl`} style={{ color: P.rosso }}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <div className="font-semibold" style={{ color: P.white }}>
-                  {s.team}
-                </div>
-                <div className="font-mono text-[11px] uppercase tracking-wider" style={{ color: P.giallo }}>
-                  {s.role} · {s.period}
+              <div className="flex items-start gap-4">
+                <span className={`${anton.className} text-3xl shrink-0`} style={{ color: P.rosso }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="flex-1">
+                  <div className="font-semibold text-lg" style={{ color: P.white }}>
+                    {s.link ? (
+                      <a href={s.link} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline">
+                        {s.team}
+                      </a>
+                    ) : (
+                      s.team
+                    )}
+                  </div>
+                  <div className="font-mono text-[11px] uppercase tracking-wider mt-1" style={{ color: P.giallo }}>
+                    {s.role} · {s.period}
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed" style={{ color: P.muted }}>
+                    {s.note}
+                  </p>
+                  <ul className="mt-4 space-y-2">
+                    {s.points.map((p) => (
+                      <li key={p} className="flex gap-2 text-sm leading-relaxed" style={{ color: P.muted }}>
+                        <span className="mt-1 h-1 w-1 shrink-0 rounded-full" style={{ background: P.rosso }} />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-              <p className="text-sm leading-relaxed" style={{ color: P.muted }}>
-                {s.note}
-              </p>
             </div>
           </Reveal>
         ))}
@@ -479,7 +517,7 @@ export function Standings() {
 export function Setup() {
   return (
     <Shell id="setup">
-      <SectorTag n="Car Setup" label="The skill sheet" />
+      <SectorTag n="Car Setup" label="The Build Sheet (Skills · Tech Stack)" />
       <Reveal>
         <Heading>
           The <span style={{ color: P.rosso }}>build sheet.</span>
@@ -517,41 +555,127 @@ export function Setup() {
   );
 }
 
+function CrewCard({ r }: { r: PitRole }) {
+  const [hover, setHover] = useState(false);
+  const fx = useCardFx();
+  return (
+    <div
+      ref={fx.ref as React.RefObject<HTMLDivElement>}
+      onMouseEnter={() => setHover(true)}
+      onMouseMove={fx.onMouseMove}
+      onMouseLeave={() => {
+        setHover(false);
+        fx.reset();
+      }}
+      className="pt-glass group relative flex h-full flex-col overflow-hidden rounded-xl border p-5"
+      style={{
+        borderColor: hover ? P.rosso : P.line,
+        transform: "perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))",
+        transition: "transform 0.25s ease, border-color 0.3s ease",
+        "--ty": hover ? "-4px" : "0px",
+      } as React.CSSProperties}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{ background: "radial-gradient(260px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.08), transparent 55%)" }}
+      />
+      {/* Featured spine — an element rather than a border-left, which would
+          conflict with the `borderColor` set above. */}
+      {r.featured && <span aria-hidden className="absolute inset-y-0 left-0 w-[3px]" style={{ background: P.rosso }} />}
+      <div className="flex items-start justify-between gap-3">
+        <h3 className={`${anton.className} ${r.featured ? "text-2xl" : "text-xl"} uppercase leading-tight`} style={{ color: P.white }}>
+          {r.org}
+        </h3>
+        <span
+          className="shrink-0 rounded border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em]"
+          style={{ borderColor: P.line, color: P.muted }}
+        >
+          {r.tag}
+        </span>
+      </div>
+      <div className="mt-1 font-mono text-[11px] uppercase tracking-wider" style={{ color: P.giallo }}>
+        {r.role}
+      </div>
+      <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: P.muted }}>
+        {r.period}
+      </div>
+      <div className="mt-3 font-mono text-sm font-bold" style={{ color: P.rosso }}>
+        {r.metric}
+      </div>
+      <p className="mt-2 text-sm leading-relaxed" style={{ color: P.muted }}>
+        {r.note}
+      </p>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left transition-transform duration-300"
+        style={{ background: P.rosso, transform: hover ? "scaleX(1)" : "scaleX(0)" }}
+      />
+    </div>
+  );
+}
+
 export function PitWall() {
+  const featured = pitWall.filter((r) => r.featured);
+  const rest = pitWall.filter((r) => !r.featured);
   return (
     <Shell id="pitwall">
-      <SectorTag n="Pit Wall" label="Leadership & impact" purple />
+      <SectorTag n="Pit Wall" label="Pit Wall (Leadership · Volunteering)" purple />
       <Reveal>
         <Heading>
           Calling the <span style={{ color: P.rosso }}>strategy.</span>
         </Heading>
         <p className="mt-6 max-w-2xl text-lg" style={{ color: P.muted }}>
-          Races aren&apos;t won by drivers alone. 200+ people, six cities, tens of thousands reached.
+          Races aren&apos;t won by drivers alone — {pitWall.length} crews founded, chaired or run. 200+ people,
+          six cities, tens of thousands reached.
         </p>
       </Reveal>
-      <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {pitWall.map((r, i) => (
+
+      {/* Aggregate impact — every figure traces to one role below. */}
+      <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {crewStats.map((s, i) => (
+          <AnimatedStat key={s.label} value={s.value} label={s.label} sub={s.sub} delay={i * 0.05} />
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {featured.map((r, i) => (
           <Reveal key={r.org} delay={(i % 3) * 0.06}>
-            <div
-              className="pt-glass h-full rounded-xl border p-5"
-              style={{ borderColor: P.line }}
-            >
-              <h3 className={`${anton.className} text-xl uppercase`} style={{ color: P.white }}>
-                {r.org}
-              </h3>
-              <div className="mt-0.5 font-mono text-[11px] uppercase tracking-wider" style={{ color: P.giallo }}>
-                {r.role}
-              </div>
-              <div className="mt-3 font-mono text-sm font-bold" style={{ color: P.rosso }}>
-                {r.metric}
-              </div>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: P.muted }}>
-                {r.note}
-              </p>
-            </div>
+            <CrewCard r={r} />
           </Reveal>
         ))}
       </div>
+      <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {rest.map((r, i) => (
+          <Reveal key={r.org} delay={(i % 3) * 0.05}>
+            <CrewCard r={r} />
+          </Reveal>
+        ))}
+      </div>
+
+      {/* Volunteering — crews joined rather than led. */}
+      <Reveal>
+        <div className="pt-glass mt-10 rounded-xl border p-5" style={{ borderColor: P.line }}>
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.28em]" style={{ color: P.white }}>
+              Also on the grid — volunteering
+            </span>
+            <span className="h-px flex-1" style={{ background: P.line }} />
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {volunteering.map((v) => (
+              <div key={v.org}>
+                <div className="font-mono text-[11px] uppercase tracking-wider" style={{ color: P.giallo }}>
+                  {v.org}
+                </div>
+                <p className="mt-1.5 text-sm leading-relaxed" style={{ color: P.muted }}>
+                  {v.contribution}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Reveal>
     </Shell>
   );
 }
@@ -629,7 +753,7 @@ function RadioForm() {
 export function Radio() {
   return (
     <Shell id="radio">
-      <SectorTag n="Box, box" label="Team Radio — Contact" />
+      <SectorTag n="Box, box" label="Team Radio (Contact)" />
       <div className="grid gap-10 lg:grid-cols-[1fr_1fr]">
         <Reveal>
           <Heading>
@@ -651,7 +775,7 @@ export function Radio() {
                   {row.k}
                 </span>
                 {row.href ? (
-                  <a href={row.href} target="_blank" rel="noreferrer" style={{ color: P.white }}>
+                  <a href={row.href} target="_blank" rel="noopener noreferrer" style={{ color: P.white }}>
                     {row.v}
                   </a>
                 ) : (
@@ -666,7 +790,7 @@ export function Radio() {
           <a
             href={driver.resumeUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
             style={{ borderColor: P.line, color: P.white }}
           >
@@ -697,6 +821,12 @@ export function Podium() {
             <span style={{ color: P.white }}>hotlap</span>, <span style={{ color: P.white }}>quali</span>,{" "}
             <span style={{ color: P.white }}>forza</span>, <span style={{ color: P.white }}>wings</span>,{" "}
             <span style={{ color: P.white }}>box</span> anywhere, or the Konami code (↑↑↓↓←→←→ B A) for a hot lap.
+          </p>
+          <p className="mt-3 font-mono text-[11px]" style={{ color: P.muted }}>
+            <a href="/prototype/" className="underline underline-offset-2" style={{ color: P.giallo }}>
+              Prefer it quiet? →
+            </a>{" "}
+            same CV, classic dark theme, no racing.
           </p>
           <p className="mt-2 max-w-md text-[10px] leading-relaxed" style={{ color: P.muted }}>
             3D cars:{" "}

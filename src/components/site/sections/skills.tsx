@@ -35,8 +35,8 @@ export function Skills() {
     () =>
       categories.map((cat) => ({
         id: cat,
-        color: (CATEGORY_META[cat] ?? { color: "#10d9a3" }).color,
-        count: skills[cat].length,
+        color: (CATEGORY_META[cat as keyof typeof CATEGORY_META] ?? { color: "#10d9a3" }).color,
+        count: skills[cat as keyof typeof skills].length,
       })),
     [categories]
   );
@@ -53,13 +53,13 @@ export function Skills() {
       const angle = (i / categories.length) * Math.PI * 2 - Math.PI / 2;
       const x = Math.round((cx + Math.cos(angle) * radius) * 1000) / 1000;
       const y = Math.round((cy + Math.sin(angle) * radius) * 1000) / 1000;
-      const meta = CATEGORY_META[cat] ?? { color: "#10d9a3", angle: 0 };
-      nodes.push({ id: cat, x, y, color: meta.color, count: skills[cat].length });
+      const meta = CATEGORY_META[cat as keyof typeof CATEGORY_META] ?? { color: "#10d9a3", angle: 0 };
+      nodes.push({ id: cat, x, y, color: meta.color, count: skills[cat as keyof typeof skills].length });
       links.push({ from: { x: cx, y: cy }, to: { x, y }, key: `${cat}-center` });
     });
 
     return { nodes, links };
-  }, []);
+  }, [categories]);
 
   return (
     <SectionShell id="skills" className="relative overflow-hidden">
@@ -67,7 +67,7 @@ export function Skills() {
 
       <SectionHeading
         eyebrow="Skills"
-        fileLabel="07 · constellation · clusters"
+        fileLabel="05 · constellation · clusters"
         title={
           <>
             An interconnected toolkit for{" "}
@@ -290,12 +290,12 @@ export function Skills() {
                     {cat}
                   </h3>
                   <span className="ml-auto font-mono text-[10px] text-muted-foreground">
-                    {skills[cat].length}
+                    {skills[cat as keyof typeof skills].length}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {/* ponytail: drag + spring-back stands in for full physics; swap in matter-js if gravity is ever wanted */}
-                  {skills[cat].map((s) => (
+                  {skills[cat as keyof typeof skills].map((s) => (
                     <motion.span
                       key={s}
                       drag

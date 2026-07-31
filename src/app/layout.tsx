@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
-import { projects, research, books } from "@/lib/portfolio-data";
+import { projects, research } from "@/lib/portfolio-data";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -150,27 +150,25 @@ const projectJsonLd = projects.map((p) => ({
 }));
 
 // Research papers as ScholarlyArticle.
-const researchJsonLd = research.map((r) => ({
+const researchJsonLd = research.filter(r => r.type === "Paper").map((r) => ({
   "@context": "https://schema.org",
   "@type": "ScholarlyArticle",
   name: r.title,
-  description: r.abstract,
+  description: r.description,
   author: { "@type": "Person", name: "Shubh Jain" },
   publisher: { "@type": "Organization", name: r.venue },
-  datePublished: r.date,
-  keywords: r.topics.join(", "),
+  datePublished: r.year,
 }));
 
 // Books as Book.
-const booksJsonLd = books.map((b) => ({
+const booksJsonLd = research.filter(r => r.type === "Book").map((b) => ({
   "@context": "https://schema.org",
   "@type": "Book",
   name: b.title,
-  description: b.abstract,
+  description: b.description,
   author: { "@type": "Person", name: "Shubh Jain" },
-  isbn: b.isbn,
-  datePublished: b.date,
-  keywords: b.topics.join(", "),
+  isbn: b.venue.replace("ISBN ", ""),
+  datePublished: b.year,
 }));
 
 const allJsonLd = [personJsonLd, ...projectJsonLd, ...researchJsonLd, ...booksJsonLd];

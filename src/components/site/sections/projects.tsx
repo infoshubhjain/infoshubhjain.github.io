@@ -100,7 +100,7 @@ export function Projects() {
 
       <SectionHeading
         eyebrow="Projects"
-        fileLabel="03 · filter · search · sort"
+        fileLabel="04 · filter · search · sort"
         title={
           <>
             Things I have{" "}
@@ -437,7 +437,7 @@ function ProjectCard({
               <a
                 href={project.demo}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Live demo"
                 className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card/40 px-2.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
               >
@@ -448,7 +448,7 @@ function ProjectCard({
               <a
                 href={project.github}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Source code"
                 className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card/40 text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
               >
@@ -459,7 +459,7 @@ function ProjectCard({
               <a
                 href={project.research}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Research paper"
                 className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card/40 text-muted-foreground transition-colors hover:border-accent/40 hover:text-accent"
               >

@@ -26,19 +26,23 @@ const CATEGORY_META: Record<
   "Event Management": { icon: <CalendarDays className="h-4 w-4" />, color: "accent" },
   Leadership: { icon: <Users className="h-4 w-4" />, color: "primary" },
   Founder: { icon: <Crown className="h-4 w-4" />, color: "accent" },
+  Fellowship: { icon: <Trophy className="h-4 w-4" />, color: "accent" },
   Editorial: { icon: <PenLine className="h-4 w-4" />, color: "accent" },
   Volunteer: { icon: <HandHeart className="h-4 w-4" />, color: "primary" },
+  Selection: { icon: <Trophy className="h-4 w-4" />, color: "accent" },
 };
 
 const FILTERS = [
   "All",
   "Founder",
+  "Fellowship",
   "Leadership",
   "Event Management",
   "Mentoring",
   "Teaching",
   "Editorial",
   "Volunteer",
+  "Selection",
 ] as const;
 
 export function Leadership() {
@@ -55,7 +59,7 @@ export function Leadership() {
 
       <SectionHeading
         eyebrow="Leadership"
-        fileLabel="06 · founder · events · mentoring"
+        fileLabel="06 · founder · fellowship · events · mentoring"
         title={
           <>
             Leading at scale —{" "}

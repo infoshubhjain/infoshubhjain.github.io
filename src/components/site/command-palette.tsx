@@ -81,7 +81,7 @@ export function CommandPalette({
   const researchActions: Item[] = [
     ...research.map((r) => ({
       label: r.title,
-      hint: `Research · ${r.date}`,
+      hint: `Research · ${r.year}`,
       icon: <GraduationCap className="h-4 w-4" />,
       action: () => {
         scrollToSection("research");

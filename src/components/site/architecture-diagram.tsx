@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 /**
  * Interactive architecture diagram for the AI-Powered Adaptive Learning Platform.

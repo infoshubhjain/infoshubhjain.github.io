@@ -87,7 +87,7 @@ export function Footer() {
                 <a
                   href={profile.github}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground transition-colors hover:text-primary"
                 >
                   github.com/infoshubhjain
@@ -97,7 +97,7 @@ export function Footer() {
                 <a
                   href={profile.linkedin}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground transition-colors hover:text-primary"
                 >
                   linkedin.com/in/infoshubhjain

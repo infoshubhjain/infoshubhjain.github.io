@@ -25,14 +25,23 @@ export type Palette = {
   };
 };
 
+export const TEAM_KEY = "pt-team";
+export const DEFAULT_TEAM: TeamId = "redbull";
+
+/** The livery to show on load — the visitor's last pick, else the default. */
+export function savedTeam(): TeamId {
+  const v = typeof window === "undefined" ? null : localStorage.getItem(TEAM_KEY);
+  return v === "ferrari" || v === "redbull" ? v : DEFAULT_TEAM;
+}
+
 export const PALETTES: Record<TeamId, Palette> = {
   ferrari: {
     id: "ferrari",
     label: "Ferrari",
     vars: {
       "--pt-canvas": "#0a0a0b",
-      "--pt-panel": "rgba(9,9,11,0.55)",
-      "--pt-glass": "rgba(22,18,18,0.42)",
+      "--pt-panel": "rgba(9,9,11,0.9)",
+      "--pt-glass": "rgba(22,18,18,0.62)",
       "--pt-primary": "#e10600",
       "--pt-primary-dk": "#a30400",
       "--pt-on-primary": "#f5f3ee",
@@ -57,8 +66,8 @@ export const PALETTES: Record<TeamId, Palette> = {
     label: "Red Bull",
     vars: {
       "--pt-canvas": "#080d24",
-      "--pt-panel": "rgba(8,13,36,0.58)",
-      "--pt-glass": "rgba(12,20,54,0.44)",
+      "--pt-panel": "rgba(8,13,36,0.91)",
+      "--pt-glass": "rgba(12,20,54,0.64)",
       "--pt-primary": "#ffc500",
       "--pt-primary-dk": "#c99a00",
       "--pt-on-primary": "#0a1030",

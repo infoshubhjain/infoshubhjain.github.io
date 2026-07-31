@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { type Project } from "@/lib/portfolio-data";
-import { cn } from "@/lib/utils";
 import { ArchitectureDiagram } from "./architecture-diagram";
 
 type CaseStudyData = {
@@ -117,7 +116,7 @@ class PM25Forecaster(nn.Module):
 
     def forward(self, x):
         # x: (batch, seq_len, features)
-        out, (hn, cn) = self.lstm(x)
+        out, (hn, cell_state) = self.lstm(x)
         return self.fc(hn[-1])  # predict next 24h`,
     metrics: [
       { label: "Forecast Horizon", value: "24h" },

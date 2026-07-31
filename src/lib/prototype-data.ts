@@ -12,7 +12,7 @@ export const driver = {
   grid: "Urbana-Champaign, IL",
   tagline: "I build intelligent systems that reason — and I race to ship them.",
   intro:
-    "Computer Science at the University of Illinois. I design multi-agent architectures, train transformers from first principles, ship full-stack products to production, and lead teams that reach tens of thousands. Equal parts engineer, researcher, and builder.",
+    "Computer Science at the University of Illinois Urbana-Champaign — a top-5 CS program in the U.S. I design multi-agent architectures, train transformers from first principles, ship full-stack products to production, and lead teams that reach tens of thousands. Equal parts engineer, researcher, and builder.",
   email: "shubhj3@illinois.edu",
   github: "https://github.com/infoshubhjain",
   linkedin: "https://www.linkedin.com/in/infoshubhjain/",
@@ -32,7 +32,7 @@ export const seasonStats: { label: string; value: string; sub: string }[] = [
   { label: "Sponsorship", value: "$42K+", sub: "funds raised" },
 ];
 
-export const honors = ["Dean's List", "James Scholar", "MLH Commit Fellow · 2.5%"];
+export const honors = ["Dean's List", "James Scholar"];
 
 export type WinLink = { label: string; href: string; kind: "github" | "demo" | "paper" };
 export type Win = {
@@ -52,6 +52,8 @@ export type Win = {
   metrics: { label: string; value: string }[];
   stack: { group: string; items: string[] }[];
   links: WinLink[];
+  /** Screenshot in /public/projects. Cards without one just lead with the header. */
+  image?: string;
 };
 
 export const wins: Win[] = [
@@ -159,37 +161,7 @@ export const wins: Win[] = [
       { group: "Data", items: ["Supabase", "pgvector", "RLS"] },
     ],
     links: [{ label: "Live demo", href: "https://aiceuiuc.vercel.app/", kind: "demo" }],
-  },
-  {
-    id: "neuro-rust",
-    pos: "P2",
-    name: "neuro-rust",
-    year: "2026",
-    role: "CS 128 Honors",
-    circuit: "Understand backprop by building a neural net with zero ML libraries.",
-    setup: "Feedforward net in pure Rust — Xavier init, sigmoid, MSE, chain-rule backprop, online SGD across a configurable architecture.",
-    gap: "0 ML libs · learns XOR in 10k epochs · 15 unit tests",
-    tech: ["Rust", "ndarray", "SGD", "backprop"],
-    overview:
-      "A feedforward neural network built from scratch in Rust with zero ML libraries — just ndarray for matrices and rand for init — to understand backprop end to end.",
-    impact: [
-      "Forward propagation, chain-rule backpropagation, and online SGD across a configurable layer architecture.",
-      "Xavier/Glorot initialization, sigmoid with analytic derivative, MSE loss; learns XOR in 10,000 epochs at lr 1.0.",
-      "Owned the Network struct, backprop (delta computation + upstream gradient propagation), docs, and RUN.md.",
-      "15 unit tests: sigmoid correctness, layer shapes, forward-cache consistency, hand-computed gradient verification, XOR convergence.",
-    ],
-    metrics: [
-      { label: "ML libraries", value: "0" },
-      { label: "Unit tests", value: "15" },
-      { label: "XOR epochs", value: "10k" },
-      { label: "Language", value: "Rust" },
-    ],
-    stack: [
-      { group: "Core", items: ["Rust", "ndarray", "rand"] },
-      { group: "Algorithms", items: ["Forward prop", "Backprop", "Online SGD"] },
-      { group: "Init / Loss", items: ["Xavier", "Sigmoid", "MSE"] },
-    ],
-    links: [],
+    image: "/projects/adaptive-learning.png",
   },
   {
     id: "sigaida",
@@ -221,37 +193,40 @@ export const wins: Win[] = [
       { group: "ML", items: ["PyTorch LSTM", "Scheduled inference"] },
       { group: "Data", items: ["OpenAQ", "Open-Meteo", "Earth Engine", "GTFS"] },
     ],
-    links: [],
+    links: [{ label: "Source", href: "https://github.com/infoshubhjain/SIGAIDA-CAMPUS-ENERGY", kind: "github" }],
+    image: "/projects/sigaida.png",
   },
   {
-    id: "helix",
-    pos: "P3",
-    name: "Project Helix",
-    year: "2025",
-    role: "Lead SWE",
-    circuit: "Campus events are scattered across 15+ inconsistent university sources.",
-    setup: "Multi-technique scraper (BeautifulSoup + Playwright) unifying 1000+ events into one schema, with OAuth2 Google Calendar export.",
-    gap: "1000+ events · 15+ sources · dedup + scheduled scraping",
-    tech: ["Python", "Playwright", "OAuth2", "REST"],
+    id: "neuro-rust",
+    pos: "P2",
+    name: "neuro-rust",
+    year: "2026",
+    role: "CS 128 Honors",
+    circuit: "Understand backprop by building a neural net with zero ML libraries.",
+    setup: "Feedforward net in pure Rust — Xavier init, sigmoid, MSE, chain-rule backprop, online SGD across a configurable architecture.",
+    gap: "0 ML libs · learns XOR in 10k epochs · 15 unit tests",
+    tech: ["Rust", "ndarray", "SGD", "backprop"],
     overview:
-      "A campus event-aggregation platform that scrapes and unifies 1000+ events from 15+ university sources into one queryable calendar.",
+      "A feedforward neural network built from scratch in Rust with zero ML libraries — just ndarray for matrices and rand for init — to understand backprop end to end.",
     impact: [
-      "Multi-technique scraping (BeautifulSoup + Playwright) handles static and JS-rendered sources with dedup and scheduled workflows.",
-      "Normalizes inconsistent HTML into a centralized relational schema for dynamic querying and filtering.",
-      "REST API + OAuth2 Google Calendar integration lets authenticated users export events with token-based access control.",
+      "Forward propagation, chain-rule backpropagation, and online SGD across a configurable layer architecture.",
+      "Xavier/Glorot initialization, sigmoid with analytic derivative, MSE loss; learns XOR in 10,000 epochs at lr 1.0.",
+      "Owned the Network struct, backprop (delta computation + upstream gradient propagation), docs, and RUN.md.",
+      "15 unit tests: sigmoid correctness, layer shapes, forward-cache consistency, hand-computed gradient verification, XOR convergence.",
     ],
     metrics: [
-      { label: "Events", value: "1000+" },
-      { label: "Sources", value: "15+" },
-      { label: "Auth", value: "OAuth2" },
-      { label: "Export", value: "Google Cal" },
+      { label: "ML libraries", value: "0" },
+      { label: "Unit tests", value: "15" },
+      { label: "XOR epochs", value: "10k" },
+      { label: "Language", value: "Rust" },
     ],
     stack: [
-      { group: "Scraping", items: ["BeautifulSoup", "Playwright", "Dedup"] },
-      { group: "Backend", items: ["Python", "REST", "Relational schema"] },
-      { group: "Integrations", items: ["OAuth2", "Google Calendar"] },
+      { group: "Core", items: ["Rust", "ndarray", "rand"] },
+      { group: "Algorithms", items: ["Forward prop", "Backprop", "Online SGD"] },
+      { group: "Init / Loss", items: ["Xavier", "Sigmoid", "MSE"] },
     ],
-    links: [],
+    links: [{ label: "Source", href: "https://github.com/infoshubhjain/cs128hons", kind: "github" }],
+    image: "/projects/neuro-rust.png",
   },
   {
     id: "harvest",
@@ -283,38 +258,8 @@ export const wins: Win[] = [
       { group: "Data", items: ["Python Selenium"] },
       { group: "Ops", items: ["GitHub Actions CI/CD"] },
     ],
-    links: [],
-  },
-  {
-    id: "bert-compliance",
-    pos: "P2",
-    name: "BERT Ad Compliance",
-    year: "2025",
-    role: "ML Engineer",
-    circuit: "FDA/FTC advertising violations are expensive to catch by hand.",
-    setup: "Built the preprocessing + tokenization infra for a DistilBERT classifier across 15 regulatory categories; balanced corpus 5.3×.",
-    gap: "15 categories · 512-token context · +430% dataset",
-    tech: ["PyTorch", "HuggingFace", "DistilBERT", "NLP"],
-    overview:
-      "The data and tokenization backbone for a DistilBERT system that flags FDA/FTC advertising-compliance violations across 15 regulatory categories.",
-    impact: [
-      "End-to-end pipeline turns raw advertising scripts into model-ready tensors (input_ids, attention_mask, labels).",
-      "Grew and balanced the training corpus 5.3× (10→53 labeled samples) toward near-equal class distribution.",
-      "Defined the canonical dataset schema + tensor spec adopted across preprocessing, training and evaluation.",
-      "DistilBERT tokenization with full 512-token context, padding, truncation and attention masking.",
-    ],
-    metrics: [
-      { label: "Categories", value: "15" },
-      { label: "Corpus growth", value: "5.3×" },
-      { label: "Context", value: "512 tok" },
-      { label: "Dataset", value: "+430%" },
-    ],
-    stack: [
-      { group: "Model", items: ["DistilBERT", "HuggingFace", "PyTorch"] },
-      { group: "Pipeline", items: ["Tokenization", "Tensor artifacts", "Attention masking"] },
-      { group: "Data", items: ["Social", "Influencer", "E-commerce", "Broadcast", "Podcasts", "Print"] },
-    ],
-    links: [],
+    links: [{ label: "Source", href: "https://github.com/infoshubhjain/Project-Harvest", kind: "github" }],
+    image: "/projects/harvest.png",
   },
 ];
 
@@ -369,38 +314,81 @@ export type Stint = {
   role: string;
   period: string;
   note: string;
+  points: string[];
+  link?: string;
 };
 
 export const standings: Stint[] = [
   {
-    team: "MLH × Transcend Network",
-    role: "Commit Fellow · Founding Cohort",
-    period: "2026",
-    note: "2.5% acceptance. 24 lean experiments, 10 user interviews, 3 assumptions invalidated. Advised founders & GPs on pricing, AI integration and an acquisition deal.",
+    team: "QuantHQ",
+    role: "Software Engineering Intern",
+    period: "May 2026 – Aug 2026",
+    note: "Solo-built Alpha Engine: deterministic multi-asset signal research across crypto, US & Indian equities, F&O and forex — then backtested it honestly and published the null result rather than a claim.",
+    points: [
+      "Built a deterministic research engine — 22 independent analyzers synthesized into directional signals with calibrated confidence and explicit invalidation prices (33K LOC, solo).",
+      "Integrated 25+ market data sources (Binance, Glassnode, FRED, OANDA, Dhan, AngelOne, NSE, RBI, Finnhub) behind a unified ingestion layer with caching, health tracking and automatic failover.",
+      "Backtested 6,788 signals across 7 assets / 5 years via no-lookahead replay — measured +0.0% edge over base rates and published the null result in FINDINGS.md instead of an unvalidated claim.",
+      "Maintained 1,009 tests across 57 suites; shipped CLI, HTTP API and MCP server interfaces with Docker packaging and daily signal collection via GitHub Actions.",
+    ],
+    link: "https://quanthq.in",
+  },
+  {
+    team: "The HDF Group",
+    role: "Software Engineer (part-time) — HDF5 AI Pipeline",
+    period: "May 2026 – Aug 2026",
+    note: "LLM refactoring engine for the 25-year-old HDF5 C library with a dual-LLM consensus gate (Claude + GPT-4o both_approve/disagree).",
+    points: [
+      "Built the primary LLM refactoring engine (457 LOC) generating git-format-patch-validated diffs with invariants enforcing no-new-API / no-new-export / no-new-file.",
+      "Designed the multi-model consensus gate — Claude Sonnet and GPT-4o independently review every diff, with split verdicts routed to a human-review disagreements ledger.",
+      "Parallelized the dual-LLM gate (ThreadPoolExecutor, ~2× faster per diff) and added a zero-API-cost faithfulness pre-check catching hallucinated RAG citations in ~1 ms.",
+      "Authored ~280 unit and mocked-E2E tests (14-person repo, 809 total), contributing 80 commits and ~22K lines; prompt caching cut repeat-call cost ~80%.",
+    ],
+    link: "https://www.hdfgroup.org",
   },
   {
     team: "Exam Lounge",
     role: "Junior AI & NLP Lead Researcher",
-    period: "2024",
-    note: "Led a 31-intern team (Agile), +15% model accuracy, −40% production errors. Intern of the Month ×3.",
+    period: "May 2024 – Aug 2024",
+    note: "Led a 31-intern team (Agile) improving a production exam platform.",
+    points: [
+      "Led a cross-functional team of 31 interns with Agile methodology, improving exam model accuracy by 15%.",
+      "Designed data pipelines for large-scale educational datasets and optimization techniques that lifted performance 20%.",
+      "Coordinated multiple bug-detection teams, cutting critical production errors by 40%.",
+      "Awarded Intern of the Month in 3 of 4 months for problem-solving and communication.",
+    ],
   },
   {
     team: "IETE",
     role: "Machine Learning Intern",
-    period: "2023",
-    note: "Full-stack AI chatbot at 200+ daily inquiries; BiLSTM misinformation detector at 87% accuracy; sentiment tool over 10,000+ reviews.",
+    period: "Jun 2023 – Aug 2023",
+    note: "Shipped three production AI systems end to end.",
+    points: [
+      "Built and deployed a full-stack AI chatbot with database integration handling 200+ daily inquiries.",
+      "Implemented a BiLSTM misinformation detector at 87% accuracy and a sentiment tool processing 10,000+ reviews.",
+      "Completed a regression price-prediction capstone with <5% mean error.",
+    ],
   },
   {
     team: "Freelance",
     role: "Web Developer",
-    period: "2023–25",
-    note: "40+ websites shipped — SEO, responsive UI/UX, payments, e-commerce, booking. Full lifecycle, consult to launch.",
+    period: "May 2023 – May 2025",
+    note: "40+ websites shipped across the full product lifecycle.",
+    points: [
+      "Designed and developed 40+ websites — SEO, responsive UI/UX, payment gateways, e-commerce, booking systems and analytics.",
+      "Managed complete project lifecycles from client consultation to launch.",
+      "Delivered against a diverse client base spanning personal brands, local businesses and online stores.",
+    ],
   },
   {
-    team: "IIT Delhi IHFC · YBI Foundation",
-    role: "AI/ML Programs",
-    period: "2022–23",
-    note: "Among 20 selected nationwide at Rancho Labs; intensive practical AI/ML foundations.",
+    team: "Rancho Labs · IIT Delhi",
+    role: "AI/ML Program — Top 20 Nationwide",
+    period: "2022 – 2023",
+    note: "Selected among 20 students nationwide for an intensive AI/ML program at IIT Delhi's IHFC innovation hub.",
+    points: [
+      "Selected nationwide (top 20) for a hands-on AI/ML program hosted at IIT Delhi's IHFC.",
+      "Built practical models on real datasets — training, evaluation and deployment fundamentals.",
+      "Earned a strong early foundation that directly fed into later research and engineering work.",
+    ],
   },
 ];
 
@@ -415,63 +403,237 @@ export const setup: { unit: string; parts: string[] }[] = [
 export type PitRole = {
   org: string;
   role: string;
+  period: string;
+  /** Short category chip — Founder / Fellowship / Events / Mentoring / Editorial / Service. */
+  tag: string;
   metric: string;
   note: string;
+  /** The three headline roles get the wide treatment in the Pit Wall grid. */
+  featured?: boolean;
 };
 
-/** 3D chart datasets (F1 telemetry viz). */
-export const skillBars: { label: string; value: number; detail: string }[] = [
-  { label: "Power Unit", value: 8, detail: "Python · TypeScript · Rust · C++ …" },
-  { label: "Aero / AI", value: 8, detail: "Multi-agent · Transformers · PyTorch …" },
-  { label: "Chassis", value: 8, detail: "Next.js · FastAPI · Docker · Three.js …" },
-  { label: "Telemetry", value: 7, detail: "pgvector · FAISS · ETL · Cloud Run …" },
-  { label: "Strategy", value: 5, detail: "XAI · NLP · Bayesian · Experiment design" },
+export type Trophy = {
+  /** The headline figure — what a recruiter reads first. */
+  value: string;
+  title: string;
+  issuer: string;
+  year: string;
+  note: string;
+  /** 1 = the three podium trophies, 2 = the cabinet grid behind them. */
+  tier: 1 | 2;
+};
+
+/** The honours board — every entry verbatim from the CV. */
+export const trophies: Trophy[] = [
+  {
+    value: "2.5%",
+    title: "MLH Commit Fellow",
+    issuer: "Major League Hacking × Transcend Network",
+    year: "2026",
+    note: "One of 30 fellows in the inaugural founder-track cohort, selected globally alongside Stanford, MIT and Ivy League peers.",
+    tier: 1,
+  },
+  {
+    value: "$1,000",
+    title: "Best Junior Author of the Year",
+    issuer: "IJETAE",
+    year: "2023",
+    note: "For the ChatGPT common-sense study — the most-downloaded high-school-authored paper in the journal's history.",
+    tier: 1,
+  },
+  {
+    value: "Granted",
+    title: "IoT & Precision Agriculture Patent",
+    issuer: "Government of India",
+    year: "2024",
+    note: "Real-time soil, crop and water monitoring with automated irrigation and predictive analytics for sustainable farming.",
+    tier: 1,
+  },
+  {
+    value: "17×",
+    title: "Best Delegate",
+    issuer: "Model United Nations",
+    year: "2022–24",
+    note: "Across 35+ conferences, while chairing 8+ committees and serving twice as Secretary General.",
+    tier: 2,
+  },
+  {
+    value: "Sole",
+    title: "School Colour for ICT",
+    issuer: "TSVS",
+    year: "2024",
+    note: "The only high-school recipient — awarded for cybersecurity workshops, TechFest and network administration.",
+    tier: 2,
+  },
+  {
+    value: "3 of 4",
+    title: "Intern of the Month",
+    issuer: "Exam Lounge",
+    year: "2024",
+    note: "Three months out of a four-month internship, for problem-solving and communication while leading 31 interns.",
+    tier: 2,
+  },
+  {
+    value: "Top 20",
+    title: "AI/ML Program — Nationwide",
+    issuer: "Rancho Labs · IIT Delhi IHFC",
+    year: "2022",
+    note: "Selected among 20 students nationally for an intensive hands-on AI/ML program at IIT Delhi's innovation hub.",
+    tier: 2,
+  },
+  {
+    value: "Dean's List",
+    title: "Academic Honours",
+    issuer: "University of Illinois Urbana-Champaign",
+    year: "2025–26",
+    note: "Sustained academic excellence in a top-5 US Computer Science program, alongside the James Scholar honours program.",
+    tier: 2,
+  },
+  {
+    value: "Governor",
+    title: "Recognition for Agricultural Innovation",
+    issuer: "State of Madhya Pradesh",
+    year: "2024",
+    note: "For 'IoT in Agriculture' — 500+ copies distributed to universities across India.",
+    tier: 2,
+  },
+  {
+    value: "1 of 50+",
+    title: "Best Club Exhibition",
+    issuer: "AI & STEM Club",
+    year: "2024",
+    note: "Won against 50+ clubs with an AI-powered chatbot built for school operations.",
+    tier: 2,
+  },
 ];
 
-export const careerTrace: { year: string; value: number; detail: string }[] = [
-  { year: "2022", value: 2, detail: "MUN, first clubs, editorial" },
-  { year: "2023", value: 4, detail: "IETE ML intern · freelance · papers" },
-  { year: "2024", value: 5, detail: "Exam Lounge lead · patent · 1st book" },
-  { year: "2025", value: 7, detail: "Harvest · SIGAIDA · Helix · 2nd book" },
-  { year: "2026", value: 9, detail: "Mnemostack · AstraSign · MLH · UIUC" },
-];
-
+/** Mirrors `leadership` in portfolio-data.ts — same CV, race-flavored copy. */
 export const pitWall: PitRole[] = [
   {
     org: "Project Uthaan",
     role: "Founder & President",
+    period: "Dec 2022 – Dec 2025",
+    tag: "Founder",
     metric: "200+ volunteers · 6 cities · $24K",
-    note: "Built 8 classrooms, installed 100+ computers, educated 2,200+ across digital literacy and vocational programs.",
+    note: "Built 8 classrooms, installed 100+ computers, educated 2,200+ across digital literacy and vocational programs — 700+ women, 600+ children, 300+ seniors.",
+    featured: true,
   },
   {
     org: "AI & STEM Club",
     role: "Founder & President",
+    period: "Mar 2023 – Mar 2025",
+    tag: "Founder",
     metric: "80+ members · $7K raised",
-    note: "Established the city's first AI & STEM lab and recording studio; 'Best Club Exhibition' among 50+ clubs.",
+    note: "Established the city's first AI & STEM lab and recording studio; built the school's largest club and won 'Best Club Exhibition' among 50+ clubs.",
+    featured: true,
   },
   {
     org: "Model United Nations",
     role: "Secretary General ×2",
+    period: "Feb 2022 – Nov 2024",
+    tag: "Leadership",
     metric: "35+ MUNs · 17 Best Delegate",
-    note: "Chaired 8+ committees, ran conferences of 700+ delegates, trained junior secretariats.",
+    note: "Chaired 8+ committees, ran conferences of 700+ delegates, trained junior secretariats in procedure, motions and conflict resolution.",
+    featured: true,
+  },
+  {
+    org: "MLH × Transcend Network",
+    role: "Commit Fellow — Founding Cohort",
+    period: "Jun 2026 – Jul 2026",
+    tag: "Fellowship",
+    metric: "2.5% acceptance · 30 fellows",
+    note: "Ran 24 lean experiments and 15 founder conversations, invalidated 3 core assumptions, and advised founders and Transcend Fund GPs on B2B pricing and AI integration.",
   },
   {
     org: "UI-CON",
     role: "Panels Head",
+    period: "Oct 2025 – Feb 2026",
+    tag: "Events",
     metric: "2,000+ attendees · 60+ volunteers",
-    note: "Ran 20+ panels and 40+ guests across 8 event areas at a multi-day university convention.",
+    note: "Ran 20+ panels and 40+ guests across 8 event areas, planning 250+ volunteer hours and troubleshooting 6+ simultaneous rooms live.",
   },
   {
     org: "SBI Sustainability Drive",
     role: "Head of Operations",
+    period: "Jun 2023 – Jul 2023",
+    tag: "Events",
     metric: "18,000+ trees · $10K",
-    note: "Led an 80-member team with SBI, BHEL and NGOs across 6 acres of reforestation.",
+    note: "Led an 80-member team with SBI, BHEL and local NGOs across 6 acres of reforestation, including 100+ native species, plus press and community outreach.",
   },
   {
-    org: "CS Peer Mentor · CS 124 Tutor",
-    role: "UIUC Siebel",
+    org: "SSUAB · UIUC",
+    role: "Director of Board Development",
+    period: "Aug 2025 – Present",
+    tag: "Leadership",
+    metric: "Board-wide development",
+    note: "Authored a comprehensive report on undergraduate research and career-services gaps; mentors peers on résumés, LinkedIn and professional communication.",
+  },
+  {
+    org: "Diwali on the Quad",
+    role: "Management Head",
+    period: "Oct 2025",
+    tag: "Events",
+    metric: "1,000+ attendees · 30+ volunteers",
+    note: "Directed a 4-hour campus festival on a centralized task system — 50+ tracked tasks, 10+ cultural performances, vendor and crowd-flow coordination.",
+  },
+  {
+    org: "TSVS Student Council",
+    role: "ICT Captain",
+    period: "Aug 2023 – Aug 2024",
+    tag: "Leadership",
+    metric: "15+ workshops · 900+ trained",
+    note: "Ran cybersecurity workshops and a 1,000+ participant TechFest while managing the school website and network — School Colour for ICT, the only high-school recipient.",
+  },
+  {
+    org: "MetroVaartha",
+    role: "Junior Editor-in-Chief",
+    period: "Aug 2022 – Aug 2023",
+    tag: "Editorial",
+    metric: "50,000+ readers · 200+ articles",
+    note: "Led the technology section of a national newspaper: supervised junior editors, edited 200+ articles, and wrote an AI feature that reached 50,000+ readers.",
+  },
+  {
+    org: "Bharat Scouts and Guides",
+    role: "Teacher & Mentor",
+    period: "Mar 2022 – Mar 2023",
+    tag: "Service",
+    metric: "30,000+ reached · 90+ volunteers",
+    note: "Mentored 400+ underprivileged children, managed 90+ volunteers on community campaigns, and raised $1,500+ for education initiatives.",
+  },
+  {
+    org: "UIUC Siebel",
+    role: "CS Peer Mentor · CS 124 Tutor",
+    period: "Jan 2026 – Present",
+    tag: "Mentoring",
     metric: "80+ sessions",
-    note: "One-on-one support across CS 124/128/173/225 — meeting each student at their exact point of confusion.",
+    note: "One-on-one support across CS 124/128/173/225 — meeting each student at their exact point of confusion, and advising on RSOs, research access and course sequencing.",
+  },
+];
+
+/** Headline numbers behind the leadership work — each traceable to one role above. */
+export const crewStats: { label: string; value: string; sub: string }[] = [
+  { label: "Funds raised", value: "$42K+", sub: "across every program" },
+  { label: "Educated", value: "2,200+", sub: "Project Uthaan" },
+  { label: "Reached", value: "30,000+", sub: "Scouts campaigns" },
+  { label: "Trees planted", value: "18,000+", sub: "SBI drive · 6 acres" },
+];
+
+/** Unpaid crews joined rather than led — the short list under the Pit Wall. */
+export const volunteering: { org: string; contribution: string }[] = [
+  {
+    org: "Hira Nyas Trust",
+    contribution:
+      "Designed and ran computer-literacy workshops for underprivileged communities; organized fundraising through handmade product sales.",
+  },
+  {
+    org: "Lalitambha Social Welfare Society",
+    contribution:
+      "Ran digital-literacy and computer-basics workshops, improving community access to educational resources.",
+  },
+  {
+    org: "S.H.E Foundation",
+    contribution:
+      "Coordinated project management, operational strategy and execution for education and community-development initiatives.",
   },
 ];
 
@@ -500,6 +662,8 @@ export const timeline: TimelineStint[] = [
   { track: "eng", start: 2024, end: 2024, title: "Exam Lounge — AI/NLP Lead", detail: "Led 31 interns; +15% model accuracy; Intern of the Month ×3." },
   { track: "eng", start: 2025, end: 2025, title: "SIGAIDA Campus Energy", detail: "Env-monitoring platform + PyTorch LSTM PM2.5 forecast; 10-person team." },
   { track: "eng", start: 2025, end: 2026, title: "Adaptive Learning Platform", detail: "7-agent backend + Bayesian Knowledge Tracing from scratch." },
+  { track: "eng", start: 2026, end: 2026, title: "HDF Group — SWE", detail: "LLM refactoring engine for the HDF5 C library; dual-model consensus gate (Claude + GPT-4o)." },
+  { track: "eng", start: 2026, end: 2026, title: "QuantHQ — SWE Intern", detail: "Solo-built Alpha Engine: multi-asset signal research, 22 analyzers, 1,009 tests." },
   { track: "eng", start: 2026, end: 2026, title: "Mnemostack", detail: "Graph-aware code-retrieval MCP for AI coding assistants." },
   { track: "eng", start: 2026, end: 2026, title: "AstraSign", detail: "Real-time bidirectional ASL ↔ speech translator, ~30 FPS." },
 
@@ -515,15 +679,8 @@ export const timeline: TimelineStint[] = [
   { track: "lead", start: 2022, end: 2025, title: "Project Uthaan — Founder", detail: "200+ volunteers, 6 cities, $24K raised, 2,200+ educated." },
   { track: "lead", start: 2022, end: 2024, title: "Model UN — Secretary General ×2", detail: "35+ MUNs, 17 Best Delegate awards; ran 700+ delegate conferences." },
   { track: "lead", start: 2023, end: 2025, title: "AI & STEM Club — Founder", detail: "80+ members; built the city's first AI lab; $7K raised." },
+  { track: "lead", start: 2025, end: 2026, title: "SSUAB — Director of Board Development", detail: "Board-wide professional development; authored comprehensive research & career services report." },
   { track: "lead", start: 2025, end: 2026, title: "UI-CON — Panels Head", detail: "2,000+ attendees; 60+ volunteers; 20+ panels, 40+ guests." },
   { track: "lead", start: 2026, end: 2026, title: "MLH Commit Fellow", detail: "2.5% acceptance founder-track; advised founders & GPs on PMF." },
   { track: "lead", start: 2026, end: 2026, title: "CS Peer Mentor · Tutor", detail: "80+ one-on-one sessions across UIUC CS courses." },
-];
-
-/** Point-in-time milestones plotted above the tracks. */
-export const milestones: { year: number; label: string }[] = [
-  { year: 2023, label: "Best Junior Author · $1,000" },
-  { year: 2024, label: "Patent granted · IoT" },
-  { year: 2025, label: "UIUC · Dean's List · James Scholar" },
-  { year: 2026, label: "MLH Commit Fellow · 2.5%" },
 ];

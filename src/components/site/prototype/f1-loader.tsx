@@ -22,14 +22,16 @@ export function F1Loader({ onDone }: { onDone: () => void }) {
       return;
     }
     const t: ReturnType<typeof setTimeout>[] = [];
-    for (let i = 1; i <= 5; i++) t.push(setTimeout(() => setLit(i), 500 + i * 460));
-    const OUT = 500 + 5 * 460 + 850; // hold the tension, then lights out
+    // Halved from the original ~4.5s: a visitor scanning ten tabs shouldn't spend
+    // a sixth of their attention budget watching lights.
+    for (let i = 1; i <= 5; i++) t.push(setTimeout(() => setLit(i), 220 + i * 230));
+    const OUT = 220 + 5 * 230 + 420; // hold the tension, then lights out
     t.push(setTimeout(() => setOut(true), OUT));
     t.push(
       setTimeout(() => {
         sessionStorage.setItem("f1-launched", "1");
         onDoneRef.current(); // parent removes us → exit animation + site crossfade
-      }, OUT + 900)
+      }, OUT + 450)
     );
     return () => t.forEach(clearTimeout);
   }, []);

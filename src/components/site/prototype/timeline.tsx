@@ -2,14 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Shell, SectorTag } from "./sections";
+import { Shell, SectorTag, Heading } from "./sections";
 import { anton } from "@/lib/prototype-fonts";
-import { timeline, timelineTracks, timelineSpan, milestones, type TimelineStint, type TrackId } from "@/lib/prototype-data";
+import { timeline, timelineTracks, timelineSpan, type TimelineStint, type TrackId } from "@/lib/prototype-data";
 
 const TRACK_COLOR: Record<TrackId, string> = {
   eng: "var(--pt-primary)",
   research: "var(--pt-accent)",
-  lead: "#c9cede",
+  lead: "#a855f7",
 };
 
 const SPAN_LEN = timelineSpan.end - timelineSpan.start + 1; // inclusive year slots
@@ -32,8 +32,8 @@ function packRows(items: TimelineStint[]) {
   return { placed, rowCount: Math.max(1, rowEnd.length) };
 }
 
-const ROW_H = 40; // px per stacked row
-const ROW_GAP = 8;
+const ROW_H = 46; // px per stacked row
+const ROW_GAP = 10;
 
 export function StrategyBoard() {
   const [active, setActive] = useState<TimelineStint | null>(null);
@@ -48,48 +48,44 @@ export function StrategyBoard() {
 
   return (
     <Shell id="timeline">
-      <SectorTag n="Strategy Board" label="The season — every stint, in parallel" />
-      <div className="max-w-2xl">
-        <h2 className="text-5xl font-black uppercase italic leading-[0.95] tracking-[-0.02em] sm:text-6xl md:text-7xl" style={{ color: "var(--pt-white)" }}>
+      <SectorTag n="Strategy Board" label="Strategy Board (Timeline)" />
+      <div>
+        <Heading>
           Four years, run <span style={{ color: "var(--pt-primary)" }}>flat out.</span>
-        </h2>
-        <p className="mt-6 text-lg" style={{ color: "var(--pt-muted)" }}>
+        </Heading>
+        <p className="mt-6 max-w-2xl text-lg" style={{ color: "var(--pt-muted)" }}>
           Engineering, research and leadership — running at the same time, not in sequence. Hover or tap a
           stint to read it.
         </p>
       </div>
 
       <div className="mt-10 overflow-x-auto">
-        <div className="min-w-[720px]">
-          {/* Year axis + gridlines + milestones */}
-          <div className="relative mb-3 h-14">
+        <div className="min-w-[860px]">
+          {/* Year axis. The milestone diamonds that used to sit here were the
+              same four awards the Trophy Cabinet now lists in full — and their
+              labels are wider than a year column, so they collided into an
+              unreadable stack. */}
+          <div className="relative mb-4 h-8">
             {YEARS.map((y, i) => (
-              <div key={y} className="absolute top-6 bottom-0 border-l" style={{ left: `${(i / SPAN_LEN) * 100}%`, borderColor: "var(--pt-line)" }}>
+              <div key={y} className="absolute bottom-0 top-6 border-l" style={{ left: `${(i / SPAN_LEN) * 100}%`, borderColor: "var(--pt-line)" }}>
                 <span className="absolute -top-6 left-2 font-mono text-xs font-bold" style={{ color: "var(--pt-white)" }}>
                   {y}
                 </span>
               </div>
             ))}
-            {milestones.map((m) => (
-              <div key={m.label} className="absolute top-6" style={{ left: `calc(${pct(m.year)}% + 2rem)` }}>
-                <div className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rotate-45" style={{ background: "var(--pt-primary)" }} />
-                  <span className="whitespace-nowrap font-mono text-[10px] uppercase tracking-wider" style={{ color: "var(--pt-accent)" }}>
-                    {m.label}
-                  </span>
-                </div>
-              </div>
-            ))}
           </div>
 
           {/* Track lanes */}
-          <div className="space-y-3">
+          <div className="space-y-6">
             {packedByTrack.map(({ track, placed, rowCount }) => (
               <div key={track.id} className="relative">
-                <div className="mb-1.5 flex items-center gap-2">
+                <div className="mb-2 flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-sm" style={{ background: TRACK_COLOR[track.id] }} />
                   <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--pt-white)" }}>
                     {track.label}
+                  </span>
+                  <span className="font-mono text-[10px] tabular-nums" style={{ color: "var(--pt-muted)" }}>
+                    {placed.length}
                   </span>
                 </div>
                 {/* gridlines behind bars */}
@@ -110,23 +106,33 @@ export function StrategyBoard() {
                         onFocus={() => setActive(s)}
                         onClick={() => setActive(s)}
                         whileHover={{ y: -2 }}
-                        className="group absolute flex items-center gap-2 overflow-hidden rounded-md border px-3 text-left backdrop-blur-md transition-colors"
+                        className="group absolute flex flex-col justify-center overflow-hidden rounded-md border px-3 text-left backdrop-blur-md transition-[border-color,opacity,box-shadow] duration-200"
                         style={{
                           ...span(s),
                           top: s.row * (ROW_H + ROW_GAP),
                           height: ROW_H,
                           transformOrigin: "left",
+                          // Dim the rest while one stint is being read, so a single
+                          // bar stands out of a board this dense.
+                          opacity: active && !isActive ? 0.45 : 1,
                           borderColor: isActive ? TRACK_COLOR[track.id] : "var(--pt-line)",
-                          borderLeft: `3px solid ${TRACK_COLOR[track.id]}`,
-                          background: `linear-gradient(90deg, color-mix(in srgb, ${TRACK_COLOR[track.id]} 13%, transparent), color-mix(in srgb, var(--pt-canvas) 55%, transparent))`,
+                          background: `linear-gradient(90deg, color-mix(in srgb, ${TRACK_COLOR[track.id]} 16%, transparent), color-mix(in srgb, var(--pt-canvas) 60%, transparent))`,
                           boxShadow: isActive ? `0 8px 24px -12px ${TRACK_COLOR[track.id]}` : undefined,
                         }}
                         aria-label={s.title}
                       >
-                        <span className="truncate font-mono text-[11px] font-medium" style={{ color: "var(--pt-white)" }}>
+                        {/* Track-colour accent as an element, not a border-left:
+                            mixing `borderColor` with a per-side border style makes
+                            React warn about shorthand/longhand conflicts. */}
+                        <span
+                          aria-hidden
+                          className="absolute inset-y-0 left-0 w-[3px]"
+                          style={{ background: TRACK_COLOR[track.id] }}
+                        />
+                        <span className="truncate text-[13px] font-semibold leading-tight" style={{ color: "var(--pt-white)" }}>
                           {s.title}
                         </span>
-                        <span className="ml-auto shrink-0 font-mono text-[9px] tabular-nums" style={{ color: "var(--pt-muted)" }}>
+                        <span className="font-mono text-[9px] tabular-nums leading-tight" style={{ color: "var(--pt-muted)" }}>
                           &apos;{String(s.start).slice(2)}
                           {s.end !== s.start ? `–'${String(s.end).slice(2)}` : ""}
                         </span>
@@ -141,7 +147,9 @@ export function StrategyBoard() {
       </div>
 
       {/* Active-stint detail readout */}
-      <div className="mt-6 min-h-[3.5rem] rounded-xl border p-4" style={{ borderColor: "var(--pt-line)", background: "rgba(255,255,255,0.02)" }}>
+      {/* pt-glass, not a 2%-white wash: the 3D car sits behind this and shows
+          straight through an almost-transparent panel. */}
+      <div className="pt-glass mt-6 min-h-[3.5rem] rounded-xl border p-4" style={{ borderColor: "var(--pt-line)" }}>
         {active ? (
           <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4">
             <div className={`${anton.className} text-lg uppercase`} style={{ color: "var(--pt-white)" }}>

@@ -6,7 +6,6 @@ import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { FadeIn } from "./animated-text";
 import { Scramble } from "./scramble";
-import { TextScramble } from "./text-scramble";
 
 type SectionHeadingProps = {
   eyebrow: string;

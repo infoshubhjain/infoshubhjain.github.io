@@ -10,27 +10,39 @@ Single-page personal portfolio for Shubh Jain. Next.js 16 (App Router) + React 1
 
 - `npm run dev` — dev server on :3000 (tees to `dev.log`)
 - `npm run lint` — ESLint
+- `npm run test:run` — Vitest once; `npm test` watches; `npx vitest run src/lib/utils.test.ts` for a single file, `-t "name"` for a single test
 - `GH_PAGES=1 npx next build` — the build CI actually runs (static export to `out/`)
 - `npm run build` — local standalone build; note it also does `cp` steps into `.next/standalone` and `npm start` runs the server via `bun`. This path is for local server preview, **not** deployment.
 
-No test suite exists.
+Tests are jsdom + Vitest (`vitest.config.mjs`, setup in `src/test/setup.ts`, `@` alias mirrored there). Only `src/lib/*.test.ts` exists so far — data-shape and util assertions, no component tests.
 
 ## Deploy
 
 Pushing to the **`source`** branch triggers `.github/workflows/deploy.yml`, which runs `GH_PAGES=1 npx next build` and publishes `out/` to GitHub Pages. `source` is the working/source branch; the built site lives on the Pages branch. Site URL: `https://infoshubhjain.github.io`.
 
-`next.config.ts` switches output on the `GH_PAGES` env var: `export` (static, for Pages) when set, `standalone` otherwise.
+`next.config.ts` switches output on the `GH_PAGES` env var: `export` (static, for Pages) when set, `standalone` otherwise. `trailingSlash: true` so Pages serves `/prototype` and `/prototype/`.
 
 ## Architecture
 
-- **Content is centralized in `src/lib/portfolio-data.ts`** — the single source of truth for all copy, projects, research, experience, skills, etc. Edit content there, not in components. Comments in that file note facts are CV-sourced.
-- **`src/app/page.tsx`** is the whole page: a client component that composes `src/components/site/sections/*` (hero, about, projects, research, experience, leadership, skills, contact) plus site-wide chrome (custom cursor, scroll progress, loading screen, navbar, command palette, ambient particles).
-- **`src/components/site/`** — bespoke site components (animations, cursors, terminal, 3D hero scene under `hero/`). **`src/components/ui/`** — shadcn primitives; add new ones with the shadcn CLI (config in `components.json`, lucide icons).
+**Two complete site designs share one CV.** The naming is counterintuitive — read this before editing:
+
+| Route | File | Design | Content source |
+|---|---|---|---|
+| `/` | `src/app/page.tsx` | **F1 racing theme** — telemetry HUD, timing tower, circuit map, engine audio, Grid Run minigame | `src/lib/prototype-data.ts` |
+| `/prototype` | `src/app/prototype/page.tsx` | **Classic premium dark theme** — the original portfolio, 3D hero scene | `src/lib/portfolio-data.ts` |
+
+So `prototype-*` files back the **live homepage**, and the `/prototype` route is the older classic design. Components follow the same split: `src/components/site/prototype/*` = F1, `src/components/site/sections/*` = classic.
+
+- **Content lives in the two data files, never in components.** `portfolio-data.ts` is the CV-sourced source of truth (comments mark which facts come from the CV); `prototype-data.ts` is the same career re-told as a race weekend (driver → wins → directives → standings → setup → pit wall → radio → podium) — race-flavored copy but factual. A CV change usually needs editing **both**.
+- **`src/lib/prototype-theme.ts`** — the F1 theme's `PALETTES` (`ferrari` | `redbull`), exposed as `--pt-*` CSS vars (`--pt-primary`, `--pt-canvas`, `--pt-accent`…) that F1 components read. `prototype-fonts.ts` holds its display fonts (Anton, serif, grotesk), separate from layout fonts.
+- **`src/components/ui/`** — shadcn primitives; add new ones with the shadcn CLI (config in `components.json`, lucide icons). **`src/components/site/`** — bespoke components (cursors, terminal, 3D hero scene under `hero/`).
 - **`src/app/layout.tsx`** — fonts (Geist, Geist Mono, Space Grotesk), theme provider (`next-themes`), Toaster, and all SEO/OG metadata. `sitemap.ts` and `robots.ts` live in `src/app/`.
-- Path alias `@/*` → `src/*`. `cn()` helper in `src/lib/utils.ts`.
+- Path alias `@/*` → `src/*`. `cn()` helper in `src/lib/utils.ts`; hooks in `src/lib/hooks/` (`use-media-query` exports `usePrefersReducedMotion` too, `use-smooth-scroll` wraps lenis).
 - Styling is Tailwind v4 via CSS-first config in `src/app/globals.css` (no `tailwind.config`); theme tokens are oklch CSS variables (`--primary`, `--accent`, …).
 
 ## Notes
 
-- Heavy client-side animation: framer-motion, `lenis` smooth scroll (`use-smooth-scroll`), three.js. Respect `MotionConfig reducedMotion="user"` already set in `page.tsx`.
+- Heavy client-side animation: framer-motion, `lenis` smooth scroll, three.js. Both routes set `MotionConfig reducedMotion="user"` and components check `usePrefersReducedMotion()` — keep new animation behind the same guards.
+- `eslint.config.mjs` is deliberately permissive (most TS/React rules at `warn`, being tightened incrementally). Don't treat existing warnings as a mandate to refactor; do keep new code warning-free.
 - CI uses `npm`; a `bun.lock` also exists but the workflow installs with npm — keep `package-lock.json` in sync when changing deps.
+- `worklog.md` is a running changelog of design decisions; `README.md` / `CONTRIBUTING.md` are public-facing and partly stale (they still say "no automated tests").

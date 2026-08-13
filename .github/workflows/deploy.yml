@@ -18,7 +18,15 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm install
+      - run: npm ci
+
+      # Gates, not decoration: these run before the build, so a lint error or a
+      # failing test stops the deploy instead of shipping. Nothing ran here
+      # before, which is how a vitest setup file missing from every clone went
+      # unnoticed — the suite had been failing on checkout, silently.
+      - run: npm run lint
+
+      - run: npm run test:run
 
       - run: GH_PAGES=1 npx next build
 

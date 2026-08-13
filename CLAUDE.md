@@ -16,7 +16,7 @@ Single-page personal portfolio for Shubh Jain. Next.js 16 (App Router) + React 1
 
 Tests are jsdom + Vitest (`vitest.config.mjs`, setup in `src/test/setup.ts`, `@` alias mirrored there). Only `src/lib/*.test.ts` exists so far — data-shape and util assertions, no component tests. `prototype-data.test.ts` guards the couplings that break silently: absolute résumé/link URLs, unique section ids and win ids, book ISBN prefixes, and that no win references a deleted screenshot.
 
-Note the deploy workflow does **not** run lint or tests — run them locally before pushing to `source`, because nothing else will.
+The deploy workflow runs `npm run lint` and `npm run test:run` as gates before the build, so a lint error or failing test blocks the deploy rather than shipping. It installs with `npm ci`, so `package-lock.json` must stay in sync with `package.json` or every deploy fails at install.
 
 ## Deploy
 
@@ -38,7 +38,13 @@ So `prototype-*` files back the **live homepage**, and all its components live i
 
 The original classic dark-theme site (`/prototype` route, `portfolio-data.ts`, `components/site/sections/*` and ~23 supporting components) was deleted — nothing linked to it, and its data file was still feeding the live site's sitemap and JSON-LD, publishing the wrong project list and dead `#about` / `#projects` anchors to search engines.
 
-- **Content lives in the data file, never in components.** `prototype-data.ts` is the CV-sourced source of truth — the career re-told as a race weekend (driver → wins → directives → standings → setup → pit wall → radio → podium), race-flavored copy but factual. `fullcv.md` at the repo root is the raw CV it is derived from.
+- **Content lives in the data file, never in components.** `prototype-data.ts` is the CV-sourced source of truth — the career re-told as a race weekend (driver → wins → directives → standings → setup → pit wall → radio → podium), race-flavored copy but factual. `fullcv.md` is the raw CV it is derived from; it is gitignored (it carries a personal phone number and this repo is public), so keep a local copy.
+- **The site is a curated subset of the CV, not a transcription.** Two entries are deliberately excluded and must not be re-added from `fullcv.md`:
+  - **Freelance Web Developer** (May 2023 – May 2025, 40+ websites)
+  - **YBI Foundation** AI & ML Intern (2023, one-month program)
+
+  They were cut on 2026-08-13 at the owner's request. If a future pass "notices they're missing from the CV", that is this note's whole purpose — leave them out.
+- **Every list renders in the order it is declared — keep them reverse-chronological.** `standings`, `pitWall` and `timeline` are sorted newest-first (`pitWall` by end date, so ongoing "Present" roles lead). `trophies` and `directives` sort newest-first *within* their groupings — tier 1/2 for trophies, kind for directives — because those groupings drive layout. `trophies` tier 1 must stay exactly three: it renders as a P2·P1·P3 podium on a 3-column grid.
 - **`SECTIONS`** (every section, in document order) lives in `prototype-data.ts` rather than `pit-nav.tsx` so `sitemap.ts`, a server module, can read it without pulling a client component into the server graph. `pit-nav.tsx` re-exports it.
 - **SEO metadata is generated from the same data**: `layout.tsx` derives JSON-LD from `wins` (SoftwareApplication) and `directives` (ScholarlyArticle / Book), and `sitemap.ts` from `SECTIONS`. Adding a project or paper updates structured data automatically — but note `layout.tsx` parses a book's ISBN out of `directive.venue` with `replace("ISBN ", "")`, which `prototype-data.test.ts` pins.
 - **`src/lib/prototype-theme.ts`** — the F1 theme's `PALETTES` (`ferrari` | `redbull`), exposed as `--pt-*` CSS vars (`--pt-primary`, `--pt-canvas`, `--pt-accent`…) that F1 components read. `prototype-fonts.ts` holds its display fonts (Anton, serif, grotesk), separate from layout fonts.

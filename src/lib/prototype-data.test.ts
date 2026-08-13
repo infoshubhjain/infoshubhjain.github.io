@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SECTIONS, driver, wins, directives, standings, trophies } from './prototype-data';
+import { SECTIONS, driver, wins, directives, standings, trophies, pitWall, timeline } from './prototype-data';
 
 describe('Live site data integrity', () => {
   describe('driver', () => {
@@ -129,6 +129,55 @@ describe('Live site data integrity', () => {
         expect(t.title).toBeDefined();
         expect(t.issuer).toBeDefined();
       });
+    });
+
+    // The podium renders on a 3-column grid as P2 / P1 / P3. A fourth tier-1
+    // entry wraps and breaks the metaphor; promote nothing without changing
+    // trophy-cabinet.tsx first.
+    it('should keep exactly three podium trophies', () => {
+      expect(trophies.filter((t) => t.tier === 1)).toHaveLength(3);
+    });
+  });
+
+  // Every list renders in declaration order, so ordering is data, not styling.
+  describe('ordering', () => {
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    /**
+     * Sort key for a period's end: "Present" outranks any date. A year-only
+     * bound ("2023", from the two CV entries that give a season rather than a
+     * month) counts as mid-year — assuming December would rank a vague "2023"
+     * above a precise "Aug 2023" on no real evidence.
+     */
+    const endOf = (period: string): number => {
+      const end = (period.split('–')[1] ?? period).trim();
+      if (end === 'Present') return Number.MAX_SAFE_INTEGER;
+      const [, mon, year] = /^(?:(\w{3})\w* )?(\d{4})$/.exec(end) ?? [];
+      return Number(year) * 12 + (mon ? MONTHS.indexOf(mon) : 5);
+    };
+    const descending = (xs: number[]) => xs.every((v, i) => i === 0 || xs[i - 1] >= v);
+
+    it('should list experience newest-first', () => {
+      expect(descending(standings.map((s) => endOf(s.period)))).toBe(true);
+    });
+
+    it('should list leadership newest-first', () => {
+      expect(descending(pitWall.map((r) => endOf(r.period)))).toBe(true);
+    });
+
+    it('should list each timeline track newest-first', () => {
+      (['eng', 'research', 'lead'] as const).forEach((track) => {
+        const ends = timeline.filter((t) => t.track === track).map((t) => t.end);
+        expect(descending(ends), track).toBe(true);
+      });
+    });
+
+    // Freelance Web Developer and YBI Foundation were cut from the site on
+    // purpose; they are still in fullcv.md, so a future CV sync could put them
+    // back without anyone noticing. See CLAUDE.md.
+    it('should keep the deliberately excluded CV entries out', () => {
+      const blob = JSON.stringify({ standings, pitWall, timeline, wins });
+      expect(blob).not.toMatch(/Freelance/i);
+      expect(blob).not.toMatch(/YBI/i);
     });
   });
 });

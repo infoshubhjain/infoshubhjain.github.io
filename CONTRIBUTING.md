@@ -46,23 +46,22 @@ Thank you for your interest in contributing to this portfolio project! This docu
 
 ### Content Updates
 
-All portfolio content is centralized in `src/lib/portfolio-data.ts`:
+All portfolio content is centralized in `src/lib/prototype-data.ts`:
 
-1. **Add new projects**: Update the `projects` array
-2. **Update experience**: Modify the `experience` array
-3. **Add skills**: Update the `skills` object
-4. **Leadership roles**: Update the `leadership` array
+1. **Add new projects**: Update the `wins` array
+2. **Update experience**: Modify the `standings` array
+3. **Add skills**: Update the `setup` array
+4. **Leadership roles**: Update the `pitWall` array
+5. **Papers, books & patents**: Update the `directives` array
 
-**Important**: Edit content in `portfolio-data.ts`, not in individual components. Components automatically reflect changes.
+**Important**: Edit content in `prototype-data.ts`, not in individual components. Components automatically reflect changes, and `layout.tsx` regenerates the JSON-LD structured data from the same arrays.
 
 ### Theme Guidelines
 
-The project has two themes:
-- **Classic Theme** (`/prototype`): Premium dark theme
-- **F1 Theme** (`/`): Racing-themed design
+The F1 theme ships two selectable team liveries (Ferrari / Red Bull), defined as `PALETTES` in `src/lib/prototype-theme.ts`.
 
 When making changes:
-- Test both themes if your changes affect shared components
+- Test both liveries if your changes touch themed components
 - Follow the existing color token system in `src/app/globals.css`
 - Use CSS custom properties for theming
 

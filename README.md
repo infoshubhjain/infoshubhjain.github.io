@@ -1,10 +1,8 @@
 # Shubh Jain — Portfolio
 
-A dual-theme, interactive portfolio website showcasing AI systems, research, and engineering projects. Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Three.js, and Framer Motion.
+An interactive, F1-themed portfolio website showcasing AI systems, research, and engineering projects. Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Three.js, and Framer Motion.
 
-- **Live Site**: https://infoshubhjain.github.io
-- **Classic Theme**: `/prototype` — Premium dark theme with 3D hero scene
-- **F1 Theme**: `/` — Racing-themed interactive experience with telemetry HUD
+- **Live Site**: https://infoshubhjain.github.io — racing-themed experience with telemetry HUD, timing tower, circuit map and a Grid Run minigame
 
 ## 🚀 Quick Start
 
@@ -38,24 +36,19 @@ npm run lint
 src/
 ├── app/                    # Next.js App Router
 │   ├── layout.tsx         # Root layout with fonts, SEO, themes
-│   ├── page.tsx           # F1-themed homepage
-│   ├── prototype/         # Classic theme route
+│   ├── page.tsx           # The homepage
 │   └── globals.css        # Global styles and theme tokens
 ├── components/
-│   ├── site/              # Portfolio-specific components
-│   │   ├── sections/      # Main content sections (hero, projects, etc.)
-│   │   ├── prototype/     # F1-themed components
-│   │   └── ui/            # shadcn/ui primitives
-│   └── ui/                # Reusable UI components
+│   ├── site/prototype/    # Every component on the page
+│   └── ui/                # shadcn/ui primitives
 └── lib/
-    ├── portfolio-data.ts  # Single source of truth for all content
-    ├── prototype-data.ts  # F1-themed content mappings
+    ├── prototype-data.ts  # Single source of truth for all content
     ├── hooks/             # Custom React hooks
     └── utils.ts           # Utility functions
 ```
 
 ### Content Management
-All portfolio content is centralized in `src/lib/portfolio-data.ts`. This includes:
+All portfolio content is centralized in `src/lib/prototype-data.ts`. This includes:
 - Profile information
 - Projects and research
 - Work experience
@@ -63,15 +56,12 @@ All portfolio content is centralized in `src/lib/portfolio-data.ts`. This includ
 - Leadership roles
 - Achievements
 
-**⚠️ Important**: Edit content in `portfolio-data.ts`, not in individual components.
+**⚠️ Important**: Edit content in `prototype-data.ts`, not in individual components. The `prototype-` prefix is historical — the F1 design began as a prototype, replaced the original site, and kept its filenames.
 
 ## 🎨 Theming
 
-### Dual Theme System
-The site supports two distinct themes:
-
-1. **Classic Theme** (`/prototype`): Premium dark theme with aurora accents, glassmorphism, and 3D hero scene
-2. **F1 Theme** (`/`): Racing-themed design with team liveries (Ferrari/Red Bull), telemetry HUD, and interactive elements
+### Team Liveries
+The F1 theme ships two selectable liveries (Ferrari / Red Bull), defined as `PALETTES` in `src/lib/prototype-theme.ts` and exposed as `--pt-*` CSS variables.
 
 ### Theme Tokens
 Colors use OKLCH color space for perceptual uniformity:
@@ -142,7 +132,7 @@ Currently, the project uses manual testing via:
 - CSS-in-JS via Tailwind classes
 
 ### Adding New Content
-1. Update `src/lib/portfolio-data.ts` with new content
+1. Update `src/lib/prototype-data.ts` with new content
 2. Components automatically reflect changes
 3. Test both themes if applicable
 4. Update timestamps and relevant sections

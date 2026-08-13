@@ -2,50 +2,94 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Home, ArrowLeft } from "lucide-react";
+import { anton, grotesk, serif } from "@/lib/prototype-fonts";
+import { PALETTES, DEFAULT_TEAM } from "@/lib/prototype-theme";
 
+/**
+ * Dead links land here — including /prototype, which search engines still have
+ * indexed from the retired site. It applies the palette vars itself because
+ * they live inline on the homepage's .pt-root, which this page never mounts.
+ *
+ * DNF is what a car scores when it retires without finishing.
+ */
 export default function NotFound() {
+  const palette = PALETTES[DEFAULT_TEAM];
+
   return (
-    <div className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-5">
-      {/* Aurora */}
-      <div aria-hidden className="absolute inset-0 -z-10">
-        <div className="aurora-blob left-1/4 top-1/3 h-[50vh] w-[50vh]" style={{ background: "var(--aurora-1)" }} />
-        <div className="aurora-blob right-1/4 bottom-1/3 h-[40vh] w-[40vh]" style={{ background: "var(--aurora-3)" }} />
-      </div>
-      <div aria-hidden className="absolute inset-0 -z-10 bg-grid opacity-40" />
+    <main
+      className={`pt-root relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 ${grotesk.className}`}
+      style={{ ...palette.vars, background: "var(--pt-canvas)", color: "var(--pt-white)" } as React.CSSProperties}
+    >
+      {/* Livery stripe, matching the header rule across the site. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-[5px]"
+        style={{
+          background:
+            "linear-gradient(90deg, var(--pt-primary) 0%, var(--pt-primary) 42%, var(--pt-accent) 42%, var(--pt-accent) 52%, transparent 52%)",
+        }}
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="text-center"
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-[1] w-full max-w-2xl"
       >
-        <div className="font-display text-[10rem] font-bold leading-none text-aurora sm:text-[14rem]">
-          404
+        <div
+          className="font-mono text-[11px] uppercase tracking-[0.32em]"
+          style={{ color: "var(--pt-muted)" }}
+        >
+          Race Control · Status
         </div>
-        <h1 className="mt-4 font-display text-2xl font-semibold text-foreground sm:text-3xl">
-          This page wandered off the graph.
+
+        <div
+          className={`${anton.className} mt-4 text-[8rem] uppercase leading-[0.82] sm:text-[11rem]`}
+          style={{ color: "var(--pt-primary)" }}
+        >
+          DNF
+        </div>
+
+        <h1 className={`${anton.className} mt-4 text-3xl uppercase leading-tight sm:text-4xl`}>
+          This lap{" "}
+          <span className={`${serif.className} normal-case italic`} style={{ color: "var(--pt-accent)" }}>
+            never finished.
+          </span>
         </h1>
-        <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-          The URL you hit does not exist. Let's get you back to something useful.
+
+        <p className="mt-4 max-w-md text-base leading-relaxed" style={{ color: "var(--pt-muted)" }}>
+          Error 404 — no page at this address. It may have been retired in a rebuild.
+          Head back to the grid and pick a sector from the menu.
         </p>
-        <div className="mt-8 flex items-center justify-center gap-3">
+
+        <div className="mt-9 flex flex-wrap items-center gap-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all hover:glow-primary"
+            className="rounded px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.22em] transition-transform hover:-translate-y-0.5"
+            style={{ background: "var(--pt-primary)", color: "var(--pt-on-primary)" }}
           >
-            <Home className="h-4 w-4" />
-            Back home
+            ← Return to the grid
           </Link>
           <button
             onClick={() => history.back()}
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/40 px-5 py-3 text-sm font-semibold text-foreground backdrop-blur-md transition-all hover:border-primary/40"
+            className="rounded border px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.22em] transition-colors"
+            style={{ borderColor: "var(--pt-line)", color: "var(--pt-white)" }}
           >
-            <ArrowLeft className="h-4 w-4" />
-            Go back
+            Previous lap
           </button>
         </div>
       </motion.div>
-    </div>
+
+      {/* Checkered strip — the same motif that closes the homepage. */}
+      <div aria-hidden className="absolute inset-x-0 bottom-0 flex h-3.5">
+        {Array.from({ length: 60 }).map((_, i) => (
+          <span
+            key={i}
+            className="h-full flex-1"
+            style={{ background: i % 2 ? "var(--pt-white)" : "var(--pt-canvas)" }}
+          />
+        ))}
+      </div>
+    </main>
   );
 }

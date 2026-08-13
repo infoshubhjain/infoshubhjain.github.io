@@ -110,7 +110,7 @@ export const wins: Win[] = [
       { group: "Control", items: ["Circuit breaker", "Rate limits", "Audit"] },
       { group: "Ops", items: ["Docker (non-root)", "GitHub Actions", "ruff", "pip-audit"] },
     ],
-    links: [],
+    links: [{ label: "Live demo", href: "https://meter-three-beta.vercel.app/", kind: "demo" }],
   },
   {
     id: "mnemostack",

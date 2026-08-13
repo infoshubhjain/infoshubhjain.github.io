@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "Shubh Jain",
-    title: "Shubh Jain — AI Systems · Research · Engineering · Leadership",
+    title: "Shubh Jain — AI Systems Engineer, built at the limit",
     description:
       "Computer Science @ UIUC. Building ambitious AI systems, conducting research, and shipping real products.",
     images: [
@@ -67,13 +67,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Shubh Jain — AI Systems · Research · Engineering · Leadership",
+        alt: "Shubh Jain, #16 — AI Systems Engineer, built at the limit. CS @ UIUC, 3.83 CGPA, 2 papers, 2 books, 1 patent.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shubh Jain — AI Systems · Research · Engineering",
+    title: "Shubh Jain — AI Systems Engineer, built at the limit",
     description:
       "Computer Science @ UIUC. Building ambitious AI systems, conducting research, and shipping real products.",
     images: ["/og-image.png"],

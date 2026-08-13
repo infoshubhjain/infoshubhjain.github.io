@@ -38,9 +38,6 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --color-aurora-1: var(--aurora-1);
-  --color-aurora-2: var(--aurora-2);
-  --color-aurora-3: var(--aurora-3);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -86,16 +83,6 @@
   --chart-4: oklch(0.6 0.18 80);
   --chart-5: oklch(0.55 0.22 20);
 
-  --aurora-1: oklch(0.6 0.18 165 / 30%);
-  --aurora-2: oklch(0.55 0.2 200 / 25%);
-  --aurora-3: oklch(0.55 0.25 300 / 22%);
-
-  /* Opaque gradient stops for .text-aurora — must stay readable, so NOT the
-     translucent blob tokens above. Tuned for contrast on the light canvas. */
-  --aurora-text-1: oklch(0.5 0.17 165);
-  --aurora-text-2: oklch(0.49 0.19 210);
-  --aurora-text-3: oklch(0.49 0.23 300);
-
   --sidebar: oklch(0.97 0.004 240 / 85%);
   --sidebar-foreground: oklch(0.12 0.02 250);
   --sidebar-primary: oklch(0.45 0.16 165);
@@ -126,7 +113,8 @@
   --popover: oklch(0.1 0.012 240 / 85%);
   --popover-foreground: oklch(0.97 0.005 240);
 
-  /* Accent colors — emerald / cyan / violet aurora */
+  /* Base shadcn tokens — used by ui/sonner and Tailwind utilities. The page
+     itself themes off the --pt-* livery vars in prototype-theme.ts. */
   --primary: oklch(0.78 0.18 165);
   --primary-foreground: oklch(0.06 0.01 240);
   --secondary: oklch(0.18 0.02 240 / 60%);
@@ -145,15 +133,6 @@
   --chart-3: oklch(0.7 0.25 300);
   --chart-4: oklch(0.78 0.18 80);
   --chart-5: oklch(0.7 0.22 20);
-
-  --aurora-1: oklch(0.7 0.2 165 / 35%);
-  --aurora-2: oklch(0.65 0.22 200 / 30%);
-  --aurora-3: oklch(0.6 0.25 300 / 25%);
-
-  /* Opaque, luminous gradient stops for .text-aurora on the dark canvas. */
-  --aurora-text-1: oklch(0.82 0.17 165);
-  --aurora-text-2: oklch(0.78 0.19 210);
-  --aurora-text-3: oklch(0.74 0.22 300);
 
   --sidebar: oklch(0.1 0.012 240 / 80%);
   --sidebar-foreground: oklch(0.97 0.005 240);
@@ -204,222 +183,10 @@
   /* ════════════════════════════════════════════════════════════
      LIQUID GLASS — Apple-inspired translucent surfaces
      - NO pseudo-elements (avoids conflicts with .scanlines, .conic-border,
-       .border-gradient, .spotlight which all use ::before/::after)
-     - Pure box-shadow + background layering
-     - Inset top highlight (specular light catch)
-     - Inset bottom shadow (refractive edge)
-     - Outer drop shadow for depth
-     ════════════════════════════════════════════════════════════ */
-  .liquid-glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(28px) saturate(180%) brightness(1.05);
-    -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.05);
-    box-shadow:
-      inset 0 1px 0 0 var(--glass-highlight),
-      inset 0 -1px 0 0 var(--glass-shadow-edge),
-      inset 0 0 0 1px var(--glass-border-light),
-      0 8px 32px -8px rgba(0, 0, 0, 0.2),
-      0 2px 8px -2px rgba(0, 0, 0, 0.1);
-  }
-
-  .liquid-glass-strong {
-    background: var(--glass-bg-strong);
-    backdrop-filter: blur(40px) saturate(200%) brightness(1.08);
-    -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.08);
-    box-shadow:
-      inset 0 1px 0 0 var(--glass-highlight),
-      inset 0 -1px 0 0 var(--glass-shadow-edge),
-      inset 0 0 0 1px var(--glass-border-light),
-      0 12px 48px -12px rgba(0, 0, 0, 0.3),
-      0 4px 12px -2px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Aurora gradient text */
-  .text-aurora {
-    background: linear-gradient(
-      100deg,
-      var(--aurora-text-1),
-      var(--aurora-text-2),
-      var(--aurora-text-3),
-      var(--aurora-text-1)
-    );
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: aurora-pan 12s ease-in-out infinite;
-  }
-
-  .text-gradient-primary {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  /* Glow rings */
-  .glow-primary {
-    box-shadow:
-      0 0 0 1px color-mix(in oklch, var(--primary) 30%, transparent),
-      0 0 32px -4px color-mix(in oklch, var(--primary) 50%, transparent),
-      0 0 80px -12px color-mix(in oklch, var(--primary) 30%, transparent);
-  }
-  .glow-accent {
-    box-shadow:
-      0 0 0 1px color-mix(in oklch, var(--accent) 30%, transparent),
-      0 0 32px -4px color-mix(in oklch, var(--accent) 50%, transparent),
-      0 0 80px -12px color-mix(in oklch, var(--accent) 30%, transparent);
-  }
-
-  /* Hairline gradient border */
-  .border-gradient {
-    position: relative;
-    background-clip: padding-box;
-  }
-  .border-gradient::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: linear-gradient(
-      135deg,
-      color-mix(in oklch, var(--primary) 60%, transparent),
-      transparent 35%,
-      transparent 65%,
-      color-mix(in oklch, var(--accent) 60%, transparent)
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  /* Aurora blob backgrounds */
-  .aurora-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.55;
-    pointer-events: none;
-    will-change: transform;
-  }
-
-  /* Animated grid */
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-  }
-  .bg-dots {
-    background-image: radial-gradient(color-mix(in oklch, var(--foreground) 8%, transparent) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  /* Noise overlay */
-  .noise::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    opacity: 0.04;
-    mix-blend-mode: overlay;
-    pointer-events: none;
-  }
-
-  /* Spotlight hover */
-  .spotlight {
-    position: relative;
-    overflow: hidden;
-  }
-  .spotlight::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      600px circle at var(--mx, 50%) var(--my, 50%),
-      color-mix(in oklch, var(--primary) 14%, transparent),
-      transparent 40%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-  .spotlight:hover::before {
-    opacity: 1;
-  }
-
-  /* Custom scrollbar */
-  .scroll-area {
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklch, var(--primary) 40%, transparent) transparent;
-  }
-  .scroll-area::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .scroll-area::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .scroll-area::-webkit-scrollbar-thumb {
-    background: color-mix(in oklch, var(--primary) 40%, transparent);
-    border-radius: 99px;
-  }
-  .scroll-area::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in oklch, var(--primary) 60%, transparent);
-  }
-
-  /* Animated conic border */
-  .conic-border {
-    position: relative;
-    overflow: hidden;
-  }
-  .conic-border::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: conic-gradient(
-      from var(--conic-angle, 0deg),
-      transparent 0deg,
-      var(--primary) 90deg,
-      transparent 180deg,
-      var(--accent) 270deg,
-      transparent 360deg
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: conic-rotate 6s linear infinite;
-    pointer-events: none;
-    opacity: 0.6;
-  }
 
   /* Hide default cursor when custom cursor is active */
   .cursor-none, .cursor-none * {
     cursor: none !important;
-  }
-
-  /* Shimmer */
-  .shimmer {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      color-mix(in oklch, var(--primary) 18%, transparent) 50%,
-      transparent 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer-pan 2.2s linear infinite;
   }
 
   /* Prototype liquid glass — frosted backdrop + light-catching specular edges.
@@ -452,18 +219,6 @@
       fill 0.45s ease;
   }
 
-  /* Font display utility */
-  .font-display {
-    font-family: var(--font-display), var(--font-geist-sans), sans-serif;
-    letter-spacing: -0.02em;
-  }
-
-  /* Terminal / code-style text */
-  .font-mono-accent {
-    font-family: var(--font-geist-mono), ui-monospace, monospace;
-    letter-spacing: 0.02em;
-  }
-
   /* Scanline overlay for terminal cards */
   .scanlines::before {
     content: "";
@@ -479,28 +234,11 @@
     pointer-events: none;
     border-radius: inherit;
   }
-
-  /* Glow text shadow for CS accents */
-  .text-glow-primary {
-    text-shadow:
-      0 0 12px color-mix(in oklch, var(--primary) 60%, transparent),
-      0 0 32px color-mix(in oklch, var(--primary) 30%, transparent);
-  }
-  .text-glow-accent {
-    text-shadow:
-      0 0 12px color-mix(in oklch, var(--accent) 60%, transparent),
-      0 0 32px color-mix(in oklch, var(--accent) 30%, transparent);
-  }
 }
 
 /* ===================================================================
    KEYFRAMES
    =================================================================== */
-
-@keyframes aurora-pan {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
 
 /* Timing-tower marquee (content is duplicated ×2, so -50% loops seamlessly) */
 @keyframes ticker {
@@ -514,63 +252,11 @@
   to { opacity: 1; }
 }
 
-@keyframes conic-rotate {
-  to { --conic-angle: 360deg; transform: rotate(360deg); }
-}
-
 @property --conic-angle {
   syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }
-
-@keyframes shimmer-pan {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes float-y {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 24px -8px color-mix(in oklch, var(--primary) 60%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 48px -8px color-mix(in oklch, var(--primary) 90%, transparent);
-  }
-}
-
-@keyframes scroll-dot {
-  0% { transform: translateY(0); opacity: 0; }
-  30% { opacity: 1; }
-  60% { transform: translateY(10px); opacity: 0; }
-  100% { opacity: 0; }
-}
-
-@keyframes cursor-blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-@keyframes scan-line {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-
-@keyframes glitch-shift {
-  0%, 92%, 100% { transform: translate(0); }
-  93% { transform: translate(-1px, 1px); }
-  94% { transform: translate(1px, -1px); }
-  95% { transform: translate(-1px, -1px); }
-  96% { transform: translate(1px, 1px); }
-}
-
-.animate-float-y { animation: float-y 6s ease-in-out infinite; }
-.animate-pulse-glow { animation: pulse-glow 3.5s ease-in-out infinite; }
-.animate-glitch { animation: glitch-shift 4s infinite; }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -583,5 +269,4 @@
     scroll-behavior: auto !important;
   }
 }
-
 

@@ -533,6 +533,9 @@ export const setup: { unit: string; parts: string[] }[] = [
   { unit: "Chassis — Full-Stack", parts: ["Next.js", "React", "FastAPI", "Node.js", "Supabase", "Docker", "Tailwind", "Three.js"] },
   { unit: "Telemetry — Data & Infra", parts: ["pgvector", "FAISS", "SQLite", "ETL Pipelines", "Cloud Run", "GitHub Actions", "OAuth2"] },
   { unit: "Strategy — Research", parts: ["Explainable AI", "NLP", "Bayesian Methods", "Technical Writing", "Experiment Design"] },
+  // Spoken languages, kept distinct from the programming ones in "Power Unit".
+  // Each carries its evidence rather than a self-assessed fluency label.
+  { unit: "Comms — Spoken Languages", parts: ["English — IELTS 8.0 / 9.0", "Hindi — IGCSE Grade A"] },
 ];
 
 export type PitRole = {

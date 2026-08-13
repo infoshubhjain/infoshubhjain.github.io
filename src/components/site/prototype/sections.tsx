@@ -64,7 +64,10 @@ export function SectorTag({ n, label, purple }: { n: string; label: string; purp
     <div className="mb-6 flex items-center gap-3">
       <span
         className="rounded px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.28em]"
-        style={{ background: purple ? "rgba(168,85,247,0.9)" : P.rosso, color: purple ? "#120222" : P.onPrimary }}
+        // Opaque, not rgba(...,0.9): at 90% the dark canvas bled through and
+        // dropped this badge to 4.25:1 against its text, under the 4.5:1 AA
+        // floor for 11px bold. Same hue, 5.02:1.
+        style={{ background: purple ? "#a855f7" : P.rosso, color: purple ? "#120222" : P.onPrimary }}
       >
         {n}
       </span>
@@ -200,7 +203,7 @@ const POS_COLOR: Record<string, string> = { P1: "#ffd000", P2: "#c7ccd1", P3: "#
 
 /** Cursor-tracking specular sheen + subtle 3D tilt (Apple-style). Writes CSS vars directly (no re-render). */
 function useCardFx() {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const onMouseMove = (e: React.MouseEvent) => {
     const el = ref.current;
     if (!el) return;
@@ -226,8 +229,11 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
   const fx = useCardFx();
   return (
     <Reveal delay={(i % 2) * 0.08} className="h-full">
-      <article
-        ref={fx.ref as React.RefObject<HTMLElement>}
+      {/* A div, not an article: the whole card is one control that opens the
+          debrief, and article + role="button" is a contradictory pairing that
+          leaves the accessibility tree malformed for screen readers and agents. */}
+      <div
+        ref={fx.ref}
         onMouseEnter={() => setHover(true)}
         onMouseMove={fx.onMouseMove}
         onMouseLeave={() => {
@@ -340,7 +346,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
           className="pointer-events-none absolute inset-x-0 bottom-0 h-1 origin-left transition-transform duration-300"
           style={{ background: P.rosso, transform: hover ? "scaleX(1)" : "scaleX(0)" }}
         />
-      </article>
+      </div>
     </Reveal>
   );
 }
@@ -560,7 +566,7 @@ function CrewCard({ r }: { r: PitRole }) {
   const fx = useCardFx();
   return (
     <div
-      ref={fx.ref as React.RefObject<HTMLDivElement>}
+      ref={fx.ref}
       onMouseEnter={() => setHover(true)}
       onMouseMove={fx.onMouseMove}
       onMouseLeave={() => {
@@ -822,18 +828,15 @@ export function Podium() {
             <span style={{ color: P.white }}>forza</span>, <span style={{ color: P.white }}>wings</span>,{" "}
             <span style={{ color: P.white }}>box</span> anywhere, or the Konami code (↑↑↓↓←→←→ B A) for a hot lap.
           </p>
-          <p className="mt-3 font-mono text-[11px]" style={{ color: P.muted }}>
-            <a href="/prototype/" className="underline underline-offset-2" style={{ color: P.giallo }}>
-              Prefer it quiet? →
-            </a>{" "}
-            same CV, classic dark theme, no racing.
-          </p>
           <p className="mt-2 max-w-md text-[10px] leading-relaxed" style={{ color: P.muted }}>
             3D cars:{" "}
             <a
               href="https://sketchfab.com/3d-models/ferrari-f1-75-06454e0f23a44fcdabcc7808aee6caf9"
               target="_blank"
               rel="noreferrer"
+              // Underlined, not colour-only: this sits inside a paragraph, so
+              // colour alone leaves it invisible to colour-blind readers.
+              className="underline underline-offset-2"
               style={{ color: P.rosso }}
             >
               &ldquo;Ferrari F1-75&rdquo;

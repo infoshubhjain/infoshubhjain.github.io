@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
-import { projects, research } from "@/lib/portfolio-data";
+import { wins, directives } from "@/lib/prototype-data";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -133,43 +133,50 @@ const personJsonLd = {
   ],
 };
 
-// Per-project structured data as CreativeWork / SoftwareApplication.
-const projectJsonLd = projects.map((p) => ({
+// Per-project structured data as SoftwareApplication.
+const projectJsonLd = wins.map((w) => ({
   "@context": "https://schema.org",
-  "@type": p.category === "Research" ? "ScholarlyArticle" : "SoftwareApplication",
-  name: p.title,
-  description: p.oneLiner,
+  "@type": "SoftwareApplication",
+  name: w.name,
+  description: w.circuit,
   author: { "@type": "Person", name: "Shubh Jain" },
   url: SITE_URL,
-  applicationCategory: p.category,
-  programmingLanguage: p.tech.join(", "),
-  keywords: p.tags.join(", "),
-  datePublished: `${p.year}`,
-  ...(p.demo && { installUrl: p.demo }),
-  ...(p.github && { codeRepository: p.github }),
+  applicationCategory: w.role,
+  programmingLanguage: w.tech.join(", "),
+  datePublished: w.year,
+  ...(w.links.find((l) => l.kind === "demo") && {
+    installUrl: w.links.find((l) => l.kind === "demo")!.href,
+  }),
+  ...(w.links.find((l) => l.kind === "github") && {
+    codeRepository: w.links.find((l) => l.kind === "github")!.href,
+  }),
 }));
 
 // Research papers as ScholarlyArticle.
-const researchJsonLd = research.filter(r => r.type === "Paper").map((r) => ({
-  "@context": "https://schema.org",
-  "@type": "ScholarlyArticle",
-  name: r.title,
-  description: r.description,
-  author: { "@type": "Person", name: "Shubh Jain" },
-  publisher: { "@type": "Organization", name: r.venue },
-  datePublished: r.year,
-}));
+const researchJsonLd = directives
+  .filter((d) => d.kind === "Paper")
+  .map((d) => ({
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    name: d.title,
+    description: d.note,
+    author: { "@type": "Person", name: "Shubh Jain" },
+    publisher: { "@type": "Organization", name: d.venue },
+    datePublished: d.year,
+  }));
 
 // Books as Book.
-const booksJsonLd = research.filter(r => r.type === "Book").map((b) => ({
-  "@context": "https://schema.org",
-  "@type": "Book",
-  name: b.title,
-  description: b.description,
-  author: { "@type": "Person", name: "Shubh Jain" },
-  isbn: b.venue.replace("ISBN ", ""),
-  datePublished: b.year,
-}));
+const booksJsonLd = directives
+  .filter((d) => d.kind === "Book")
+  .map((d) => ({
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: d.title,
+    description: d.note,
+    author: { "@type": "Person", name: "Shubh Jain" },
+    isbn: d.venue.replace("ISBN ", ""),
+    datePublished: d.year,
+  }));
 
 const allJsonLd = [personJsonLd, ...projectJsonLd, ...researchJsonLd, ...booksJsonLd];
 

@@ -4,6 +4,23 @@
  * setup → pit wall → radio → podium. Copy is race-flavored but factual.
  */
 
+/**
+ * Every section on the page, in document order. Lives here rather than in
+ * pit-nav so the sitemap (a server module) can read it without pulling a
+ * client component into the server graph.
+ */
+export const SECTIONS = [
+  { id: "driver", race: "Paddock", plain: "About", key: "1" },
+  { id: "standings", race: "Career Standings", plain: "Experience", key: "2" },
+  { id: "wins", race: "Race Wins", plain: "Projects", key: "3" },
+  { id: "directives", race: "R&D Bay", plain: "Research & Publications", key: "4" },
+  { id: "pitwall", race: "Pit Wall", plain: "Leadership & Volunteering", key: "5" },
+  { id: "trophies", race: "Trophy Cabinet", plain: "Awards & Honours", key: "6" },
+  { id: "timeline", race: "Strategy Board", plain: "Timeline", key: "7" },
+  { id: "setup", race: "Build Sheet", plain: "Skills & Tech Stack", key: "8" },
+  { id: "radio", race: "Team Radio", plain: "Contact", key: "9" },
+];
+
 export const driver = {
   name: "Shubh Jain",
   number: "16",
@@ -198,7 +215,6 @@ export const wins: Win[] = [
       { group: "Data", items: ["Supabase", "pgvector", "RLS"] },
     ],
     links: [{ label: "Live demo", href: "https://aiceuiuc.vercel.app/", kind: "demo" }],
-    image: "/projects/adaptive-learning.png",
   },
   {
     id: "sigaida",
@@ -231,7 +247,6 @@ export const wins: Win[] = [
       { group: "Data", items: ["OpenAQ", "Open-Meteo", "Earth Engine", "GTFS"] },
     ],
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/SIGAIDA-CAMPUS-ENERGY", kind: "github" }],
-    image: "/projects/sigaida.png",
   },
   {
     id: "neuro-rust",
@@ -263,7 +278,6 @@ export const wins: Win[] = [
       { group: "Init / Loss", items: ["Xavier", "Sigmoid", "MSE"] },
     ],
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/cs128hons", kind: "github" }],
-    image: "/projects/neuro-rust.png",
   },
   {
     id: "harvest",
@@ -296,7 +310,6 @@ export const wins: Win[] = [
       { group: "Ops", items: ["GitHub Actions CI/CD"] },
     ],
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/Project-Harvest", kind: "github" }],
-    image: "/projects/harvest.png",
   },
 ];
 

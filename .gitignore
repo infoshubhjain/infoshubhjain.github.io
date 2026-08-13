@@ -49,7 +49,9 @@ local-*
 *.log
 dev.log
 dev.out.log
-test
+# Scratch dir at repo root only — a bare "test" also matched src/test/,
+# which silently kept the vitest setup file out of every clone.
+/test
 prompt
 
 server.log

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { anton } from "@/lib/prototype-fonts";
+import { SECTIONS } from "@/lib/prototype-data";
 
 /**
  * The page runs ~14 screens deep with no other way to move around it. This is a
@@ -11,17 +12,7 @@ import { anton } from "@/lib/prototype-fonts";
  * is actually scanning for.
  */
 
-export const SECTIONS = [
-  { id: "driver", race: "Paddock", plain: "About", key: "1" },
-  { id: "standings", race: "Career Standings", plain: "Experience", key: "2" },
-  { id: "wins", race: "Race Wins", plain: "Projects", key: "3" },
-  { id: "directives", race: "R&D Bay", plain: "Research & Publications", key: "4" },
-  { id: "pitwall", race: "Pit Wall", plain: "Leadership & Volunteering", key: "5" },
-  { id: "trophies", race: "Trophy Cabinet", plain: "Awards & Honours", key: "6" },
-  { id: "timeline", race: "Strategy Board", plain: "Timeline", key: "7" },
-  { id: "setup", race: "Build Sheet", plain: "Skills & Tech Stack", key: "8" },
-  { id: "radio", race: "Team Radio", plain: "Contact", key: "9" },
-];
+export { SECTIONS };
 
 export function PitNav({ onGo }: { onGo: (id: string) => void }) {
   const [open, setOpen] = useState(false);

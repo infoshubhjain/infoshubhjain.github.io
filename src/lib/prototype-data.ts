@@ -49,7 +49,7 @@ export const seasonStats: { label: string; value: string; sub: string }[] = [
   { label: "Sponsorship", value: "$42K+", sub: "funds raised" },
 ];
 
-export const honors = ["Dean's List", "James Scholar"];
+export const honors = ["B.S. CS · Expected May 2028", "Dean's List", "James Scholar"];
 
 export type WinLink = { label: string; href: string; kind: "github" | "demo" | "paper" };
 export type Win = {
@@ -311,6 +311,72 @@ export const wins: Win[] = [
     ],
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/Project-Harvest", kind: "github" }],
   },
+  {
+    id: "bert-compliance",
+    pos: "P2",
+    name: "BERT Ad Compliance Classifier",
+    year: "2026",
+    role: "Machine Learning Engineer",
+    circuit:
+      "FDA/FTC advertising rules span 15 regulatory categories, and the labelled corpus for training a classifier on them was 10 samples deep.",
+    setup:
+      "Owned the data layer of a DistilBERT classifier — an end-to-end preprocessing and tokenization pipeline turning raw ad scripts into model-ready tensors, plus the dataset schema the rest of the project built against.",
+    gap: "15 categories · 5.3× corpus growth · 512-token context",
+    tech: ["PyTorch", "HuggingFace Transformers", "DistilBERT", "Python"],
+    overview:
+      "A DistilBERT NLP system that detects FDA/FTC advertising compliance violations across 15 regulatory categories. I owned the data stage end to end — preprocessing, tokenization, dataset curation and the artifact specification that formed the interface between dataset curation and transformer fine-tuning.",
+    impact: [
+      "Built the preprocessing and tokenization infrastructure transforming raw advertising scripts into model-ready tensor datasets (input_ids, attention_mask, labels).",
+      "Expanded and balanced the training corpus 5.3× (10 → 53 labelled samples), reaching near-equal class distribution across all 15 violation categories.",
+      "Designed the canonical dataset schema and tensor artifact specification adopted project-wide, defining the data contract downstream contributors built against.",
+      "Curated a domain-specific corpus spanning social media, influencer marketing, e-commerce listings, broadcast, podcasts, email and print — so the model generalises across ad formats rather than one channel.",
+      "Implemented DistilBERT-compatible tokenization using the full 512-token context window with padding, truncation and attention masking, keeping preprocessing consistent with the downstream architecture.",
+    ],
+    metrics: [
+      { label: "Categories", value: "15" },
+      { label: "Corpus growth", value: "5.3×" },
+      { label: "Context window", value: "512" },
+      { label: "Pipeline stage", value: "Owned" },
+    ],
+    stack: [
+      { group: "Modelling", items: ["DistilBERT", "HuggingFace Transformers", "PyTorch"] },
+      { group: "Data", items: ["Tokenization", "Dataset curation", "Tensor artifacts"] },
+      { group: "Process", items: ["Git", "Technical documentation"] },
+    ],
+    links: [],
+  },
+  {
+    id: "helix",
+    pos: "P3",
+    name: "Project Helix",
+    year: "2025",
+    role: "Lead SWE",
+    circuit:
+      "Campus events are scattered across 15+ university sources, every one publishing a different and inconsistent HTML structure.",
+    setup:
+      "Multi-technique scraping pipeline pairing BeautifulSoup with Playwright to cover static and JavaScript-rendered sources, normalising everything into one relational schema with OAuth2 export to Google Calendar.",
+    gap: "1000+ events · 15+ sources unified",
+    tech: ["Next.js", "BeautifulSoup", "Playwright", "OAuth2"],
+    overview:
+      "A campus event aggregation platform that scrapes and unifies 1000+ events from 15+ university sources into a single queryable, filterable schema — and lets authenticated users push them straight into their own calendar.",
+    impact: [
+      "Scraped and unified 1000+ events from 15+ university sources, normalising inconsistent HTML into a centralised relational schema for dynamic querying and filtering.",
+      "Combined BeautifulSoup and Playwright in one pipeline to handle both static and JavaScript-rendered sources, with deduplication logic and scheduled scraping workflows.",
+      "Built a RESTful API layer with OAuth2 Google Calendar integration, letting authenticated users export aggregated events to personal calendars under token-based access control.",
+    ],
+    metrics: [
+      { label: "Events", value: "1000+" },
+      { label: "Sources", value: "15+" },
+      { label: "Auth", value: "OAuth2" },
+      { label: "Schema", value: "Unified" },
+    ],
+    stack: [
+      { group: "Frontend", items: ["Next.js"] },
+      { group: "Scraping", items: ["BeautifulSoup", "Playwright", "Deduplication"] },
+      { group: "Integration", items: ["REST", "OAuth2", "Google Calendar API"] },
+    ],
+    links: [],
+  },
 ];
 
 export type Directive = {
@@ -386,6 +452,7 @@ export const standings: Stint[] = [
       "Integrated 25+ market data sources (Binance, Glassnode, FRED, OANDA, Dhan, AngelOne, NSE, RBI, Finnhub) behind a unified ingestion layer with caching, health tracking and automatic failover.",
       "Backtested 6,788 signals across 7 assets / 5 years via no-lookahead replay — measured +0.0% edge over base rates and published the null result in FINDINGS.md instead of an unvalidated claim.",
       "Maintained 1,009 tests across 57 suites; shipped CLI, HTTP API and MCP server interfaces with Docker packaging and daily signal collection via GitHub Actions.",
+      "Designed and built the public organisation site (quanthq.in) solo as a static Astro 5 SSG — type-safe MDX content collections with Zod schemas, interactive canvas visualisations in vanilla script tags, light/dark theming and a contrast audit, deployed to a custom domain via GitHub Pages CI.",
     ],
     link: "https://quanthq.in",
   },
@@ -728,6 +795,8 @@ export const timeline: TimelineStint[] = [
   { track: "eng", start: 2023, end: 2023, title: "IETE — ML Intern", detail: "AI chatbot (200+/day), BiLSTM misinformation detector at 87%." },
   { track: "eng", start: 2024, end: 2024, title: "Exam Lounge — AI/NLP Lead", detail: "Led 31 interns; +15% model accuracy; Intern of the Month ×3." },
   { track: "eng", start: 2025, end: 2025, title: "SIGAIDA Campus Energy", detail: "Env-monitoring platform + PyTorch LSTM PM2.5 forecast; 10-person team." },
+  { track: "eng", start: 2025, end: 2025, title: "Project Helix", detail: "1000+ campus events unified from 15+ sources; OAuth2 calendar export." },
+  { track: "eng", start: 2025, end: 2026, title: "BERT Ad Compliance Classifier", detail: "Owned the data layer of a DistilBERT FDA/FTC classifier across 15 categories." },
   { track: "eng", start: 2025, end: 2026, title: "Adaptive Learning Platform", detail: "7-agent backend + Bayesian Knowledge Tracing from scratch." },
   { track: "eng", start: 2026, end: 2026, title: "HDF Group — SWE", detail: "LLM refactoring engine for the HDF5 C library; dual-model consensus gate (Claude + GPT-4o)." },
   { track: "eng", start: 2026, end: 2026, title: "QuantHQ — SWE Intern", detail: "Solo-built Alpha Engine: multi-asset signal research, 22 analyzers, 1,009 tests." },

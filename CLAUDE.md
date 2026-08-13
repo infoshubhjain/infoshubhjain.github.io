@@ -53,4 +53,4 @@ The original classic dark-theme site (`/prototype` route, `portfolio-data.ts`, `
 - The résumé is an **external Google Drive link** (`driver.resumeUrl`), not a file in `public/`, so updating the PDF there needs no redeploy. There is no `public/resume.pdf`; don't reintroduce a relative path.
 - `eslint.config.mjs` is deliberately permissive (most TS/React rules at `warn`, being tightened incrementally). Don't treat existing warnings as a mandate to refactor; do keep new code warning-free.
 - CI uses `npm`; a `bun.lock` also exists but the workflow installs with npm — keep `package-lock.json` in sync when changing deps.
-- `worklog.md` is a running changelog of design decisions; `README.md` / `CONTRIBUTING.md` are public-facing and partly stale (they still say "no automated tests").
+- `worklog.md` is a running changelog of design decisions; `README.md` / `CONTRIBUTING.md` are public-facing and were updated alongside this file when the old site was removed.

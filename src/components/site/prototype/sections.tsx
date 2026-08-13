@@ -417,7 +417,7 @@ export function Wins() {
 }
 
 export function Directives() {
-  const badge: Record<string, string> = { Patent: P.giallo, Paper: P.rosso, Book: "#a855f7" };
+  const badge: Record<string, string> = { Patent: P.giallo, Paper: P.rosso, Book: "#a855f7", Training: "#38bdf8" };
   return (
     <Shell id="directives">
       <SectorTag n="R&D Bay" label="Publications (Research)" />

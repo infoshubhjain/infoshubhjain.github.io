@@ -73,6 +73,7 @@ export const skills = {
   ],
   "Backend & APIs": [
     "FastAPI", "REST", "OAuth2", "Pydantic v2", "Supabase", "PostgreSQL", "SQLite", "pgvector", "Row-Level Security", "MCP",
+    "asyncio", "httpx", "SSE streaming", "Rate limiting & circuit breakers",
   ],
   "Cloud & DevOps": [
     "Google Cloud Run", "Vercel", "Docker", "Docker Compose", "GitHub Actions CI/CD", "Selenium", "Playwright",
@@ -87,6 +88,7 @@ export const skills = {
   "Research": [
     "Mixed-methods evaluation", "Quantitative & qualitative analysis", "Common-sense reasoning benchmarks",
     "Explainable AI", "Counterfactual reasoning", "Surrogate modeling", "Citation-grade writing",
+    "Reproducibility", "Experimental design", "Hypothesis development", "Literature review & citation tracing",
   ],
   "Data & Visualization": [
     "BeautifulSoup", "Playwright", "OpenAQ", "Open-Meteo", "Google Earth Engine", "GTFS", "Recharts",
@@ -120,6 +122,31 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    id: "meter",
+    title: "Meter — Autonomous LLM Cost Governance Proxy",
+    oneLiner:
+      "Metering proxy that enforces LLM spend ceilings under concurrency, with dual-protocol streaming usage accounting.",
+    description:
+      "A FastAPI proxy that sits in front of OpenAI and Anthropic and runs the full request lifecycle — authenticate → attribute → predict → circuit-break → reserve → forward → capture — for both the OpenAI (/v1/chat/completions) and Anthropic-native (/v1/messages) wire protocols. Model-prefix routing means a caller's existing provider SDK works unmodified against a single endpoint.",
+    problem:
+      "LLM spend has no enforcement layer. Concurrent requests each read the same healthy balance and collectively overspend a shared ceiling, and streamed responses under-bill silently — the failure raises no exception and degrades accounting specifically on the longest, most expensive requests.",
+    solution:
+      "Built an authorize/capture reservation system counting in-flight holds alongside settled ledger spend inside a single asyncio lock, heartbeated every 30s against a 120s TTL so holds cannot expire mid-stream, plus a dual-protocol SSE usage parser and a two-condition circuit breaker (absolute spend floor over 5 minutes AND a 3× burst ratio against the trailing hour).",
+    impact: [
+      "40-way concurrent test against a ceiling funding exactly 4 requests, with TTL-expiry, heartbeat-rescue and zero-hold-leak assertions",
+      "Diagnosed a silent corruption invalidating 100% of streamed cost data — gzipped SSE read as raw bytes — that the entire test suite passed through, because fake upstreams don't compress",
+      "Removed one database round trip from every governed request (~50 ms remote) by folding two spend aggregates into a single scan",
+      "Security audit closed three exploitable defects: a CORS regex matching any *.vercel.app deployment, an unauthenticated payment-loop endpoint, and a per-IP rate-limit bypass",
+      "867 CI assertions across 5 suites, sustaining ~400 req/s over ~5,000 requests at 16 concurrent clients with zero dropped ledger writes",
+    ],
+    timeline: "Aug 2026",
+    tags: ["Systems", "Infrastructure", "LLMs", "Concurrency", "Security"],
+    tech: ["Python", "FastAPI", "asyncio", "PostgreSQL", "httpx", "Docker", "GitHub Actions", "Next.js 16", "TypeScript"],
+    category: "Systems",
+    year: 2026,
+    featured: true,
+  },
   {
     id: "mnemostack",
     title: "Mnemostack — Graph-Aware Code Retrieval",
@@ -615,6 +642,14 @@ export const experience = [
 ];
 
 export const research = [
+  {
+    title: "UR2PhD Pre-REC Research Training Program",
+    venue: "Research Methods & Reproducibility",
+    year: "2026",
+    type: "Training",
+    description:
+      "Reproduced a published protein-structure-classification benchmark across 72 datasets (Python, pandas, NumPy, Matplotlib) — traditional ML stayed competitive with graph deep learning at far lower runtime — plus a counterfactual name-perturbation replication of an NLP toxicity-bias workflow.",
+  },
   {
     title: "IoT & Precision Agriculture System",
     venue: "Granted Patent",

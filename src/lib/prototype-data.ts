@@ -58,6 +58,43 @@ export type Win = {
 
 export const wins: Win[] = [
   {
+    id: "meter",
+    pos: "P1",
+    name: "Meter",
+    year: "2026",
+    role: "Backend & Infra Lead",
+    circuit: "LLM spend has no enforcement layer — concurrent requests race past the same budget ceiling and streamed responses silently under-bill.",
+    setup: "FastAPI metering proxy with an authorize/capture reservation system under a single asyncio lock, dual-protocol SSE usage parsing, and a two-condition circuit breaker.",
+    gap: "~3,600 LOC · 256-assertion suite · ~400 req/s · 1 round trip removed",
+    tech: ["Python", "FastAPI", "asyncio", "PostgreSQL", "Docker"],
+    featured: true,
+    overview:
+      "An autonomous LLM cost-governance proxy that sits in front of OpenAI and Anthropic. It enforces per-project and per-feature spend ceilings on the hot path — authenticate → attribute → predict → circuit-break → reserve → forward → capture — while a caller's existing provider SDK keeps working unmodified.",
+    impact: [
+      "Authorize/capture reservations count in-flight holds alongside settled ledger spend inside one asyncio lock, closing the read-then-call race that lets N concurrent requests overspend a shared ceiling; proved with a 40-way concurrent test against a ceiling funding exactly 4 requests.",
+      "Heartbeats reservations every 30s against a 120s TTL so a hold can't expire mid-stream — the under-billing failure mode that raised no exception and hit the longest, most expensive requests hardest.",
+      "Dual-protocol SSE usage parser reconciles formats that disagree: injects and strips OpenAI's stream_options.include_usage, and reassembles Anthropic usage split across message_start and message_delta — reading only the first under-counts output tokens ~40×.",
+      "Found and fixed a silent corruption invalidating 100% of streamed cost data: real providers gzip SSE, the raw read found no data: lines and quietly downgraded to byte-count estimates. The whole suite passed throughout, because fake upstreams don't compress — pinned with a purpose-built gzipping HTTP server.",
+      "Reframed proxy latency as a round-trip count model, proved the published 52.7 ms benchmark measured a config nobody runs, and removed one database round trip (~50 ms/request remote) by folding two spend aggregates into a single scan.",
+      "Two-condition circuit breaker: absolute spend floor over a 5-minute window AND a 3× burst ratio against the trailing hour, with tag-scoped 429 throttling, key-scoped 403 revocation and half-open recovery — Google's multi-burn-rate pattern adapted, not ported.",
+      "Led a full-codebase security audit reproducing every finding against a running service: a CORS regex matching any attacker-published *.vercel.app deployment, an unauthenticated endpoint exposing the payment loop, and a per-IP rate-limit bypass from a missing --proxy-headers flag.",
+      "Authored the test and measurement infrastructure — 256-assertion proxy suite, 750-LOC soak harness, latency benchmark — sustaining ~400 req/s over ~5,000 requests at 16 clients with zero dropped ledger writes; the harnesses surfaced 6 pre-existing defects.",
+    ],
+    metrics: [
+      { label: "Proxy LOC", value: "~3,600" },
+      { label: "Assertions", value: "867" },
+      { label: "Throughput", value: "~400 req/s" },
+      { label: "Concurrency test", value: "40-way" },
+    ],
+    stack: [
+      { group: "Proxy", items: ["FastAPI", "asyncio", "httpx", "SSE"] },
+      { group: "Data", items: ["PostgreSQL", "spend ledger", "reservations"] },
+      { group: "Control", items: ["Circuit breaker", "Rate limits", "Audit"] },
+      { group: "Ops", items: ["Docker (non-root)", "GitHub Actions", "ruff", "pip-audit"] },
+    ],
+    links: [],
+  },
+  {
     id: "mnemostack",
     pos: "P1",
     name: "Mnemostack",
@@ -264,7 +301,7 @@ export const wins: Win[] = [
 ];
 
 export type Directive = {
-  kind: "Patent" | "Paper" | "Book";
+  kind: "Patent" | "Paper" | "Book" | "Training";
   title: string;
   venue: string;
   year: string;
@@ -272,6 +309,13 @@ export type Directive = {
 };
 
 export const directives: Directive[] = [
+  {
+    kind: "Training",
+    title: "UR2PhD Pre-REC Research Training Program",
+    venue: "Research methods & reproducibility",
+    year: "2026",
+    note: "Reproduced a published protein-structure-classification benchmark across 72 datasets in Python/pandas/Matplotlib — finding traditional ML stays competitive with deep learning at a fraction of the runtime — plus a counterfactual name-perturbation replication of an NLP toxicity-bias workflow.",
+  },
   {
     kind: "Patent",
     title: "IoT & Precision Agriculture System",
@@ -377,6 +421,16 @@ export const standings: Stint[] = [
       "Designed and developed 40+ websites — SEO, responsive UI/UX, payment gateways, e-commerce, booking systems and analytics.",
       "Managed complete project lifecycles from client consultation to launch.",
       "Delivered against a diverse client base spanning personal brands, local businesses and online stores.",
+    ],
+  },
+  {
+    team: "YBI Foundation",
+    role: "AI & ML Intern",
+    period: "2023",
+    note: "Intensive one-month practical AI/ML program.",
+    points: [
+      "Worked through a hands-on AI/ML curriculum end to end — data preparation, model training and evaluation.",
+      "Built and evaluated models on real datasets rather than toy examples.",
     ],
   },
   {
@@ -666,6 +720,7 @@ export const timeline: TimelineStint[] = [
   { track: "eng", start: 2026, end: 2026, title: "QuantHQ — SWE Intern", detail: "Solo-built Alpha Engine: multi-asset signal research, 22 analyzers, 1,009 tests." },
   { track: "eng", start: 2026, end: 2026, title: "Mnemostack", detail: "Graph-aware code-retrieval MCP for AI coding assistants." },
   { track: "eng", start: 2026, end: 2026, title: "AstraSign", detail: "Real-time bidirectional ASL ↔ speech translator, ~30 FPS." },
+  { track: "eng", start: 2026, end: 2026, title: "Meter", detail: "LLM cost-governance proxy: reservation-based spend ceilings, dual-protocol SSE metering." },
 
   // Research & Writing
   { track: "research", start: 2022, end: 2023, title: "MetroVaartha — Jr Editor-in-Chief", detail: "AI column reached 50k+ readers; led the technology section." },
@@ -674,6 +729,7 @@ export const timeline: TimelineStint[] = [
   { track: "research", start: 2024, end: 2024, title: "Paper — Conversational Agents", detail: "IJETAE. Compared ChatGPT, Gemini, Perplexity & Claude." },
   { track: "research", start: 2024, end: 2024, title: "Book — IoT in Agriculture", detail: "ISBN; 500+ copies; recognized by the Governor of Madhya Pradesh." },
   { track: "research", start: 2025, end: 2025, title: "Book — Beyond the Black Box", detail: "ISBN; explainable AI across healthcare, finance & autonomy." },
+  { track: "research", start: 2026, end: 2026, title: "UR2PhD Pre-REC Training", detail: "Reproduced a 72-dataset protein-classification benchmark and an NLP bias workflow." },
 
   // Leadership
   { track: "lead", start: 2022, end: 2025, title: "Project Uthaan — Founder", detail: "200+ volunteers, 6 cities, $24K raised, 2,200+ educated." },

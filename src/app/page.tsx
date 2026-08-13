@@ -272,7 +272,7 @@ export default function Home() {
           </p>
           {/* Credentials */}
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs uppercase tracking-[0.18em]" style={{ color: MUTED }}>
-            <span><span style={{ color: WHITE }}>CS @ UIUC</span> · grad May 2029</span>
+            <span><span style={{ color: WHITE }}>CS @ UIUC</span> · grad {driver.graduation}</span>
             <span><span style={{ color: WHITE }}>3.83</span> CGPA</span>
             <span style={{ color: GIALLO }}>Dean&apos;s List · James Scholar</span>
           </div>

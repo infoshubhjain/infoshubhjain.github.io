@@ -27,6 +27,7 @@ export const driver = {
   team: "Independent · Self-Built",
   role: "CS @ UIUC · AI Systems Engineer",
   grid: "Urbana-Champaign, IL",
+  graduation: "May 2028",
   tagline: "I build intelligent systems that reason — and I race to ship them.",
   intro:
     "Computer Science at the University of Illinois Urbana-Champaign — a top-5 CS program in the U.S. I design multi-agent architectures, train transformers from first principles, ship full-stack products to production, and lead teams that reach tens of thousands. Equal parts engineer, researcher, and builder.",
@@ -49,7 +50,7 @@ export const seasonStats: { label: string; value: string; sub: string }[] = [
   { label: "Sponsorship", value: "$42K+", sub: "funds raised" },
 ];
 
-export const honors = ["B.S. CS · Expected May 2028", "Dean's List", "James Scholar"];
+export const honors = ["Dean's List", "James Scholar"];
 
 export type WinLink = { label: string; href: string; kind: "github" | "demo" | "paper" };
 export type Win = {

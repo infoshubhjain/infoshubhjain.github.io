@@ -24,6 +24,12 @@ describe('Live site data integrity', () => {
     it('should point the resume at a reachable absolute URL', () => {
       expect(driver.resumeUrl).toMatch(/^https?:\/\//);
     });
+
+    // The hero credential line hardcoded "grad May 2029" and drifted a year
+    // out of sync with the CV. It reads driver.graduation now; keep it here.
+    it('should carry a graduation date in Month YYYY form', () => {
+      expect(driver.graduation).toMatch(/^\w+ \d{4}$/);
+    });
   });
 
   describe('SECTIONS', () => {

@@ -26,4 +26,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
-          keep_files: true
+          # Must stay false so gh-pages mirrors out/ exactly. With keep_files
+          # on, anything ever published stays served forever: deleting the old
+          # /prototype site and the public/projects screenshots from source
+          # left both still reachable in production.
+          keep_files: false

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
 import { directives, driver, pitWall, setup, standings, wins } from "@/lib/prototype-data";
+import { ThemeToggle } from "@/components/site/theme-toggle";
 
 const projects = ["meter", "mnemostack", "astrasign", "adaptive-learning"]
   .map((id) => wins.find((project) => project.id === id))
@@ -10,16 +11,16 @@ const selectedRoles = standings.slice(0, 4);
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#0b0c0d] text-[#e8e9e5] selection:bg-[#c8ff62] selection:text-[#11130d]">
+    <main className="formal-site min-h-screen bg-[#0b0c0d] text-[#e8e9e5] selection:bg-[#c8ff62] selection:text-[#11130d]">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
         <a href="#top" aria-label="Shubh Jain, home" className="font-mono text-sm tracking-[-0.08em] text-white">SJ<span className="text-[#c8ff62]">/</span></a>
         <nav aria-label="Main navigation" className="hidden items-center gap-7 font-mono text-[10px] uppercase tracking-[0.14em] text-white/55 sm:flex">
-          <a className="transition hover:text-white focus-visible:outline-2 focus-visible:outline-[#c8ff62]" href="#work">Work</a>
-          <a className="transition hover:text-white focus-visible:outline-2 focus-visible:outline-[#c8ff62]" href="#research">Research</a>
           <a className="transition hover:text-white focus-visible:outline-2 focus-visible:outline-[#c8ff62]" href="#experience">Experience</a>
+          <a className="transition hover:text-white focus-visible:outline-2 focus-visible:outline-[#c8ff62]" href="#work">Projects</a>
+          <a className="transition hover:text-white focus-visible:outline-2 focus-visible:outline-[#c8ff62]" href="#research">Research</a>
           <a className="transition hover:text-white focus-visible:outline-2 focus-visible:outline-[#c8ff62]" href="#contact">Contact</a>
         </nav>
-        <Link href="/f1/" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-3.5 font-mono text-[10px] uppercase tracking-[0.12em] text-white/75 transition hover:border-[#c8ff62]/60 hover:text-[#c8ff62] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8ff62]">F1 version <ArrowUpRight size={13} aria-hidden="true" /></Link>
+        <div className="flex items-center gap-2"><ThemeToggle /><Link href="/f1/" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-3.5 font-mono text-[10px] uppercase tracking-[0.12em] text-white/75 transition hover:border-[#c8ff62]/60 hover:text-[#c8ff62] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8ff62]">F1 version <ArrowUpRight size={13} aria-hidden="true" /></Link></div>
       </header>
 
       <section id="top" className="mx-auto max-w-6xl px-5 pb-14 pt-12 sm:px-8 sm:pb-16 sm:pt-16">
@@ -41,13 +42,32 @@ export default function Home() {
           <a href={driver.github} target="_blank" rel="noreferrer" className="text-white/55 hover:text-white">GitHub <ArrowUpRight size={11} className="inline" aria-hidden="true" /></a>
           <a href={driver.linkedin} target="_blank" rel="noreferrer" className="text-white/55 hover:text-white">LinkedIn <ArrowUpRight size={11} className="inline" aria-hidden="true" /></a>
           <a href={`mailto:${driver.email}`} className="text-white/55 hover:text-white">Email <ArrowUpRight size={11} className="inline" aria-hidden="true" /></a>
-          <a href="#work" className="ml-auto hidden items-center gap-1 text-white/40 hover:text-white sm:inline-flex">Selected work <ArrowDownRight size={12} aria-hidden="true" /></a>
+          <a href="#experience" className="ml-auto hidden items-center gap-1 text-white/40 hover:text-white sm:inline-flex">Experience <ArrowDownRight size={12} aria-hidden="true" /></a>
+        </div>
+      </section>
+
+      <section id="experience" className="border-t border-white/10 px-5 py-14 sm:px-8 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <SectionLabel n="01" title="Experience" aside="Engineering · applied ML" />
+          <div className="mt-7 divide-y divide-white/10 border-y border-white/10">{selectedRoles.map((role) => <article key={`${role.team}-${role.period}`} className="grid gap-x-8 gap-y-2 py-5 md:grid-cols-[11rem_minmax(0,1fr)_11rem]">
+            <div><h3 className="text-sm">{role.team}</h3>{role.link && <a href={role.link} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 font-mono text-[9px] text-white/35 hover:text-white">Organization <ArrowUpRight size={10} aria-hidden="true" /></a>}</div>
+            <div><p className="text-sm text-white/75">{role.role}</p><p className="mt-1 text-xs leading-relaxed text-white/48">{role.note}</p>{role.points.length > 0 && <p className="mt-2 text-xs leading-relaxed text-white/38">{role.points[0]}</p>}</div>
+            <p className="font-mono text-[9px] text-white/40 md:text-right">{role.period}</p>
+          </article>)}</div>
+          <details className="group mt-5">
+            <summary className="inline-flex min-h-10 cursor-pointer items-center gap-2 font-mono text-[10px] uppercase tracking-[0.1em] text-white/50 hover:text-white focus-visible:outline-2 focus-visible:outline-[#c8ff62]">Earlier experience <span aria-hidden="true" className="transition group-open:rotate-90">›</span></summary>
+            <div className="mt-2 divide-y divide-white/10 border-y border-white/10">{standings.slice(4).map((role) => <article key={`${role.team}-${role.period}`} className="grid gap-2 py-4 sm:grid-cols-[11rem_1fr_11rem]"><h3 className="text-sm">{role.team}</h3><div><p className="text-sm text-white/70">{role.role}</p><p className="mt-1 text-xs leading-relaxed text-white/45">{role.note}</p></div><p className="font-mono text-[9px] text-white/40 sm:text-right">{role.period}</p></article>)}</div>
+          </details>
+          <div className="mt-10 grid gap-7 border-t border-white/10 pt-6 md:grid-cols-[11rem_1fr]">
+            <div><p className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/40">Leadership & service</p><p className="mt-1 text-xs text-white/35">Selected, in addition to engineering roles</p></div>
+            <div className="grid gap-x-8 gap-y-5 sm:grid-cols-2">{pitWall.filter((role) => role.featured).slice(0, 4).map((role) => <article key={role.org}><div className="flex justify-between gap-3"><h3 className="text-sm">{role.org}</h3><span className="shrink-0 font-mono text-[9px] text-white/35">{role.period}</span></div><p className="mt-1 text-xs text-white/60">{role.role} · {role.metric}</p></article>)}</div>
+          </div>
         </div>
       </section>
 
       <section id="work" className="border-t border-white/10 px-5 py-14 sm:px-8 sm:py-16">
         <div className="mx-auto max-w-6xl">
-          <SectionLabel n="01" title="Selected engineering" aside="Systems · products · tools" />
+          <SectionLabel n="02" title="Projects" aside="Systems · products · tools" />
           <div className="mt-7 divide-y divide-white/10 border-y border-white/10">
             {projects.map((project, index) => <article key={project.id} className="grid gap-x-8 gap-y-3 py-6 md:grid-cols-[2rem_minmax(0,1fr)_13rem] md:py-7">
               <span className="pt-1 font-mono text-[10px] text-[#c8ff62]">0{index + 1}</span>
@@ -67,7 +87,7 @@ export default function Home() {
 
       <section id="research" className="border-t border-white/10 px-5 py-14 sm:px-8 sm:py-16">
         <div className="mx-auto max-w-6xl">
-          <SectionLabel n="02" title="Research & writing" aside="Evaluation · NLP · explainability" />
+          <SectionLabel n="03" title="Research & writing" aside="Evaluation · NLP · explainability" />
           <div className="mt-7 grid gap-x-12 md:grid-cols-[minmax(0,1fr)_16rem]">
             <div className="divide-y divide-white/10 border-y border-white/10">{research.map((item) => <article key={item.title} className="py-5">
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1"><span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#c8ff62]">{item.kind} · {item.year}</span><span className="font-mono text-[9px] text-white/35">{item.venue}</span>{item.kind === "Paper" && !item.link && <span className="font-mono text-[9px] text-amber-200/70">Citation details incomplete</span>}</div>
@@ -77,25 +97,6 @@ export default function Home() {
             <aside className="mt-8 border-l border-white/10 pl-5 md:mt-0"><p className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/40">Additional publication</p>{directives.filter((item) => item.kind === "Book" || item.kind === "Patent").map((item) => <article key={item.title} className="mt-4"><p className="font-mono text-[9px] text-white/40">{item.kind} · {item.year}</p><h3 className="mt-1 text-sm leading-snug">{item.title}</h3><p className="mt-1 text-xs text-white/40">{item.note}</p></article>)}</aside>
           </div>
           <p className="mt-4 text-[11px] leading-relaxed text-white/35">The 2023 paper and patent need a verified public record or identifier before full citation details can be added.</p>
-        </div>
-      </section>
-
-      <section id="experience" className="border-t border-white/10 px-5 py-14 sm:px-8 sm:py-16">
-        <div className="mx-auto max-w-6xl">
-          <SectionLabel n="03" title="Experience" aside="Engineering · applied ML" />
-          <div className="mt-7 divide-y divide-white/10 border-y border-white/10">{selectedRoles.map((role) => <article key={`${role.team}-${role.period}`} className="grid gap-x-8 gap-y-2 py-5 md:grid-cols-[11rem_minmax(0,1fr)_11rem]">
-            <div><h3 className="text-sm">{role.team}</h3>{role.link && <a href={role.link} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 font-mono text-[9px] text-white/35 hover:text-white">Organization <ArrowUpRight size={10} aria-hidden="true" /></a>}</div>
-            <div><p className="text-sm text-white/75">{role.role}</p><p className="mt-1 text-xs leading-relaxed text-white/48">{role.note}</p>{role.points.length > 0 && <p className="mt-2 text-xs leading-relaxed text-white/38">{role.points[0]}</p>}</div>
-            <p className="font-mono text-[9px] text-white/40 md:text-right">{role.period}</p>
-          </article>)}</div>
-          <details className="group mt-5">
-            <summary className="inline-flex min-h-10 cursor-pointer items-center gap-2 font-mono text-[10px] uppercase tracking-[0.1em] text-white/50 hover:text-white focus-visible:outline-2 focus-visible:outline-[#c8ff62]">Earlier experience <span aria-hidden="true" className="transition group-open:rotate-90">›</span></summary>
-            <div className="mt-2 divide-y divide-white/10 border-y border-white/10">{standings.slice(4).map((role) => <article key={`${role.team}-${role.period}`} className="grid gap-2 py-4 sm:grid-cols-[11rem_1fr_11rem]"><h3 className="text-sm">{role.team}</h3><div><p className="text-sm text-white/70">{role.role}</p><p className="mt-1 text-xs leading-relaxed text-white/45">{role.note}</p></div><p className="font-mono text-[9px] text-white/40 sm:text-right">{role.period}</p></article>)}</div>
-          </details>
-          <div className="mt-10 grid gap-7 border-t border-white/10 pt-6 md:grid-cols-[11rem_1fr]">
-            <div><p className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/40">Leadership & service</p><p className="mt-1 text-xs text-white/35">Selected, in addition to engineering roles</p></div>
-            <div className="grid gap-x-8 gap-y-5 sm:grid-cols-2">{pitWall.filter((role) => role.featured).slice(0, 4).map((role) => <article key={role.org}><div className="flex justify-between gap-3"><h3 className="text-sm">{role.org}</h3><span className="shrink-0 font-mono text-[9px] text-white/35">{role.period}</span></div><p className="mt-1 text-xs text-white/60">{role.role} · {role.metric}</p></article>)}</div>
-          </div>
         </div>
       </section>
 

@@ -175,6 +175,29 @@
   }
 }
 
+.formal-site {
+  --site-accent: #c8ff62;
+  --color-white: #fff;
+  background-color: #0b0c0d;
+  color: #e8e9e5;
+}
+
+.light .formal-site {
+  --site-accent: #476512;
+  --color-white: #20231f;
+  background-color: #f5f4ef;
+  color: #20231f;
+  color-scheme: light;
+}
+
+.formal-site [class*="text-[#c8ff62]"] {
+  color: var(--site-accent);
+}
+
+.light .formal-site [class*="text-[#c8ff62]"] {
+  color: var(--site-accent);
+}
+
 /* ===================================================================
    PREMIUM UTILITY CLASSES
    =================================================================== */
@@ -269,4 +292,3 @@
     scroll-behavior: auto !important;
   }
 }
-

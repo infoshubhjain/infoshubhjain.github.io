@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Single-page personal portfolio for Shubh Jain. Next.js 16 (App Router) + React 19 + TypeScript, Tailwind v4, shadcn/ui (new-york style), framer-motion, and three.js / react-three-fiber for 3D. Deployed as a static export to GitHub Pages.
+Two-route personal portfolio for Shubh Jain. Next.js 16 (App Router) + React 19 + TypeScript, Tailwind v4, shadcn/ui (new-york style), framer-motion, and three.js / react-three-fiber for the optional F1 experience. Deployed as a static export to GitHub Pages.
 
 ## Commands
 
@@ -33,8 +33,9 @@ Two branches matter: **`source`** (this one — all work happens here) and **`gh
 | Route | File | Content source |
 |---|---|---|
 | `/` | `src/app/page.tsx` | `src/lib/prototype-data.ts` |
+| `/f1/` | `src/app/f1/page.tsx` | `src/lib/prototype-data.ts` |
 
-So `prototype-*` files back the **live homepage**, and all its components live in `src/components/site/prototype/*`.
+The root route is the formal dark portfolio. The optional F1 presentation and its client components live in `src/app/f1/page.tsx` and `src/components/site/prototype/*`.
 
 The original classic dark-theme site (`/prototype` route, `portfolio-data.ts`, `components/site/sections/*` and ~23 supporting components) was deleted — nothing linked to it, and its data file was still feeding the live site's sitemap and JSON-LD, publishing the wrong project list and dead `#about` / `#projects` anchors to search engines.
 
@@ -45,17 +46,17 @@ The original classic dark-theme site (`/prototype` route, `portfolio-data.ts`, `
 
   They were cut on 2026-08-13 at the owner's request. If a future pass "notices they're missing from the CV", that is this note's whole purpose — leave them out.
 - **Every list renders in the order it is declared — keep them reverse-chronological.** `standings`, `pitWall` and `timeline` are sorted newest-first (`pitWall` by end date, so ongoing "Present" roles lead). `trophies` and `directives` sort newest-first *within* their groupings — tier 1/2 for trophies, kind for directives — because those groupings drive layout. `trophies` tier 1 must stay exactly three: it renders as a P2·P1·P3 podium on a 3-column grid.
-- **`SECTIONS`** (every section, in document order) lives in `prototype-data.ts` rather than `pit-nav.tsx` so `sitemap.ts`, a server module, can read it without pulling a client component into the server graph. `pit-nav.tsx` re-exports it.
-- **SEO metadata is generated from the same data**: `layout.tsx` derives JSON-LD from `wins` (SoftwareApplication) and `directives` (ScholarlyArticle / Book), and `sitemap.ts` from `SECTIONS`. Adding a project or paper updates structured data automatically — but note `layout.tsx` parses a book's ISBN out of `directive.venue` with `replace("ISBN ", "")`, which `prototype-data.test.ts` pins.
+- **`SECTIONS`** lives in `prototype-data.ts` for the F1 section menu; `pit-nav.tsx` re-exports it.
+- **SEO metadata is generated from the same data**: `layout.tsx` derives JSON-LD from `wins` (SoftwareApplication) and `directives` (ScholarlyArticle / Book). `sitemap.ts` lists the two page routes. Root Open Graph and Twitter images are rendered at build time by `opengraph-image.tsx` and `twitter-image.tsx` from `share-card.tsx`.
 - **`src/lib/prototype-theme.ts`** — the F1 theme's `PALETTES` (`ferrari` | `redbull`), exposed as `--pt-*` CSS vars (`--pt-primary`, `--pt-canvas`, `--pt-accent`…) that F1 components read. `prototype-fonts.ts` holds its display fonts (Anton, serif, grotesk), separate from layout fonts.
 - **`src/components/ui/`** — shadcn primitives; add new ones with the shadcn CLI (config in `components.json`, lucide icons). Only `sonner` survives the old-site removal. **`src/components/site/prototype/`** — every bespoke component on the page.
-- **`src/app/layout.tsx`** — fonts (Geist, Geist Mono, Space Grotesk), theme provider (`next-themes`), Toaster, and all SEO/OG metadata. `sitemap.ts` and `robots.ts` live in `src/app/`.
+- **`src/app/layout.tsx`** — fonts (Geist, Geist Mono, Space Grotesk), theme provider (`next-themes`), Toaster, and SEO metadata. `sitemap.ts`, `robots.ts`, and generated social cards live in `src/app/`.
 - Path alias `@/*` → `src/*`. `cn()` helper in `src/lib/utils.ts`; hooks in `src/lib/hooks/` (`use-media-query` exports `usePrefersReducedMotion` too, `use-smooth-scroll` wraps lenis).
 - Styling is Tailwind v4 via CSS-first config in `src/app/globals.css` (no `tailwind.config`); theme tokens are oklch CSS variables (`--primary`, `--accent`, …).
 
 ## Notes
 
-- Heavy client-side animation: framer-motion, `lenis` smooth scroll, three.js. The page sets `MotionConfig reducedMotion="user"` and components check `usePrefersReducedMotion()` — keep new animation behind the same guards.
+- The formal homepage is server-rendered and has no animation dependency. The F1 route uses client-side framer-motion, Lenis, and three.js; it sets `MotionConfig reducedMotion="user"` and checks `usePrefersReducedMotion()` — keep new F1 animation behind the same guards.
 - The résumé is an **external Google Drive link** (`driver.resumeUrl`), not a file in `public/`, so updating the PDF there needs no redeploy. There is no `public/resume.pdf`; don't reintroduce a relative path.
 - `eslint.config.mjs` is deliberately permissive (most TS/React rules at `warn`, being tightened incrementally). Don't treat existing warnings as a mandate to refactor; do keep new code warning-free.
 - CI uses `npm`; a `bun.lock` also exists but the workflow installs with npm — keep `package-lock.json` in sync when changing deps.

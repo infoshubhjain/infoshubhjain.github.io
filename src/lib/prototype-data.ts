@@ -110,7 +110,10 @@ export const wins: Win[] = [
       { group: "Control", items: ["Circuit breaker", "Rate limits", "Audit"] },
       { group: "Ops", items: ["Docker (non-root)", "GitHub Actions", "ruff", "pip-audit"] },
     ],
-    links: [{ label: "Live demo", href: "https://meter-three-beta.vercel.app/", kind: "demo" }],
+    links: [
+      { label: "Source", href: "https://github.com/infoshubhjain/meter", kind: "github" },
+      { label: "Live demo", href: "https://meter-three-beta.vercel.app/", kind: "demo" },
+    ],
   },
   {
     id: "mnemostack",
@@ -342,7 +345,7 @@ export const wins: Win[] = [
       { group: "Scraping", items: ["BeautifulSoup", "Playwright", "Deduplication"] },
       { group: "Integration", items: ["REST", "OAuth2", "Google Calendar API"] },
     ],
-    links: [],
+    links: [{ label: "Source", href: "https://github.com/infoshubhjain/Project-Helix", kind: "github" }],
   },
 ];
 
@@ -352,6 +355,7 @@ export type Directive = {
   venue: string;
   year: string;
   note: string;
+  link?: string;
 };
 
 export const directives: Directive[] = [
@@ -371,10 +375,11 @@ export const directives: Directive[] = [
   },
   {
     kind: "Paper",
-    title: "A Comparative Assessment of Advanced Conversational Agents",
-    venue: "IJETAE",
+    title: "A Comparative Assessment of Advanced Conversational Agents: A Multifaceted Evaluation of ChatGPT, Gemini, Perplexity, and Claude",
+    venue: "International Journal of Emerging Technology and Advanced Engineering, 14(2), 59–69",
     year: "2024",
-    note: "Mixed-methods evaluation of ChatGPT, Gemini, Perplexity & Claude across accuracy, coherence, creativity and bias.",
+    note: "Compared ChatGPT, Gemini, Perplexity, and Claude using structured factual, open-ended, situational, hypothetical, and creative prompts, with quantitative and qualitative review. The paper reports Gemini higher on factual accuracy and ChatGPT stronger on creative text generation in its examples.",
+    link: "https://doi.org/10.46338/ijetae0224_07",
   },
   {
     kind: "Paper",

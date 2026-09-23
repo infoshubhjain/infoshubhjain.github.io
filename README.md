@@ -1,8 +1,9 @@
 # Shubh Jain — Portfolio
 
-An interactive, F1-themed portfolio website showcasing AI systems, research, and engineering projects. Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Three.js, and Framer Motion.
+Personal portfolio for Shubh Jain, with a formal dark homepage and a separate interactive F1 presentation. It showcases software engineering, applied ML, research, and leadership. Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, Three.js, and Framer Motion.
 
-- **Live Site**: https://infoshubhjain.github.io — racing-themed experience with telemetry HUD, timing tower, circuit map and a Grid Run minigame
+- **Formal portfolio**: https://infoshubhjain.github.io
+- **F1 version**: https://infoshubhjain.github.io/f1/ — telemetry HUD, timing tower, circuit map, and Grid Run minigame
 
 ## 🚀 Quick Start
 
@@ -35,9 +36,13 @@ npm run lint
 ```
 src/
 ├── app/                    # Next.js App Router
-│   ├── layout.tsx         # Root layout with fonts, SEO, themes
-│   ├── page.tsx           # The homepage
-│   └── globals.css        # Global styles and theme tokens
+│   ├── layout.tsx          # Root layout with fonts, SEO, themes
+│   ├── page.tsx            # Formal homepage
+│   ├── f1/page.tsx         # Interactive F1 version
+│   ├── opengraph-image.tsx # Generated social preview
+│   ├── twitter-image.tsx   # Generated social preview
+│   ├── share-card.tsx      # Shared social-card design
+│   └── globals.css         # Global styles and theme tokens
 ├── components/
 │   ├── site/prototype/    # Every component on the page
 │   └── ui/                # shadcn/ui primitives
@@ -48,7 +53,7 @@ src/
 ```
 
 ### Content Management
-All portfolio content is centralized in `src/lib/prototype-data.ts`. This includes:
+Portfolio facts are centralized in `src/lib/prototype-data.ts`; route-specific presentation lives in the corresponding page and components. The data includes:
 - Profile information
 - Projects and research
 - Work experience
@@ -56,12 +61,12 @@ All portfolio content is centralized in `src/lib/prototype-data.ts`. This includ
 - Leadership roles
 - Achievements
 
-**⚠️ Important**: Edit content in `prototype-data.ts`, not in individual components. The `prototype-` prefix is historical — the F1 design began as a prototype, replaced the original site, and kept its filenames.
+**Important**: Edit portfolio facts in `prototype-data.ts`, not in components. The `prototype-` prefix is historical; those components now exclusively power the optional F1 route.
 
 ## 🎨 Theming
 
 ### Team Liveries
-The F1 theme ships two selectable liveries (Ferrari / Red Bull), defined as `PALETTES` in `src/lib/prototype-theme.ts` and exposed as `--pt-*` CSS variables.
+The formal homepage uses a fixed charcoal, ivory, and lime palette. The F1 route ships two selectable liveries (Ferrari / Red Bull), defined as `PALETTES` in `src/lib/prototype-theme.ts` and exposed as `--pt-*` CSS variables.
 
 ### Theme Tokens
 Colors use OKLCH color space for perceptual uniformity:
@@ -91,12 +96,11 @@ GH_PAGES=1 npx next build
 
 ## 🧪 Testing
 
-Currently, the project uses manual testing via:
+The project uses Vitest for data and utility checks, plus:
 - Development server: `npm run dev`
 - Build verification: `npm run build`
 - Linting: `npm run lint`
-
-**Future**: Add automated testing with Jest/Vitest and Playwright.
+- Tests: `npm run test:run`
 
 ## 📦 Performance Optimizations
 

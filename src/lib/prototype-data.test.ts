@@ -38,7 +38,7 @@ describe('Live site data integrity', () => {
       expect(new Set(ids).size).toBe(ids.length);
     });
 
-    // The sitemap emits /#<id> for each of these, so a typo publishes a dead anchor.
+    // The F1 section menu links these ids; keep them stable and readable.
     it('should have a plain-language label for every section', () => {
       SECTIONS.forEach((s) => {
         expect(s.id).toMatch(/^[a-z-]+$/);

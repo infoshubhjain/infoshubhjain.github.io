@@ -1,19 +1,10 @@
 import type { MetadataRoute } from "next";
-import { SECTIONS } from "@/lib/prototype-data";
-
 export const dynamic = "force-static";
 
 const SITE_URL = "https://infoshubhjain.github.io";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-
-  const sections = SECTIONS.map((section) => ({
-    url: `${SITE_URL}/#${section.id}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
 
   return [
     {
@@ -22,6 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
-    ...sections,
+    {
+      url: `${SITE_URL}/f1/`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
   ];
 }

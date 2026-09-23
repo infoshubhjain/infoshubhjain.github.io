@@ -29,11 +29,11 @@ const SITE_URL = "https://infoshubhjain.github.io";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Shubh Jain — AI Systems Engineer, built at the limit",
+    default: "Shubh Jain — Computer Science, Software Engineering & ML Research",
     template: "%s · Shubh Jain",
   },
   description:
-    "Computer Science student at UIUC building ambitious AI systems, conducting research, shipping real projects, and leading at scale. Multi-agent learning platforms, transformers, NLP, full-stack engineering, and 2 published books.",
+    "Computer Science student at UIUC building software systems and studying machine learning in practice. Selected work in LLM infrastructure, graph-aware retrieval, ASL translation, model evaluation, and applied ML research.",
   keywords: [
     "Shubh Jain",
     "UIUC Computer Science",
@@ -59,24 +59,15 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "Shubh Jain",
-    title: "Shubh Jain — AI Systems Engineer, built at the limit",
+    title: "Shubh Jain — Computer Science, Software Engineering & ML Research",
     description:
-      "Computer Science @ UIUC. Building ambitious AI systems, conducting research, and shipping real products.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Shubh Jain, #16 — AI Systems Engineer, built at the limit. CS @ UIUC, 3.83 CGPA, 2 papers, 2 books, 1 patent.",
-      },
-    ],
+      "Computer Science @ UIUC. Software engineering and applied ML work across LLM infrastructure, graph-aware retrieval, model evaluation, and accessible technology.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shubh Jain — AI Systems Engineer, built at the limit",
+    title: "Shubh Jain — Computer Science, Software Engineering & ML Research",
     description:
-      "Computer Science @ UIUC. Building ambitious AI systems, conducting research, and shipping real products.",
-    images: ["/og-image.png"],
+      "Computer Science @ UIUC. Software engineering and applied ML work across LLM infrastructure, graph-aware retrieval, model evaluation, and accessible technology.",
   },
   robots: {
     index: true,
@@ -161,7 +152,9 @@ const researchJsonLd = directives
     name: d.title,
     description: d.note,
     author: { "@type": "Person", name: "Shubh Jain" },
+    url: d.link ?? SITE_URL,
     publisher: { "@type": "Organization", name: d.venue },
+    ...(d.link && { identifier: d.link }),
     datePublished: d.year,
   }));
 

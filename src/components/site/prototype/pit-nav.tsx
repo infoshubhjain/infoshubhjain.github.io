@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { anton } from "@/lib/prototype-fonts";
 import { SECTIONS } from "@/lib/prototype-data";
+import Link from "next/link";
 
 /**
  * The page runs ~14 screens deep with no other way to move around it. This is a
@@ -77,6 +78,10 @@ export function PitNav({ onGo }: { onGo: (id: string) => void }) {
         Menu
         <kbd className="hidden rounded bg-white/10 px-1.5 py-0.5 text-[9px] tracking-normal sm:inline">⌘K</kbd>
       </button>
+
+      <Link href="/" className="pt-glass pointer-events-auto fixed left-4 top-4 z-40 rounded-full border px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] sm:left-8 sm:top-8 sm:px-4" style={{ borderColor: "var(--pt-line)", color: "var(--pt-white)" }}>
+        Formal version
+      </Link>
 
       <AnimatePresence>
         {open && (

@@ -1,0 +1,348 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Github, Linkedin, Mail, FileDown, ArrowRight } from "lucide-react";
+import dynamic from "next/dynamic";
+import { TelemetryHud } from "@/components/site/prototype/telemetry-hud";
+import {
+  Driver,
+  Wins,
+  Directives,
+  Setup,
+  PitWall,
+  Radio,
+  Podium,
+  Standings,
+} from "@/components/site/prototype/sections";
+import { EngineAudio } from "@/components/site/prototype/engine-audio";
+import { TrophyCabinet } from "@/components/site/prototype/trophy-cabinet";
+import { EasterEggs } from "@/components/site/prototype/easter-eggs";
+import { StrategyBoard } from "@/components/site/prototype/timeline";
+import { CircuitMap } from "@/components/site/prototype/circuit-map";
+import { TimingTower } from "@/components/site/prototype/timing-tower";
+import { F1Loader } from "@/components/site/prototype/f1-loader";
+
+import { PitNav } from "@/components/site/prototype/pit-nav";
+
+// three.js + R3F + postprocessing is ~600KB of the client bundle, and React can't
+// hydrate — so the start-lights timers can't even start — until it has all parsed.
+// Both of these mount only after an explicit trigger, so neither belongs in the
+// initial bundle. This is what actually gated first paint, not the loader length.
+const F1Scene = dynamic(() => import("@/components/site/prototype/f1-scene").then((m) => m.F1Scene), { ssr: false });
+const GridRun = dynamic(() => import("@/components/site/prototype/grid-run").then((m) => m.GridRun), { ssr: false });
+import { anton, serif, grotesk } from "@/lib/prototype-fonts";
+import { driver } from "@/lib/prototype-data";
+import { usePrefersReducedMotion, useMediaQuery } from "@/lib/hooks/use-media-query";
+import { useSmoothScroll } from "@/lib/hooks/use-smooth-scroll";
+import { PALETTES, DEFAULT_TEAM, TEAM_KEY, savedTeam, type TeamId } from "@/lib/prototype-theme";
+
+const ROSSO = "var(--pt-primary)";
+const CARBON = "var(--pt-canvas)";
+const GIALLO = "var(--pt-accent)";
+const WHITE = "var(--pt-white)";
+const MUTED = "var(--pt-muted)";
+
+const NOISE =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+
+/** Filmic overlay: soft vignette + subtle film grain. */
+function CinematicOverlay() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-30">
+      <div className="absolute inset-0" style={{ boxShadow: "inset 0 0 220px 50px rgba(0,0,0,0.6)" }} />
+      <div className="absolute inset-0 opacity-[0.045] mix-blend-overlay" style={{ backgroundImage: NOISE }} />
+    </div>
+  );
+}
+
+
+/** F1 "swipe" flash on team change — a skewed colour panel in the incoming
+ *  team's colour sweeps across and fades, branding the swap. Remounted via a
+ *  changing `key` so each toggle replays it. */
+function TeamWipe({ team }: { team: TeamId }) {
+  const p = PALETTES[team];
+  return (
+    <motion.div
+      className="pointer-events-none fixed inset-0 z-[60] flex items-center justify-center overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: [0, 1, 1, 0] }}
+      transition={{ duration: 0.72, times: [0, 0.22, 0.5, 1], ease: "easeInOut" }}
+    >
+      <motion.div
+        className="absolute inset-y-0 -left-1/4 w-[150%] -skew-x-12"
+        style={{ background: p.vars["--pt-primary"] }}
+        initial={{ x: "-30%" }}
+        animate={{ x: ["-30%", "0%", "30%"] }}
+        transition={{ duration: 0.72, ease: [0.76, 0, 0.24, 1] }}
+      />
+      <span
+        className={`${anton.className} relative text-[12vw] uppercase leading-none`}
+        style={{ color: p.vars["--pt-on-primary"] }}
+      >
+        {p.label}
+      </span>
+    </motion.div>
+  );
+}
+
+function TeamToggle({ team, onChange }: { team: TeamId; onChange: (t: TeamId) => void }) {
+  return (
+    <div className="pointer-events-auto pt-glass fixed left-1/2 top-4 z-30 flex -translate-x-1/2 items-center gap-1.5 rounded-full border p-1.5 sm:top-6" style={{ borderColor: "rgba(255,255,255,0.14)" }}>
+      {(["ferrari", "redbull"] as TeamId[]).map((t) => {
+        const active = team === t;
+        return (
+          <button
+            key={t}
+            onClick={() => onChange(t)}
+            className="whitespace-nowrap rounded-full px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.15em] transition-colors sm:px-6 sm:py-2.5 sm:text-sm sm:tracking-[0.18em]"
+            style={{
+              background: active ? "var(--pt-primary)" : "transparent",
+              color: active ? "var(--pt-on-primary)" : "var(--pt-muted)",
+            }}
+            aria-pressed={active}
+          >
+            {PALETTES[t].label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function Home() {
+  const reduced = usePrefersReducedMotion();
+  const mobile = useMediaQuery("(max-width: 768px)");
+  const [launched, setLaunched] = useState(false);
+  // Mounting F1Scene the instant the loader finishes made the Draco decode and
+  // shader compile starve the loader's own exit animation — the overlay sat on
+  // screen for ~4s after the lights had gone out. Wait for the exit to complete
+  // (the timeout covers repeat visits, where the loader is skipped entirely).
+  const [sceneReady, setSceneReady] = useState(false);
+  const [team, setTeam] = useState<TeamId>(DEFAULT_TEAM);
+  const [racing, setRacing] = useState(false);
+  const speedRef = useRef(0);
+  useSmoothScroll();
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTeam(savedTeam());
+  }, []);
+
+  // `flash.n` is a nonce that remounts TeamWipe so its animation replays.
+  const [flash, setFlash] = useState<{ team: TeamId; n: number } | null>(null);
+  // The colour-morph transition (.pt-morphing) is only worth its cost during a
+  // swap — see globals.css.
+  const [morphing, setMorphing] = useState(false);
+  const morphTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const changeTeam = (t: TeamId) => {
+    if (t === team) return;
+    setTeam(t);
+    localStorage.setItem(TEAM_KEY, t);
+    setMorphing(true);
+    clearTimeout(morphTimer.current);
+    morphTimer.current = setTimeout(() => setMorphing(false), 600);
+    if (!reduced) setFlash((f) => ({ team: t, n: (f?.n ?? 0) + 1 }));
+  };
+  useEffect(() => () => clearTimeout(morphTimer.current), []);
+
+  useEffect(() => {
+    if (!launched) return;
+    const t = setTimeout(() => setSceneReady(true), 900);
+    return () => clearTimeout(t);
+  }, [launched]);
+
+  // Code-splitting F1Scene also moved drei's useGLTF.preload into the split
+  // chunk, so the 1.1 MB car only started downloading once the loader had gone.
+  // Warm the HTTP cache immediately instead: the transfer overlaps the lights,
+  // and drei's own load is then a cache hit. No three.js import needed.
+  useEffect(() => {
+    const c = new AbortController();
+    fetch(PALETTES[savedTeam()].three.model, { signal: c.signal }).catch(() => {});
+    return () => c.abort();
+  }, []);
+
+  const palette = PALETTES[team];
+
+  const goTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const lenis = (window as unknown as { __lenis?: { scrollTo: (t: HTMLElement, o?: object) => void } }).__lenis;
+    if (lenis) lenis.scrollTo(el, { offset: -20 });
+    else el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    let raf = 0;
+    let lastY = window.scrollY;
+    let lastT = performance.now();
+    const onScroll = () => {
+      const now = performance.now();
+      const dy = Math.abs(window.scrollY - lastY);
+      const dt = Math.max(1, now - lastT);
+      speedRef.current = Math.max(speedRef.current, Math.min(1, dy / dt / 2.4));
+      lastY = window.scrollY;
+      lastT = now;
+    };
+    const decay = () => {
+      speedRef.current *= 0.9;
+      raf = requestAnimationFrame(decay);
+    };
+    raf = requestAnimationFrame(decay);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  return (
+    <main
+      className={`pt-root ${morphing ? "pt-morphing " : ""}${grotesk.className}`}
+      style={{ ...palette.vars, background: CARBON, color: WHITE } as React.CSSProperties}
+    >
+      <AnimatePresence onExitComplete={() => setSceneReady(true)}>
+        {!launched && <F1Loader key="f1-loader" onDone={() => setLaunched(true)} />}
+      </AnimatePresence>
+
+      {/* F1 endless-runner minigame — launched from the hero Drive button */}
+      <AnimatePresence>
+        {racing && <GridRun key="grid-run" team={team} onExit={() => setRacing(false)} />}
+      </AnimatePresence>
+
+      {/* Mount the heavy 3D scene only after the loader — keeps the launch sequence
+          smooth (no timer starvation) and crossfades the car in. */}
+      {sceneReady && (
+        <div style={{ animation: "ptFade 1s ease" }}>
+          <F1Scene speedRef={speedRef} reduced={reduced} colors={palette.three} mobile={mobile} />
+        </div>
+      )}
+      <CinematicOverlay />
+      <TelemetryHud speedRef={speedRef} />
+      <CircuitMap />
+      <EngineAudio speedRef={speedRef} />
+      <TeamToggle team={team} onChange={changeTeam} />
+      <PitNav onGo={goTo} />
+      {flash && <TeamWipe key={flash.n} team={flash.team} />}
+      <EasterEggs speedRef={speedRef} team={team} />
+
+      {/* Broadcast chrome — hidden on phones (toggle carries the team identity there) */}
+      <div className="pointer-events-none fixed inset-0 z-20 hidden sm:block">
+        <div className="absolute left-5 top-5 flex items-center gap-3 sm:left-8 sm:top-8">
+          <span className={`${anton.className} text-lg uppercase`} style={{ color: ROSSO }}>
+            {palette.label} <span style={{ color: WHITE }}>·{driver.number}</span>
+          </span>
+          <span className="h-4 w-px bg-white/20" />
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/50">
+            Round 01 · Urbana GP
+          </span>
+        </div>
+      </div>
+
+      {/* Hero — the grid */}
+      <section className="relative z-10 flex min-h-screen flex-col justify-center px-5 pb-28 pt-20 sm:px-8 sm:pb-0 sm:pt-0 md:px-16">
+        {/* Mobile legibility scrim — dims the car behind the hero text on phones */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 sm:hidden"
+          style={{
+            background:
+              "linear-gradient(180deg, var(--pt-canvas) 14%, color-mix(in srgb, var(--pt-canvas) 55%, transparent) 46%, var(--pt-canvas) 90%)",
+          }}
+        />
+        <motion.div
+          className="relative w-full max-w-6xl"
+          initial={{ opacity: 0, y: 24 }}
+          animate={launched ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+          <div className="lg:max-w-3xl">
+          <div className="mb-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.35em]" style={{ color: ROSSO }}>
+            <span className="h-2 w-2 rounded-full" style={{ background: ROSSO }} />
+            {driver.role} · {driver.team}
+          </div>
+          <h1 className={`${anton.className} text-[19vw] uppercase leading-[0.8] tracking-[0.005em] sm:text-[15vw] md:text-[13rem]`}>
+            Shubh
+            <br />
+            <span style={{ color: ROSSO }}>Jain</span>
+          </h1>
+          <p className="mt-8 max-w-xl text-lg leading-relaxed sm:text-2xl" style={{ color: "#d6d4ce" }}>
+            {driver.tagline} <span className={`${serif.className} italic`}>Built from first principles.</span>
+          </p>
+          {/* Credentials */}
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs uppercase tracking-[0.18em]" style={{ color: MUTED }}>
+            <span><span style={{ color: WHITE }}>CS @ UIUC</span> · grad {driver.graduation}</span>
+            <span><span style={{ color: WHITE }}>3.83</span> CGPA</span>
+            <span style={{ color: GIALLO }}>Dean&apos;s List · James Scholar</span>
+          </div>
+          {/* Primary CTAs — the work leads; the game is a chip beside it. */}
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => goTo("wins")}
+              className={`${anton.className} inline-flex items-center gap-3 rounded-xl px-7 py-4 text-2xl uppercase tracking-wide shadow-lg transition-transform hover:-translate-y-0.5`}
+              style={{ background: ROSSO, color: "var(--pt-on-primary)" }}
+            >
+              View the work <ArrowRight className="h-5 w-5" />
+            </button>
+            <a
+              href={driver.resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pt-glass inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+              style={{ borderColor: "var(--pt-line)", color: WHITE }}
+            >
+              <FileDown className="h-4 w-4" /> Résumé
+            </a>
+            <div className="flex items-center gap-2">
+              {[
+                { Icon: Github, href: driver.github, label: "GitHub" },
+                { Icon: Linkedin, href: driver.linkedin, label: "LinkedIn" },
+                { Icon: Mail, href: `mailto:${driver.email}`, label: "Email", isMailto: true },
+              ].map(({ Icon, href, label, isMailto }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={isMailto ? undefined : "_blank"}
+                  rel={isMailto ? undefined : "noopener noreferrer"}
+                  aria-label={label}
+                  className="pt-glass flex h-11 w-11 items-center justify-center rounded-xl border transition-transform hover:-translate-y-0.5"
+                  style={{ borderColor: "var(--pt-line)", color: WHITE }}
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+            <button
+              onClick={() => setRacing(true)}
+              className="pt-glass inline-flex items-center gap-2 rounded-xl border px-4 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
+              style={{ borderColor: GIALLO, color: GIALLO }}
+            >
+              ▶ Drive <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] tracking-normal">GAME</span>
+            </button>
+          </div>
+          </div>{/* /left column */}
+          </div>{/* /hero two-column */}
+          <div className="mt-12 font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: GIALLO }}>
+            ↓ &nbsp;scroll to accelerate — telemetry is live
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Recruiter-optimized: education → experience → projects → research →
+          leadership → stack → contact. The stack sits last: it's the reference
+          sheet you check after the work has already convinced you. */}
+      <Driver />
+      <Standings />
+      <Wins />
+      <TimingTower />
+      <Directives />
+      <PitWall />
+      <TrophyCabinet />
+      <StrategyBoard />
+      <Setup />
+      <Radio />
+      <Podium />
+    </main>
+  );
+}

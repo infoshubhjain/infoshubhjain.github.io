@@ -57,7 +57,7 @@ The original classic dark-theme site (`/prototype` route, `portfolio-data.ts`, `
 ## Notes
 
 - The formal homepage is server-rendered and has no animation dependency. The F1 route uses client-side framer-motion, Lenis, and three.js; it sets `MotionConfig reducedMotion="user"` and checks `usePrefersReducedMotion()` — keep new F1 animation behind the same guards.
-- The résumé is an **external Google Drive link** (`driver.resumeUrl`), not a file in `public/`, so updating the PDF there needs no redeploy. There is no `public/resume.pdf`; don't reintroduce a relative path.
+- The résumé is the versioned `public/Shubh_Jain_SWE_Resume.pdf`. `driver.resumeUrl` uses its absolute GitHub Pages URL so both routes share the same download. Update the PDF with future CV changes; tests check that the referenced asset exists.
 - `eslint.config.mjs` is deliberately permissive (most TS/React rules at `warn`, being tightened incrementally). Don't treat existing warnings as a mandate to refactor; do keep new code warning-free.
 - CI uses `npm`; a `bun.lock` also exists but the workflow installs with npm — keep `package-lock.json` in sync when changing deps.
 - `worklog.md` is a running changelog of design decisions; `README.md` / `CONTRIBUTING.md` are public-facing and were updated alongside this file when the old site was removed.

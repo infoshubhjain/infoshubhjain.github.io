@@ -59,3 +59,10 @@ Task: Rebuilt the portfolio as an F1 race-weekend theme (static export to GitHub
 - `npm run lint`: clean. `GH_PAGES=1 npx next build`: EXIT 0 (routes `/`, `/prototype`, `/robots.txt`, `/sitemap.xml`).
 - Local preview: `python3 -m http.server 3000 --directory out`; both pages 200 with 0 console errors.
 - Browser-audited both pages: section order, links, new entries, bullets, YBI absence all confirmed.
+# November 21, 2026: CV and portfolio refresh
+
+- Added Mega Service Solutions, ConvAI/GroundWorks, and OnCARE to current professional experience. Kept SIGMobile in projects and leadership, and added separate CS124/ENG177 teaching roles.
+- Added RecallRush, ScrollEat, GeoCrop, and FloodSense to both presentations; made all projects, leadership/service, and awards accessible from the formal homepage.
+- Updated the shared profile, skills, timeline, Llama Naturals dates, and current SWE resume PDF. Kept the raw CV ignored and retained the two deliberately excluded older roles.
+- Labeled GroundWorks as an ICLR 2027 submission in visible copy and structured data. Corrected the explainable-AI book's ASIN so it is not emitted as an ISBN.
+- Verified 31 tests, CI lint, static export, desktop/narrow-mobile layout, expandable content, and F1 rendering.

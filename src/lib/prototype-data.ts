@@ -28,21 +28,22 @@ export const driver = {
   role: "CS @ UIUC · AI Systems Engineer",
   grid: "Urbana-Champaign, IL",
   graduation: "May 2028",
+  degree: "B.S. Computer Science",
+  gpa: "3.83 / 4.00",
+  summary: "I build reliable backend systems, data pipelines, and AI tools. At UIUC, I study how agents handle changing requirements and contribute to human-centered AI research.",
   tagline: "I build intelligent systems that reason — and I race to ship them.",
   intro:
-    "Computer Science at the University of Illinois Urbana-Champaign — a top-5 CS program in the U.S. I design multi-agent architectures, train transformers from first principles, ship full-stack products to production, and lead teams that reach tens of thousands. Equal parts engineer, researcher, and builder.",
+    "I'm a Computer Science undergraduate at UIUC, graduating in May 2028. I build backend systems, research software, and AI infrastructure, from concurrent budget controls to verified code changes. My research spans agent evaluation in ConvAI Lab and exploratory work on AI-assisted learning in OnCARE Lab. I also lead student engineering projects and teach in CS124 and ENG177.",
   email: "shubhj3@illinois.edu",
   github: "https://github.com/infoshubhjain",
   linkedin: "https://www.linkedin.com/in/infoshubhjain/",
-  // Résumé is an external link (Google Drive / Dropbox) so updating the file
-  // there keeps the site current with no redeploy. Replace with your share link.
-  resumeUrl: "https://drive.google.com/file/d/1U3oReqdlwml0lJItc7a57zbN2a1BMrwx/view?usp=sharing",
+  resumeUrl: "https://infoshubhjain.github.io/Shubh_Jain_SWE_Resume.pdf",
 };
 
 export const seasonStats: { label: string; value: string; sub: string }[] = [
   { label: "Championship", value: "3.83", sub: "CGPA / 4.0" },
   { label: "Wins", value: "15+", sub: "projects shipped" },
-  { label: "Podiums", value: "2", sub: "research papers" },
+  { label: "Research", value: "1", sub: "ICLR 2027 submission" },
   { label: "Titles", value: "2", sub: "books · ISBN" },
   { label: "Patents", value: "1", sub: "IoT agriculture" },
   { label: "Grid crew", value: "200+", sub: "volunteers led" },
@@ -75,6 +76,63 @@ export type Win = {
 };
 
 export const wins: Win[] = [
+  {
+    id: "recallrush", pos: "P1", name: "RecallRush", year: "2026", role: "Architect & Project Manager", featured: true,
+    circuit: "Students need practice that tests recall and responds to specific weaknesses.",
+    setup: "Three layers separate browser-side typing, deterministic mastery and drill selection, and server-side AI generation. Managed five student developers and integrated their implementation into a working MVP.",
+    gap: "5 developers · 3 practice modes · 60 drills per course",
+    tech: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Zod"],
+    overview: "A CS124 Honors study application that turns source material into skills and active-recall drills. I designed the architecture, managed five student developers, and integrated their work; the team implemented the features.",
+    impact: [
+      "Defined Sprint, Recall, and Missing Pieces modes with per-attempt accuracy, WPM, backspace counts, and error classification.",
+      "Kept network requests outside the keystroke path and made mastery scoring and drill ranking deterministic.",
+      "Specified structured AI outputs for skill extraction, 60 generated drills per course, and session summaries, with Zod validation, one retry, and fixture fallbacks.",
+      "Coordinated five developers across the game engine, backend, AI, integration, and adaptive-learning components.",
+    ],
+    metrics: [{ label: "Developers managed", value: "5" }, { label: "Practice modes", value: "3" }, { label: "Drills per course", value: "60" }],
+    stack: [{ group: "Application", items: ["Next.js", "TypeScript"] }, { group: "Data", items: ["Supabase Auth", "PostgreSQL", "Row-level security"] }, { group: "AI reliability", items: ["Zod schemas", "Bounded retries", "Offline fixtures"] }],
+    links: [],
+  },
+  {
+    id: "scrolleat", pos: "P1", name: "ScrollEat", year: "2026", role: "ACM SIGMobile Technical Director & Project Lead", featured: true,
+    circuit: "UIUC students need a practical way to discover dishes and make food decisions together.",
+    setup: "React Native/Expo mobile flows connect to FastAPI and PostgreSQL. Group updates use polling; the scope excludes in-app ordering and payments.",
+    gap: "REST APIs · transactional voting · schema migrations",
+    tech: ["React Native", "Expo", "FastAPI", "PostgreSQL", "SQLAlchemy", "Alembic"],
+    overview: "A dish-first food-discovery application for UIUC students, with preference scoring, favorites, and shared group decisions. I lead project development, contribute mobile/backend features, and maintain the SIGMobile website.",
+    impact: [
+      "Implemented nearby/time-constrained feed filters and deterministic preference scoring with persistent preferences.",
+      "Contributed membership validation, transactional row locking, and preference-aware candidate selection for group voting.",
+      "Added SQLAlchemy/Alembic migrations, API/mobile CI checks, and a one-command local startup workflow.",
+    ],
+    metrics: [{ label: "Group size", value: "2–5" }, { label: "API", value: "REST" }, { label: "Database", value: "PostgreSQL" }],
+    stack: [{ group: "Mobile", items: ["React Native", "Expo"] }, { group: "Backend", items: ["FastAPI", "REST", "Polling"] }, { group: "Data", items: ["PostgreSQL", "SQLAlchemy", "Alembic"] }],
+    links: [],
+  },
+  {
+    id: "geocrop", pos: "P2", name: "GeoCrop", year: "2026", role: "Developer · Aug 2026–Present",
+    circuit: "A satellite basemap alone does not explain vegetation changes within a field.",
+    setup: "A map-first workflow analyzes imagery within field boundaries, with raster alignment, cloud masking, pixel quality, and vegetation-index trends.",
+    gap: "Sentinel-2 · field boundaries · quality-aware analysis",
+    tech: ["Python", "Sentinel-2", "Raster analysis", "Geospatial data"],
+    overview: "A crop-monitoring tool for defining a field and examining vegetation-index trends across satellite scenes. It distinguishes calculated analysis from demonstration data and visual basemaps.",
+    impact: ["Built a Python workflow for Sentinel-2 imagery within field boundaries.", "Handled raster alignment, cloud masking, and pixel-quality information when comparing vegetation trends.", "Made demonstration inputs and map imagery distinguishable from computed analysis."],
+    metrics: [{ label: "Imagery", value: "Sentinel-2" }, { label: "Analysis", value: "Field-level" }],
+    stack: [{ group: "Analysis", items: ["Python", "Raster alignment", "Cloud masks", "Vegetation indices"] }],
+    links: [{ label: "Source", href: "https://github.com/infoshubhjain/geocrop", kind: "github" }],
+  },
+  {
+    id: "floodsense", pos: "P2", name: "FloodSense", year: "2026", role: "Developer · Aug 2026–Present",
+    circuit: "Spatial screening needs valid geometries and traceable results, not an unexplained map overlay.",
+    setup: "Validate selected/uploaded geometries, intersect flood zones, avoid double counting overlapping polygons, and export results with provenance.",
+    gap: "Geometry validation · overlap analysis · provenance",
+    tech: ["Python", "Spatial analysis", "Geometry validation", "Data exports"],
+    overview: "A geographic screening tool that summarizes flood-zone overlap with a selected area or uploaded assets. Synthetic examples are labeled; an intersection is not an official flood determination or a complete property-risk assessment.",
+    impact: ["Implemented geometry validation and flood-zone intersections.", "Handled overlapping polygons to avoid double counting and retained source/geometry details.", "Exported screening results with provenance so users can inspect their basis."],
+    metrics: [{ label: "Checks", value: "Geometry" }, { label: "Exports", value: "Provenance" }],
+    stack: [{ group: "Spatial workflow", items: ["Python", "Geometry validation", "Polygon intersections", "Source provenance"] }],
+    links: [{ label: "Source", href: "https://github.com/infoshubhjain/floodsense", kind: "github" }],
+  },
   {
     id: "meter",
     pos: "P1",
@@ -161,7 +219,7 @@ export const wins: Win[] = [
     tech: ["React", "FastAPI", "MediaPipe", "TensorFlow.js", "Three.js"],
     featured: true,
     overview:
-      "A real-time, bidirectional ASL ↔ speech translator: sign-to-speech and speech-to-signed-3D-avatars, running dual-hand tracking in the browser at ~30 FPS.",
+      "An ASL/speech translation prototype combining browser hand tracking, sign classification, speech tools, and animated avatars, processing video at approximately 30 FPS.",
     impact: [
       "MediaPipe HandLandmarker tracks 2 hands × 21 landmarks (63 features/frame) on a ~33 ms requestAnimationFrame loop.",
       "Browser TensorFlow.js classifier (68→128/64/32 dense, dropout, softmax) with landmark smoothing and temporal confidence accumulation.",
@@ -356,9 +414,16 @@ export type Directive = {
   year: string;
   note: string;
   link?: string;
+  status?: "Submitted";
 };
 
 export const directives: Directive[] = [
+  {
+    kind: "Paper", status: "Submitted", year: "2026", venue: "ICLR 2027 submission · fourth author",
+    title: "GroundWorks: Agents Can Complete Tasks Yet Fail Under Plausible Perturbations in Multi-Turn Interactions",
+    note: "With Parisa Rabbani, Siyan Li, Yi Evie Zhang, Hyeonjeong Ha, and Dilek Hakkani-Tür. Contributed Python implementation, experimental execution, and analysis. The study spans five agents, 30 perturbation operators, and 1,040 paired evaluations; agents failed on 47% of perturbed scenarios whose originals they completed, averaged across agents.",
+    link: "https://openreview.net/forum?id=AB5kRc0EkX",
+  },
   {
     kind: "Training",
     title: "UR2PhD Pre-REC Research Training Program",
@@ -391,7 +456,7 @@ export const directives: Directive[] = [
   {
     kind: "Book",
     title: "Beyond the Black Box: Unlocking Explainable AI",
-    venue: "ISBN B0F38TX4ZR",
+    venue: "ASIN B0F38TX4ZR",
     year: "2025",
     note: "Post-hoc interpretability, counterfactuals & surrogate models applied to healthcare, finance and autonomous systems.",
   },
@@ -411,11 +476,30 @@ export type Stint = {
   note: string;
   points: string[];
   link?: string;
+  featured?: boolean;
 };
 
 export const standings: Stint[] = [
   {
+    team: "Mega Service Solutions", role: "Software Engineering Lead", period: "Aug 2026 – Present", featured: true,
+    note: "Lead three engineers within a 10+ person team on Python pipelines for an ongoing migration of 1,000+ HubSpot CRM records toward an in-house Supabase-backed CRM.",
+    points: ["Design field mappings that preserve HubSpot identifiers, company hierarchies, and associations between deals, companies, contacts, and notes.", "Develop Excel/CSV validation and exception reports for duplicate or uncertain relationships before import.", "Coordinate sales review and export handoff with the client's database team; migration remains in progress."],
+  },
+  {
+    team: "ConvAI Lab · UIUC", role: "Undergraduate Researcher", period: "Aug 2026 – Present", featured: true,
+    note: "Work with Parisa Rabbani and Prof. Dilek Hakkani-Tür on GroundWorks, evaluating multi-turn agents under changing requirements and tool evidence.",
+    points: ["Contribute Python implementation, dataset/scenario execution, and analysis for five agents, 30 perturbation operators, and 1,040 paired evaluations.", "Distinguish task completion, targeted hallucinations, and other failures under controlled interaction changes.", "Fourth author on the ICLR 2027 submission, contributing implementation, experiments, and analysis."],
+    link: "https://uiuc-conversational-ai-lab.github.io/",
+  },
+  {
+    team: "OnCARE Lab · UIUC", role: "Undergraduate Researcher", period: "Aug 2026 – Present", featured: true,
+    note: "Worked with Veda Duddu and Prof. Koustuv Saha on an exploratory pilot examining AI-assisted learning and student wellbeing.",
+    points: ["Designed, prepared, and conducted the exploratory pilot, incorporating co-design into its preparation and execution.", "Investigated how student perspectives could inform study design for educational AI and wellbeing research."],
+    link: "https://oncare.cs.illinois.edu/",
+  },
+  {
     team: "QuantHQ",
+    featured: true,
     role: "Software Engineering Intern",
     period: "May 2026 – Aug 2026",
     note: "Solo-built Alpha Engine: deterministic multi-asset signal research across crypto, US & Indian equities, F&O and forex — then backtested it honestly and published the null result rather than a claim.",
@@ -430,6 +514,7 @@ export const standings: Stint[] = [
   },
   {
     team: "The HDF Group",
+    featured: true,
     role: "Software Engineer (part-time) — HDF5 AI Pipeline",
     period: "May 2026 – Aug 2026",
     note: "LLM refactoring engine for the 25-year-old HDF5 C library with a dual-LLM consensus gate (Claude + GPT-4o both_approve/disagree).",
@@ -443,12 +528,13 @@ export const standings: Stint[] = [
   },
   {
     team: "Llama Naturals × REVAMP UIUC",
+    featured: true,
     role: "Machine Learning Engineer",
-    period: "Jan 2025 – May 2026",
+    period: "Jan 2026 – May 2026",
     note: "Owned the data layer of a DistilBERT classifier that detects FDA/FTC advertising compliance violations across 15 regulatory categories.",
     points: [
       "Built the preprocessing and tokenization infrastructure turning raw advertising scripts into model-ready tensor datasets (input_ids, attention_mask, labels) in PyTorch and HuggingFace Transformers.",
-      "Expanded and balanced the labelled corpus 5.3× (10 → 53 samples), reaching near-equal class distribution across all 15 violation categories.",
+      "Expanded the labelled corpus 5.3× (10 to 53 samples), balancing binary compliance labels across examples covering 15 violation categories.",
       "Designed the canonical dataset schema and tensor artifact specification adopted project-wide — the data contract downstream contributors built against.",
       "Curated a domain-specific corpus spanning social, influencer, e-commerce, broadcast, podcast, email and print advertising so the model generalises across formats rather than one channel.",
       "Implemented DistilBERT-compatible tokenization across the full 512-token context window with padding, truncation and attention masking.",
@@ -491,14 +577,15 @@ export const standings: Stint[] = [
 ];
 
 export const setup: { unit: string; parts: string[] }[] = [
-  { unit: "Power Unit — Languages", parts: ["Python", "TypeScript", "Rust", "Kotlin", "JavaScript", "C++", "SQL", "Java"] },
+  { unit: "Power Unit — Languages", parts: ["Python", "TypeScript", "Rust", "Kotlin", "JavaScript", "C", "C++", "SQL", "Java"] },
   { unit: "Aero — AI & ML", parts: ["Multi-Agent Systems", "Transformers", "PyTorch", "BKT", "MediaPipe", "TensorFlow.js", "HuggingFace", "LLM Pipelines"] },
-  { unit: "Chassis — Full-Stack", parts: ["Next.js", "React", "FastAPI", "Node.js", "Supabase", "Docker", "Tailwind", "Three.js"] },
-  { unit: "Telemetry — Data & Infra", parts: ["pgvector", "FAISS", "SQLite", "ETL Pipelines", "Cloud Run", "GitHub Actions", "OAuth2"] },
-  { unit: "Strategy — Research", parts: ["Explainable AI", "NLP", "Bayesian Methods", "Technical Writing", "Experiment Design"] },
+  { unit: "Chassis — Full-Stack", parts: ["Next.js", "React", "React Native", "Expo", "FastAPI", "Node.js", "REST APIs", "Tailwind", "Three.js", "Zod"] },
+  { unit: "Telemetry — Data & Infra", parts: ["PostgreSQL", "Supabase", "SQLAlchemy", "Alembic", "pgvector", "FAISS", "BM25", "ChromaDB", "SQLite", "ETL pipelines", "pandas", "NumPy", "tree-sitter"] },
+  { unit: "Pit Tools — Cloud & Testing", parts: ["Docker", "GitHub Actions", "CI/CD", "Google Cloud Run", "Vercel", "Git", "pytest", "Unit/integration tests", "asyncio", "SSE", "MCP"] },
+  { unit: "Strategy — Research", parts: ["Agent evaluation", "Reproducibility", "Experimental design", "Co-design", "NLP bias analysis", "Data visualization", "Matplotlib", "Spatial analysis", "Scientific communication"] },
   // Spoken languages, kept distinct from the programming ones in "Power Unit".
   // Each carries its evidence rather than a self-assessed fluency label.
-  { unit: "Comms — Spoken Languages", parts: ["English — IELTS 8.0 / 9.0", "Hindi — IGCSE Grade A"] },
+  { unit: "Comms — Spoken Languages", parts: ["English · IELTS 8.0 / 9.0", "Hindi · Native"] },
 ];
 
 export type PitRole = {
@@ -643,12 +730,28 @@ export const trophies: Trophy[] = [
 /** Mirrors `leadership` in portfolio-data.ts — same CV, race-flavored copy. */
 export const pitWall: PitRole[] = [
   {
+    org: "CS124 Honors · UIUC", role: "Project Manager · RecallRush", period: "Aug 2026 – Present", tag: "Mentoring", metric: "5 student developers", featured: true,
+    note: "Designed the application architecture, coordinated implementation across five developers, and integrated their work into a working adaptive-study MVP.",
+  },
+  {
+    org: "ACM SIGMobile · UIUC", role: "Technical Director & Project Lead", period: "Aug 2026 – Present", tag: "Leadership", metric: "ScrollEat + SIG website", featured: true,
+    note: "Lead ScrollEat development and maintain the SIGMobile website; contribute mobile/backend features, transactional voting, migrations, and CI checks.",
+  },
+  {
+    org: "ENG177 GFX Scholars · UIUC", role: "Course Assistant", period: "Aug 2026 – Present", tag: "Teaching", metric: "15–20 students", featured: true,
+    note: "Support design theory and physical/toy-design projects, grade technical papers, assist presentations, and lead class sessions during the professor's absence.",
+  },
+  {
+    org: "CS124 · UIUC", role: "Course Assistant / Tutor", period: "Jan 2026 – Present", tag: "Teaching", metric: "Programming & debugging", featured: true,
+    note: "Tutor programming fundamentals, object-oriented concepts, control flow, and introductory data structures. Use code tracing and questions to help students identify incorrect assumptions and debug independently.",
+  },
+  {
     org: "UIUC Siebel",
-    role: "CS Peer Mentor · CS 124 Tutor",
+    role: "CS Peer Mentor",
     period: "Jan 2026 – Present",
     tag: "Mentoring",
     metric: "80+ sessions",
-    note: "One-on-one support across CS 124/128/173/225 — meeting each student at their exact point of confusion, and advising on RSOs, research access and course sequencing.",
+    note: "80+ one-on-one sessions across CS124/128/173/225, plus advising on course choices, research, RSOs, and internships. This mentoring count is separate from the CS124 CA role.",
   },
   {
     org: "SSUAB · UIUC",
@@ -790,12 +893,16 @@ export type TimelineStint = {
 
 export const timeline: TimelineStint[] = [
   // Engineering — newest first
+  { track: "eng", start: 2026, end: 2026, title: "Mega Service Solutions · Engineering Lead", detail: "Three-engineer HubSpot migration workstream within a 10+ person team; 1,000+ records, Python validation and Supabase integration." },
+  { track: "eng", start: 2026, end: 2026, title: "RecallRush · Architect & PM", detail: "Managed five developers and integrated an adaptive-learning MVP with deterministic scoring and validated AI outputs." },
+  { track: "eng", start: 2026, end: 2026, title: "SIGMobile · ScrollEat", detail: "Technical Director & Project Lead; React Native, FastAPI, transactional group voting and PostgreSQL." },
+  { track: "eng", start: 2026, end: 2026, title: "GeoCrop & FloodSense", detail: "Aug 2026–present: satellite-quality analysis and geometry-based screening with provenance." },
   { track: "eng", start: 2026, end: 2026, title: "HDF Group — SWE", detail: "LLM refactoring engine for the HDF5 C library; dual-model consensus gate (Claude + GPT-4o)." },
   { track: "eng", start: 2026, end: 2026, title: "QuantHQ — SWE Intern", detail: "Solo-built Alpha Engine: multi-asset signal research, 22 analyzers, 1,009 tests." },
   { track: "eng", start: 2026, end: 2026, title: "Mnemostack", detail: "Graph-aware code-retrieval MCP for AI coding assistants." },
   { track: "eng", start: 2026, end: 2026, title: "AstraSign", detail: "Real-time bidirectional ASL ↔ speech translator, ~30 FPS." },
   { track: "eng", start: 2026, end: 2026, title: "Meter", detail: "LLM cost-governance proxy: reservation-based spend ceilings, dual-protocol SSE metering." },
-  { track: "eng", start: 2025, end: 2026, title: "BERT Ad Compliance Classifier", detail: "Owned the data layer of a DistilBERT FDA/FTC classifier across 15 categories." },
+  { track: "eng", start: 2026, end: 2026, title: "BERT Ad Compliance Classifier", detail: "Jan–May 2026: preprocessing and tensor contracts for a DistilBERT FDA/FTC classifier across 15 categories." },
   { track: "eng", start: 2025, end: 2026, title: "Adaptive Learning Platform", detail: "7-agent backend + Bayesian Knowledge Tracing from scratch." },
   { track: "eng", start: 2025, end: 2025, title: "SIGAIDA Campus Energy", detail: "Env-monitoring platform + PyTorch LSTM PM2.5 forecast; 10-person team." },
   { track: "eng", start: 2025, end: 2025, title: "Project Helix", detail: "1000+ campus events unified from 15+ sources; OAuth2 calendar export." },
@@ -803,6 +910,8 @@ export const timeline: TimelineStint[] = [
   { track: "eng", start: 2023, end: 2023, title: "IETE — ML Intern", detail: "AI chatbot (200+/day), BiLSTM misinformation detector at 87%." },
 
   // Research & Writing — newest first
+  { track: "research", start: 2026, end: 2026, title: "ConvAI · GroundWorks", detail: "Implementation, experiments and analysis; fourth author on an ICLR 2027 submission." },
+  { track: "research", start: 2026, end: 2026, title: "OnCARE · Exploratory Pilot", detail: "AI-assisted learning and student wellbeing; study preparation, execution and co-design." },
   { track: "research", start: 2026, end: 2026, title: "UR2PhD Pre-REC Training", detail: "Reproduced a 72-dataset protein-classification benchmark and an NLP bias workflow." },
   { track: "research", start: 2025, end: 2025, title: "Book — Beyond the Black Box", detail: "ISBN; explainable AI across healthcare, finance & autonomy." },
   { track: "research", start: 2023, end: 2025, title: "Editor & Book Assistant", detail: "10+ book projects; edited 300+ academic essays." },
@@ -812,6 +921,8 @@ export const timeline: TimelineStint[] = [
   { track: "research", start: 2022, end: 2023, title: "MetroVaartha — Jr Editor-in-Chief", detail: "AI column reached 50k+ readers; led the technology section." },
 
   // Leadership — newest first
+  { track: "lead", start: 2026, end: 2026, title: "ENG177 · Course Assistant", detail: "Support 15–20 students in physical design, technical papers, presentations and class sessions." },
+  { track: "lead", start: 2026, end: 2026, title: "CS124 · Course Assistant / Tutor", detail: "Programming fundamentals and debugging support since January 2026, separate from peer mentoring." },
   { track: "lead", start: 2026, end: 2026, title: "MLH Commit Fellow", detail: "2.5% acceptance founder-track; advised founders & GPs on PMF." },
   { track: "lead", start: 2026, end: 2026, title: "CS Peer Mentor · Tutor", detail: "80+ one-on-one sessions across UIUC CS courses." },
   { track: "lead", start: 2025, end: 2026, title: "SSUAB — Director of Board Development", detail: "Board-wide professional development; authored comprehensive research & career services report." },

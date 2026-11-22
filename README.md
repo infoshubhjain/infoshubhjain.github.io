@@ -61,6 +61,8 @@ Portfolio facts are centralized in `src/lib/prototype-data.ts`; route-specific p
 - Leadership roles
 - Achievements
 
+The current SWE resume is versioned at `public/Shubh_Jain_SWE_Resume.pdf` and linked from both routes. Keep it synchronized with the content. GroundWorks is labeled as an ICLR 2027 **submission**, not an accepted publication. Teaching and SIGMobile leadership appear separately from professional research/engineering roles.
+
 **Important**: Edit portfolio facts in `prototype-data.ts`, not in components. The `prototype-` prefix is historical; those components now exclusively power the optional F1 route.
 
 ## 🎨 Theming

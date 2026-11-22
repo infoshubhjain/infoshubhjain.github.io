@@ -155,7 +155,7 @@ const researchJsonLd = directives
     url: d.link ?? SITE_URL,
     publisher: { "@type": "Organization", name: d.venue },
     ...(d.link && { identifier: d.link }),
-    datePublished: d.year,
+    ...(d.status ? { creativeWorkStatus: d.status, dateCreated: d.year } : { datePublished: d.year }),
   }));
 
 // Books as Book.
@@ -167,7 +167,9 @@ const booksJsonLd = directives
     name: d.title,
     description: d.note,
     author: { "@type": "Person", name: "Shubh Jain" },
-    isbn: d.venue.replace("ISBN ", ""),
+    ...(d.venue.startsWith("ISBN ")
+      ? { isbn: d.venue.replace("ISBN ", "") }
+      : { identifier: { "@type": "PropertyValue", propertyID: "ASIN", value: d.venue.replace("ASIN ", "") } }),
     datePublished: d.year,
   }));
 

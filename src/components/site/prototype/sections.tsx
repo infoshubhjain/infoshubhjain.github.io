@@ -429,7 +429,7 @@ export function Directives() {
       <SectorTag n="R&D Bay" label="Publications (Research)" />
       <Reveal>
         <Heading>
-          Published from the <span style={{ color: P.rosso }}>R&amp;D</span> bay.
+          Research from the <span style={{ color: P.rosso }}>R&amp;D</span> bay.
         </Heading>
       </Reveal>
       <div className="mt-10 space-y-3">
@@ -444,7 +444,7 @@ export function Directives() {
                   className="rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider"
                   style={{ background: badge[d.kind], color: "#0a0a0b" }}
                 >
-                  {d.kind}
+                  {d.status === "Submitted" ? "Submission" : d.kind}
                 </span>
                 <span className="font-mono text-[11px]" style={{ color: P.muted }}>
                   {d.venue} · {d.year}
@@ -452,7 +452,7 @@ export function Directives() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold" style={{ color: P.white }}>
-                  {d.title}
+                  {d.link ? <a href={d.link} target="_blank" rel="noreferrer" className="underline underline-offset-4">{d.title}</a> : d.title}
                 </h3>
                 <p className="mt-1 text-sm leading-relaxed" style={{ color: P.muted }}>
                   {d.note}

@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { SECTIONS, driver, wins, directives, standings, trophies, pitWall, timeline } from './prototype-data';
 
 describe('Live site data integrity', () => {
@@ -19,10 +21,10 @@ describe('Live site data integrity', () => {
       expect(driver.linkedin).toMatch(/^https?:\/\//);
     });
 
-    // The résumé buttons are the primary recruiter CTA. A relative path here
-    // means a 404 — /resume.pdf has never existed in public/.
-    it('should point the resume at a reachable absolute URL', () => {
-      expect(driver.resumeUrl).toMatch(/^https?:\/\//);
+    it('should point to the resume PDF shipped with the site', () => {
+      const url = new URL(driver.resumeUrl);
+      expect(url.origin).toBe('https://infoshubhjain.github.io');
+      expect(readFileSync(resolve('public', url.pathname.slice(1))).subarray(0, 5).toString()).toBe('%PDF-');
     });
 
     // The hero credential line hardcoded "grad May 2029" and drifted a year
@@ -93,14 +95,42 @@ describe('Live site data integrity', () => {
       });
     });
 
-    // layout.tsx derives the JSON-LD `isbn` via venue.replace("ISBN ", ""),
-    // so a book whose venue drops the prefix silently publishes a junk ISBN.
-    it('should carry an ISBN in the venue of every book', () => {
+    // Amazon's ten-character ASIN must not become an invalid ISBN in JSON-LD.
+    it('should distinguish ISBNs from ASINs on books', () => {
       directives
         .filter((d) => d.kind === 'Book')
         .forEach((d) => {
-          expect(d.venue, d.title).toMatch(/^ISBN /);
+          expect(d.venue, d.title).toMatch(/^(ISBN [0-9-]+|ASIN B[0-9A-Z]{9})$/);
         });
+    });
+  });
+
+  describe('November CV update', () => {
+    it('should surface current professional work without classifying SIGMobile as employment', () => {
+      const current = standings.filter((role) => role.featured).map((role) => role.team).join(' ');
+      ['Mega Service Solutions', 'ConvAI', 'OnCARE', 'QuantHQ', 'The HDF Group'].forEach((name) => expect(current).toContain(name));
+      expect(current).not.toContain('SIGMobile');
+    });
+
+    it('should retain the added projects and their individual descriptions', () => {
+      ['recallrush', 'scrolleat', 'geocrop', 'floodsense'].forEach((id) => {
+        const project = wins.find((item) => item.id === id);
+        expect(project?.overview.length).toBeGreaterThan(50);
+        expect(project?.impact.length).toBeGreaterThan(0);
+      });
+    });
+
+    it('should label GroundWorks as a submission rather than an accepted publication', () => {
+      const paper = directives.find((item) => item.title.startsWith('GroundWorks:'));
+      expect(paper?.status).toBe('Submitted');
+      expect(paper?.venue).toContain('ICLR 2027 submission');
+      expect(paper?.link).toBe('https://openreview.net/forum?id=AB5kRc0EkX');
+    });
+
+    it('should list teaching separately from peer mentoring', () => {
+      expect(pitWall.find((role) => role.org === 'CS124 · UIUC')?.role).toBe('Course Assistant / Tutor');
+      expect(pitWall.find((role) => role.org === 'ENG177 GFX Scholars · UIUC')?.metric).toBe('15–20 students');
+      expect(pitWall.find((role) => role.role === 'CS Peer Mentor')?.metric).toBe('80+ sessions');
     });
   });
 

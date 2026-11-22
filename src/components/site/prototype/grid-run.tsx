@@ -468,7 +468,7 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
       exit={{ opacity: 0 }}
     >
       <Dialog.Title className="sr-only">Grid Run racing game</Dialog.Title>
-      {status === "ready" && <div className="absolute inset-0 z-[75] flex flex-col justify-center items-center bg-black/80 p-6 text-center"><p className="text-lg text-white">Swipe left or right to steer. Swipe up to accelerate and down to brake. Keyboard: arrow keys.</p><button className="mt-6 rounded bg-white text-black px-6 py-3" onClick={() => { setStatus("countdown"); startCountdown.current(); }}>Start race</button></div>}
+      {status === "ready" && <div className="absolute inset-0 z-[75] flex flex-col justify-center items-center bg-black/80 p-6 text-center"><p className="text-lg text-white">Swipe left or right to steer. Swipe up to accelerate and down to brake. Keyboard: arrow keys.</p><button className="mt-6 rounded bg-white text-black px-6 py-3" onClick={() => { setStatus("countdown"); startCountdown.current(); }}>Start race</button><button className="mt-4 rounded border border-white px-6 py-3 text-white" onClick={onExit}>Exit to site</button></div>}
       <Canvas shadows={!mobile} camera={{ position: [0, 3.5, 8.6], fov: mobile ? 70 : 62 }} dpr={mobile ? [1, 1.3] : [1, 1.7]} gl={{ antialias: !mobile }}>
         <Suspense fallback={null}>
           <Scene game={game} colors={palette} modelPath={palette.three.model} mobile={mobile} onEnd={onEnd} />
@@ -514,7 +514,7 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
         ✕ exit
       </button>
 
-      <p className="absolute bottom-20 inset-x-5 z-[73] text-center text-sm text-white bg-black/80 rounded p-3">Swipe left/right to steer; swipe up/down to change speed. Keyboard: arrows. Use Exit to return.</p>
+      {status === "racing" && <p className="absolute bottom-20 inset-x-5 z-[73] text-center text-sm text-white bg-black/80 rounded p-3">Swipe left/right to steer; swipe up/down to change speed. Keyboard: arrows. Use Exit to return.</p>}
       {/* start-lights countdown */}
       <AnimatePresence>
         {status === "countdown" && (

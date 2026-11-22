@@ -8,7 +8,7 @@ import * as THREE from "three";
 import { PALETTES, savedTeam, type Palette } from "@/lib/prototype-theme";
 
 /**
- * "Lights Out" — the active team's real F1 car (Ferrari F1-75 / Red Bull RB18,
+ * "Lights Out" - the active team's real F1 car (Ferrari F1-75 / Red Bull RB18,
  * Draco-compressed) on a reflective grid with bloom. The car swaps per team;
  * a slow turntable showcases it. A procedural car renders on load/error.
  * Everything reacts to `speedRef` (scroll = throttle).
@@ -16,17 +16,17 @@ import { PALETTES, savedTeam, type Palette } from "@/lib/prototype-theme";
 
 const DRACO_PATH = "/draco/";
 // Preload + Draco-decode at module load (during the start-lights loader) so the
-// real car — not the procedural fallback — drives in on launch. Only the livery
+// real car - not the procedural fallback - drives in on launch. Only the livery
 // we're about to show: fetching both cost every visitor ~1.2 MB for a model most
 // never see. The other decodes on demand at the team toggle, behind the
 // procedural fallback.
 if (typeof window !== "undefined") useGLTF.preload(PALETTES[savedTeam()].three.model, DRACO_PATH);
-// Fixed flattering three-quarter — the reduced-motion resting angle (otherwise
+// Fixed flattering three-quarter - the reduced-motion resting angle (otherwise
 // the car turntables continuously, accelerating with scroll; see CarRig).
 const YAW_CENTER = -0.9;
 
-/** Cap the frame delta at ~2 frames. Whenever the loop is paused — hidden tab,
- *  or scrolled below the hero — the next delta is the whole gap, which sends
+/** Cap the frame delta at ~2 frames. Whenever the loop is paused - hidden tab,
+ *  or scrolled below the hero - the next delta is the whole gap, which sends
  *  every delta-scaled lerp and offset below flying. */
 const step = (delta: number) => Math.min(delta, 1 / 30);
 
@@ -262,7 +262,7 @@ function CameraDrift({ reduced }: { reduced: boolean }) {
 
 export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: SpeedRef; reduced: boolean; colors: Colors; mobile: boolean }) {
   const wrapper = useRef<HTMLDivElement>(null);
-  // The car turntables behind the whole page, not just the hero — freezing it
+  // The car turntables behind the whole page, not just the hero - freezing it
   // below the fold reads as a bug, so the loop runs the entire way down. Only a
   // hidden tab pauses it, which nobody can see anyway. (Costs a reflector FBO +
   // bloom pass per frame all the way down; that's the deliberate trade.)

@@ -28,7 +28,7 @@ export type Palette = {
 export const TEAM_KEY = "pt-team";
 export const DEFAULT_TEAM: TeamId = "redbull";
 
-/** The livery to show on load — the visitor's last pick, else the default. */
+/** The livery to show on load - the visitor's last pick, else the default. */
 export function savedTeam(): TeamId {
   const v = typeof window === "undefined" ? null : localStorage.getItem(TEAM_KEY);
   return v === "ferrari" || v === "redbull" ? v : DEFAULT_TEAM;

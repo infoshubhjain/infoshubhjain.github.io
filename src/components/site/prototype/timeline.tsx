@@ -54,7 +54,7 @@ export function StrategyBoard() {
           Experience <span style={{ color: "var(--pt-primary)" }}>timeline.</span>
         </Heading>
         <p className="mt-6 max-w-2xl text-lg" style={{ color: "var(--pt-muted)" }}>
-          Engineering, research and leadership — running at the same time, not in sequence. Hover or tap a
+          Engineering, research and leadership - running at the same time, not in sequence. Hover or tap a
           stint to read it.
         </p>
       </div>
@@ -63,7 +63,7 @@ export function StrategyBoard() {
       <div className="mt-10 hidden overflow-x-auto md:block">
         <div className="min-w-[860px]">
           {/* Year axis. The milestone diamonds that used to sit here were the
-              same four awards the Trophy Cabinet now lists in full — and their
+              same four awards the Trophy Cabinet now lists in full - and their
               labels are wider than a year column, so they collided into an
               unreadable stack. */}
           <div className="relative mb-4 h-8">

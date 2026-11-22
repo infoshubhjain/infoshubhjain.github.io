@@ -12,7 +12,7 @@ const BLUE = "var(--pt-accent)";
 const GREEN = "#2ee56b";
 const PURPLE = "rgba(180,80,255,0.9)";
 
-// A 3-stint race strategy across the page — real F1 compound colours.
+// A 3-stint race strategy across the page - real F1 compound colours.
 const COMPOUNDS = [
   { name: "SOFT", color: "#ff3b3b" },
   { name: "MEDIUM", color: "#ffd93b" },
@@ -24,14 +24,14 @@ type SpeedRef = React.MutableRefObject<number>;
 export function TelemetryHud({ speedRef }: { speedRef: SpeedRef }) {
   // The speed/gear/DRS/throttle readouts update every animation frame while
   // scrolling. Driving them through state re-rendered this whole bar 60×/s, so
-  // the loop writes to the DOM nodes directly; only `stint` — which changes
-  // twice down the entire page — stays in React.
+  // the loop writes to the DOM nodes directly; only `stint` - which changes
+  // twice down the entire page - stays in React.
   const kmhEl = useRef<HTMLSpanElement>(null);
   const gearEl = useRef<HTMLSpanElement>(null);
   const drsEl = useRef<HTMLSpanElement>(null);
   const thrTextEl = useRef<HTMLSpanElement>(null);
   const thrBarEl = useRef<HTMLDivElement>(null);
-  const [stint, setStint] = useState(0); // 0..2 — which third of the page
+  const [stint, setStint] = useState(0); // 0..2 - which third of the page
   // The bar is fixed to the bottom and was clipping card text on every section.
   // It slides away while you read and returns the moment you scroll.
   const [active, setActive] = useState(false);
@@ -55,7 +55,7 @@ export function TelemetryHud({ speedRef }: { speedRef: SpeedRef }) {
       if (thrBarEl.current) thrBarEl.current.style.width = `${throttle}%`;
       if (drsEl.current && drs !== lastDrs) {
         lastDrs = drs;
-        drsEl.current.textContent = drs ? "open" : "—";
+        drsEl.current.textContent = drs ? "open" : "-";
         Object.assign(drsEl.current.style, drs
           ? { background: GREEN, color: "#04140a", border: "none" }
           : { background: "transparent", color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.2)" });
@@ -150,11 +150,11 @@ export function TelemetryHud({ speedRef }: { speedRef: SpeedRef }) {
             className="rounded px-2 py-0.5 text-xs font-bold uppercase tracking-wider transition-colors"
             style={{ border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.4)" }}
           >
-            —
+            -
           </span>
         </div>
 
-        {/* Tyre — compound changes per stint as you progress (SOFT→MEDIUM→HARD) */}
+        {/* Tyre - compound changes per stint as you progress (SOFT→MEDIUM→HARD) */}
         <div className="hidden flex-col items-center sm:flex">
           <span className="text-[9px] uppercase tracking-[0.3em] text-white/40">
             tyre · stint {stint + 1}/3
@@ -168,7 +168,7 @@ export function TelemetryHud({ speedRef }: { speedRef: SpeedRef }) {
           </span>
         </div>
 
-        {/* Sectors — light purple (current) then green (done) as you scroll */}
+        {/* Sectors - light purple (current) then green (done) as you scroll */}
         <div className="hidden items-center gap-1 lg:flex">
           {["S1", "S2", "S3"].map((s, i) => {
             const done = stint > i;

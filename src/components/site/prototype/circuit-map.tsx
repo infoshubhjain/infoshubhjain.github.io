@@ -16,7 +16,7 @@ export function CircuitMap() {
   const pathRef = useRef<SVGPathElement>(null);
   const dotRef = useRef<SVGCircleElement>(null);
 
-  // The track is a fixed literal, so its length never changes — measuring it on
+  // The track is a fixed literal, so its length never changes - measuring it on
   // every scroll tick just forced SVG geometry work each frame.
   const lenRef = useRef(0);
 

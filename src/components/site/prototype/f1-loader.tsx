@@ -6,7 +6,7 @@ import { anton } from "@/lib/prototype-fonts";
 
 /**
  * F1 start-lights launch. Five reds build column-by-column, hold the tension,
- * then LIGHTS OUT — and the screen accelerates away (streaks + scale + blur) as
+ * then LIGHTS OUT - and the screen accelerates away (streaks + scale + blur) as
  * the site crossfades in. Plays once per session. Rendered inside a parent
  * <AnimatePresence> so the exit animation plays when it unmounts.
  */

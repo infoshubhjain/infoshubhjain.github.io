@@ -32,7 +32,7 @@ export const driver = {
   gpa: "3.83 / 4.00",
   coursework: ["Data Structures & Algorithms", "Systems Design", "Computer Architecture", "Discrete Structures", "Probability & Statistics", "Linear Algebra"],
   summary: "I build reliable backend systems, data pipelines, and AI tools. At UIUC, I study how agents handle changing requirements and contribute to human-centered AI research.",
-  tagline: "I build intelligent systems that reason — and I race to ship them.",
+  tagline: "I build intelligent systems that reason - and I race to ship them.",
   intro:
     "I'm a Computer Science undergraduate at UIUC, graduating in May 2028. I build backend systems, research software, and AI infrastructure, from concurrent budget controls to verified code changes. My research spans agent evaluation in ConvAI Lab and exploratory work on AI-assisted learning in OnCARE Lab. I also lead student engineering projects and teach in CS124 and ENG177.",
   email: "shubhj3@illinois.edu",
@@ -139,13 +139,13 @@ export const wins: Win[] = [
       "An OpenAI/Anthropic-compatible proxy that reserves budget before forwarding requests and reconciles streamed usage afterward. The concurrency test exercised 40 simultaneous requests; the soak test measured approximately 400 requests/sec over 5,000 requests at 16 clients. These are test results, not a claim about production traffic or distributed-worker safety.",
     impact: [
       "Authorize/capture reservations count in-flight holds alongside settled ledger spend inside one asyncio lock, closing the read-then-call race that lets N concurrent requests overspend a shared ceiling; proved with a 40-way concurrent test against a ceiling funding exactly 4 requests.",
-      "Renewed reservation holds every 30s against a 120s TTL so a hold can't expire mid-stream — the under-billing failure mode that raised no exception and hit the longest, most expensive requests hardest.",
-      "Dual-protocol SSE usage parser reconciles formats that disagree: injects and strips OpenAI's stream_options.include_usage, and reassembles Anthropic usage split across message_start and message_delta — reading only the first under-counts output tokens ~40×.",
+      "Renewed reservation holds every 30s against a 120s TTL so a hold can't expire mid-stream - the under-billing failure mode that raised no exception and hit the longest, most expensive requests hardest.",
+      "Dual-protocol SSE usage parser reconciles formats that disagree: injects and strips OpenAI's stream_options.include_usage, and reassembles Anthropic usage split across message_start and message_delta - reading only the first under-counts output tokens ~40×.",
       "Fixed gzip SSE parsing that caused compressed streams to fall back to byte-count cost estimates. Added a gzipping upstream HTTP server to cover the case that uncompressed test fixtures missed.",
       "Reframed proxy latency as a round-trip count model, proved the published 52.7 ms benchmark measured a config nobody runs, and removed one database round trip (~50 ms/request remote) by folding two spend aggregates into a single scan.",
-      "Two-condition circuit breaker: absolute spend floor over a 5-minute window AND a 3× burst ratio against the trailing hour, with tag-scoped 429 throttling, key-scoped 403 revocation and half-open recovery — Google's multi-burn-rate pattern adapted, not ported.",
+      "Two-condition circuit breaker: absolute spend floor over a 5-minute window AND a 3× burst ratio against the trailing hour, with tag-scoped 429 throttling, key-scoped 403 revocation and half-open recovery - Google's multi-burn-rate pattern adapted, not ported.",
       "Led a full-codebase security audit reproducing every finding against a running service: a CORS regex matching any attacker-published *.vercel.app deployment, an unauthenticated endpoint exposing the payment loop, and a per-IP rate-limit bypass from a missing --proxy-headers flag.",
-      "Authored the test and measurement infrastructure — 256-assertion proxy suite, 750-LOC soak harness, latency benchmark — sustaining ~400 req/s over ~5,000 requests at 16 clients with zero dropped ledger writes; the harnesses surfaced 6 pre-existing defects.",
+      "Authored the test and measurement infrastructure - 256-assertion proxy suite, 750-LOC soak harness, latency benchmark - sustaining ~400 req/s over ~5,000 requests at 16 clients with zero dropped ledger writes; the harnesses surfaced 6 pre-existing defects.",
     ],
     metrics: [
       { label: "Proxy LOC", value: "~3,600" },
@@ -176,7 +176,7 @@ export const wins: Win[] = [
     tech: ["Python", "tree-sitter", "FAISS HNSW", "BM25 / RRF", "MCP"],
     featured: true,
     overview:
-      "A local MCP server that gives AI coding assistants graph-aware memory — it retrieves whole dependency chains (callers and callees), not isolated files, so the model sees the real context around a symbol.",
+      "A local MCP server that gives AI coding assistants graph-aware memory - it retrieves whole dependency chains (callers and callees), not isolated files, so the model sees the real context around a symbol.",
     impact: [
       "Fused FAISS HNSW semantic search with SQLite FTS5/BM25 keyword search via Reciprocal Rank Fusion (k=60) and 3× top-k over-fetch.",
       "2-hop BFS call-graph expansion over CALLS / IMPORTS_FROM edges surfaces cross-file dependencies 1–2 hops away.",
@@ -308,11 +308,11 @@ export const wins: Win[] = [
     year: "2026",
     role: "CS 128 Honors",
     circuit: "Understand backprop by building a neural net with zero ML libraries.",
-    setup: "Feedforward net in pure Rust — Xavier init, sigmoid, MSE, chain-rule backprop, online SGD across a configurable architecture.",
+    setup: "Feedforward net in pure Rust - Xavier init, sigmoid, MSE, chain-rule backprop, online SGD across a configurable architecture.",
     gap: "0 ML libs · learns XOR in 10k epochs · 15 unit tests",
     tech: ["Rust", "ndarray", "SGD", "backprop"],
     overview:
-      "A feedforward neural network built from scratch in Rust with zero ML libraries — just ndarray for matrices and rand for init — to understand backprop end to end.",
+      "A feedforward neural network built from scratch in Rust with zero ML libraries - just ndarray for matrices and rand for init - to understand backprop end to end.",
     impact: [
       "Forward propagation, chain-rule backpropagation, and online SGD across a configurable layer architecture.",
       "Xavier/Glorot initialization, sigmoid with analytic derivative, MSE loss; learns XOR in 10,000 epochs at lr 1.0.",
@@ -339,7 +339,7 @@ export const wins: Win[] = [
     year: "2025",
     role: "Lead SWE",
     circuit: "Dining-hall nutrition data is stale and hard to filter.",
-    setup: "Full-stack ecosystem for 4 dining halls — Selenium scrapers + Node API + responsive macro/allergen dashboard, CI/CD via GitHub Actions.",
+    setup: "Full-stack ecosystem for 4 dining halls - Selenium scrapers + Node API + responsive macro/allergen dashboard, CI/CD via GitHub Actions.",
     gap: "1000+ daily users · 4 halls · 90% less manual upkeep",
     tech: ["React", "Selenium", "Node.js", "SQLite"],
     overview:
@@ -348,7 +348,7 @@ export const wins: Win[] = [
       "React + Node.js dashboard shows calories, macros, allergens and meal filtering for 1000+ daily users.",
       "Python Selenium scrapers collect daily menus automatically, with scheduled refreshes.",
       "RESTful Node.js backend serves all frontend requests from SQLite.",
-      "GitHub Actions CI/CD automates daily scraping, validation and deployment — cutting manual upkeep ~90%.",
+      "GitHub Actions CI/CD automates daily scraping, validation and deployment - cutting manual upkeep ~90%.",
     ],
     metrics: [
       { label: "Users / day", value: "1000+" },
@@ -377,7 +377,7 @@ export const wins: Win[] = [
     gap: "1000+ events · 15+ sources unified",
     tech: ["Next.js", "BeautifulSoup", "Playwright", "OAuth2"],
     overview:
-      "A campus event aggregation platform that scrapes and unifies 1000+ events from 15+ university sources into a single queryable, filterable schema — and lets authenticated users push them straight into their own calendar.",
+      "A campus event aggregation platform that scrapes and unifies 1000+ events from 15+ university sources into a single queryable, filterable schema - and lets authenticated users push them straight into their own calendar.",
     impact: [
       "Scraped and unified 1000+ events from 15+ university sources, normalising inconsistent HTML into a centralised relational schema for dynamic querying and filtering.",
       "Combined BeautifulSoup and Playwright in one pipeline to handle both static and JavaScript-rendered sources, with deduplication logic and scheduled scraping workflows.",
@@ -431,7 +431,7 @@ export const directives: Directive[] = [
     title: "UR2PhD Pre-REC Research Training Program",
     venue: "Research methods & reproducibility",
     year: "2026",
-    note: "Reproduced a published protein-structure-classification benchmark across 72 datasets in Python/pandas/Matplotlib — finding traditional ML stays competitive with deep learning at a fraction of the runtime — plus a counterfactual name-perturbation replication of an NLP toxicity-bias workflow.",
+    note: "Reproduced a published protein-structure-classification benchmark across 72 datasets in Python/pandas/Matplotlib - finding traditional ML stays competitive with deep learning at a fraction of the runtime - plus a counterfactual name-perturbation replication of an NLP toxicity-bias workflow.",
   },
   {
     kind: "Patent",
@@ -507,23 +507,23 @@ export const standings: Stint[] = [
     period: "May 2026 – Aug 2026",
     note: "Built Alpha Engine for reproducible multi-asset signal research, with data ingestion, provider failover, and CLI, HTTP and MCP interfaces.",
     points: [
-      "Built a deterministic research engine — 22 independent analyzers synthesized into directional signals with calibrated confidence and explicit invalidation prices (33K LOC, solo).",
+      "Built a deterministic research engine - 22 independent analyzers synthesized into directional signals with calibrated confidence and explicit invalidation prices (33K LOC, solo).",
       "Integrated 25+ market data sources (Binance, Glassnode, FRED, OANDA, Dhan, AngelOne, NSE, RBI, Finnhub) behind a unified ingestion layer with caching, health tracking and automatic failover.",
-      "Backtested 6,788 signals across 7 assets / 5 years via no-lookahead replay — measured +0.0% edge over base rates and published the null result in FINDINGS.md instead of an unvalidated claim.",
+      "Backtested 6,788 signals across 7 assets / 5 years via no-lookahead replay - measured +0.0% edge over base rates and published the null result in FINDINGS.md instead of an unvalidated claim.",
       "Maintained 1,009 tests across 57 suites; shipped CLI, HTTP API and MCP server interfaces with Docker packaging and daily signal collection via GitHub Actions.",
-      "Designed and built the public organisation site (quanthq.in) solo as a static Astro 5 SSG — type-safe MDX content collections with Zod schemas, interactive canvas visualisations in vanilla script tags, light/dark theming and a contrast audit, deployed to a custom domain via GitHub Pages CI.",
+      "Designed and built the public organisation site (quanthq.in) solo as a static Astro 5 SSG - type-safe MDX content collections with Zod schemas, interactive canvas visualisations in vanilla script tags, light/dark theming and a contrast audit, deployed to a custom domain via GitHub Pages CI.",
     ],
     link: "https://quanthq.in",
   },
   {
     team: "The HDF Group",
     featured: true,
-    role: "Software Engineer (part-time) — HDF5 AI Pipeline",
+    role: "Software Engineer (part-time) - HDF5 AI Pipeline",
     period: "May 2026 – Aug 2026",
     note: "LLM refactoring engine for the HDF5 C library. Independent Claude and GPT-4o reviews gate proposed changes and route disagreements to human review.",
     points: [
       "Built the primary LLM refactoring engine (457 LOC) generating git-format-patch-validated diffs with invariants enforcing no-new-API / no-new-export / no-new-file.",
-      "Designed the multi-model consensus gate — Claude Sonnet and GPT-4o independently review every diff, with split verdicts routed to a human-review disagreements ledger.",
+      "Designed the multi-model consensus gate - Claude Sonnet and GPT-4o independently review every diff, with split verdicts routed to a human-review disagreements ledger.",
       "Parallelized the dual-LLM gate (ThreadPoolExecutor, ~2× faster per diff) and added a zero-API-cost faithfulness pre-check catching hallucinated RAG citations in ~1 ms.",
       "Authored ~280 unit and mocked-E2E tests (14-person repo, 809 total), contributing 80 commits and ~22K lines; prompt caching cut repeat-call cost ~80%.",
     ],
@@ -538,7 +538,7 @@ export const standings: Stint[] = [
     points: [
       "Built the preprocessing and tokenization infrastructure turning raw advertising scripts into model-ready tensor datasets (input_ids, attention_mask, labels) in PyTorch and HuggingFace Transformers.",
       "Expanded the labelled corpus 5.3× (10 to 53 samples), balancing binary compliance labels across examples covering 15 violation categories.",
-      "Designed the canonical dataset schema and tensor artifact specification adopted project-wide — the data contract downstream contributors built against.",
+      "Designed the canonical dataset schema and tensor artifact specification adopted project-wide - the data contract downstream contributors built against.",
       "Curated a domain-specific corpus spanning social, influencer, e-commerce, broadcast, podcast, email and print advertising covering multiple advertising formats.",
       "Implemented DistilBERT-compatible tokenization across the full 512-token context window with padding, truncation and attention masking.",
     ],
@@ -568,34 +568,34 @@ export const standings: Stint[] = [
   },
   {
     team: "Rancho Labs · IIT Delhi",
-    role: "AI/ML Training Program — Top 20 Nationwide",
+    role: "AI/ML Training Program - Top 20 Nationwide",
     period: "2022 – 2023",
     note: "Selected among 20 students nationwide for an intensive AI/ML program at IIT Delhi's IHFC innovation hub.",
     points: [
       "Selected nationwide (top 20) for a hands-on AI/ML program hosted at IIT Delhi's IHFC.",
-      "Built practical models on real datasets — training, evaluation and deployment fundamentals.",
+      "Built practical models on real datasets - training, evaluation and deployment fundamentals.",
       "Earned a strong early foundation that directly fed into later research and engineering work.",
     ],
   },
 ];
 
 export const setup: { unit: string; parts: string[] }[] = [
-  { unit: "Power Unit — Languages", parts: ["Python", "TypeScript", "Rust", "Kotlin", "JavaScript", "C", "C++", "SQL", "Java"] },
-  { unit: "Aero — AI & ML", parts: ["Multi-Agent Systems", "Transformers", "PyTorch", "BKT", "MediaPipe", "TensorFlow.js", "HuggingFace", "LLM Pipelines"] },
-  { unit: "Chassis — Full-Stack", parts: ["Next.js", "React", "React Native", "Expo", "FastAPI", "Node.js", "REST APIs", "Tailwind", "Three.js", "Zod"] },
-  { unit: "Telemetry — Data & Infra", parts: ["PostgreSQL", "Supabase", "SQLAlchemy", "Alembic", "pgvector", "FAISS", "BM25", "ChromaDB", "SQLite", "ETL pipelines", "pandas", "NumPy", "tree-sitter"] },
-  { unit: "Pit Tools — Cloud & Testing", parts: ["Docker", "GitHub Actions", "CI/CD", "Google Cloud Run", "Vercel", "Git", "pytest", "Unit/integration tests", "asyncio", "SSE", "MCP"] },
-  { unit: "Strategy — Research", parts: ["Agent evaluation", "Reproducibility", "Experimental design", "Co-design", "NLP bias analysis", "Data visualization", "Matplotlib", "Spatial analysis", "Scientific communication"] },
+  { unit: "Power Unit - Languages", parts: ["Python", "TypeScript", "Rust", "Kotlin", "JavaScript", "C", "C++", "SQL", "Java"] },
+  { unit: "Aero - AI & ML", parts: ["Multi-Agent Systems", "Transformers", "PyTorch", "BKT", "MediaPipe", "TensorFlow.js", "HuggingFace", "LLM Pipelines"] },
+  { unit: "Chassis - Full-Stack", parts: ["Next.js", "React", "React Native", "Expo", "FastAPI", "Node.js", "REST APIs", "Tailwind", "Three.js", "Zod"] },
+  { unit: "Telemetry - Data & Infra", parts: ["PostgreSQL", "Supabase", "SQLAlchemy", "Alembic", "pgvector", "FAISS", "BM25", "ChromaDB", "SQLite", "ETL pipelines", "pandas", "NumPy", "tree-sitter"] },
+  { unit: "Pit Tools - Cloud & Testing", parts: ["Docker", "GitHub Actions", "CI/CD", "Google Cloud Run", "Vercel", "Git", "pytest", "Unit/integration tests", "asyncio", "SSE", "MCP"] },
+  { unit: "Strategy - Research", parts: ["Agent evaluation", "Reproducibility", "Experimental design", "Co-design", "NLP bias analysis", "Data visualization", "Matplotlib", "Spatial analysis", "Scientific communication"] },
   // Spoken languages, kept distinct from the programming ones in "Power Unit".
   // Each carries its evidence rather than a self-assessed fluency label.
-  { unit: "Comms — Spoken Languages", parts: ["English · IELTS 8.0 / 9.0", "Hindi · Native"] },
+  { unit: "Comms - Spoken Languages", parts: ["English · IELTS 8.0 / 9.0", "Hindi · Native"] },
 ];
 
 export type PitRole = {
   org: string;
   role: string;
   period: string;
-  /** Short category chip — Founder / Fellowship / Events / Mentoring / Editorial / Service. */
+  /** Short category chip - Founder / Fellowship / Events / Mentoring / Editorial / Service. */
   tag: string;
   metric: string;
   note: string;
@@ -604,7 +604,7 @@ export type PitRole = {
 };
 
 export type Trophy = {
-  /** The headline figure — what a recruiter reads first. */
+  /** The headline figure - what a recruiter reads first. */
   value: string;
   title: string;
   issuer: string;
@@ -614,7 +614,7 @@ export type Trophy = {
   tier: 1 | 2;
 };
 
-/** The honours board — every entry verbatim from the CV. */
+/** The honours board - every entry verbatim from the CV. */
 export const trophies: Trophy[] = [
   {
     value: "2.5%",
@@ -637,7 +637,7 @@ export const trophies: Trophy[] = [
     title: "Best Junior Author of the Year",
     issuer: "IJETAE",
     year: "2023",
-    note: "For the ChatGPT common-sense study — the most-downloaded high-school-authored paper in the journal's history.",
+    note: "For the ChatGPT common-sense study - the most-downloaded high-school-authored paper in the journal's history.",
     tier: 1,
   },
   {
@@ -650,7 +650,7 @@ export const trophies: Trophy[] = [
   },
   {
     value: "Topper",
-    title: "High School Overall Topper — Science Batch",
+    title: "High School Overall Topper - Science Batch",
     issuer: "Grade 12",
     year: "2025",
     note: "Ranked first across the entire science batch in the final school year.",
@@ -658,7 +658,7 @@ export const trophies: Trophy[] = [
   },
   {
     value: "Topper",
-    title: "Physics Topper — Grade 12",
+    title: "Physics Topper - Grade 12",
     issuer: "Grade 12",
     year: "2025",
     note: "Highest marks in Physics across the graduating cohort.",
@@ -669,7 +669,7 @@ export const trophies: Trophy[] = [
     title: "School Colour for ICT",
     issuer: "TSVS",
     year: "2024",
-    note: "The only high-school recipient — awarded for cybersecurity workshops, TechFest and network administration.",
+    note: "The only high-school recipient - awarded for cybersecurity workshops, TechFest and network administration.",
     tier: 2,
   },
   {
@@ -682,10 +682,10 @@ export const trophies: Trophy[] = [
   },
   {
     value: "3A",
-    title: "Overall Topper — Grade 11",
+    title: "Overall Topper - Grade 11",
     issuer: "Grade 11",
     year: "2024",
-    note: "Ranked first among 250 students, achieving 3A — the maximum grade attainable.",
+    note: "Ranked first among 250 students, achieving 3A - the maximum grade attainable.",
     tier: 2,
   },
   {
@@ -693,7 +693,7 @@ export const trophies: Trophy[] = [
     title: "Recognition for Agricultural Innovation",
     issuer: "State of Madhya Pradesh",
     year: "2024",
-    note: "For 'IoT in Agriculture' — 500+ copies distributed to universities across India.",
+    note: "For 'IoT in Agriculture' - 500+ copies distributed to universities across India.",
     tier: 2,
   },
   {
@@ -706,7 +706,7 @@ export const trophies: Trophy[] = [
   },
   {
     value: "Rank 1",
-    title: "SilverZone Science Olympiad — International Gold Medalist",
+    title: "SilverZone Science Olympiad - International Gold Medalist",
     issuer: "SilverZone Foundation",
     year: "2023",
     note: "100% marks, ranking first internationally among thousands of participants.",
@@ -722,7 +722,7 @@ export const trophies: Trophy[] = [
   },
   {
     value: "Top 20",
-    title: "AI/ML Program — Nationwide",
+    title: "AI/ML Program - Nationwide",
     issuer: "Rancho Labs · IIT Delhi IHFC",
     year: "2022",
     note: "Selected among 20 students nationally for an intensive hands-on AI/ML program at IIT Delhi's innovation hub.",
@@ -730,7 +730,7 @@ export const trophies: Trophy[] = [
   },
 ];
 
-/** Mirrors `leadership` in portfolio-data.ts — same CV, race-flavored copy. */
+/** Mirrors `leadership` in portfolio-data.ts - same CV, race-flavored copy. */
 export const pitWall: PitRole[] = [
   {
     org: "CS124 Honors · UIUC", role: "Project Manager · RecallRush", period: "Aug 2026 – Present", tag: "Mentoring", metric: "5 student developers", featured: true,
@@ -766,7 +766,7 @@ export const pitWall: PitRole[] = [
   },
   {
     org: "MLH × Transcend Network",
-    role: "Commit Fellow — Founding Cohort",
+    role: "Commit Fellow - Founding Cohort",
     period: "Jun 2026 – Jul 2026",
     tag: "Fellowship",
     metric: "2.5% acceptance · 30 fellows",
@@ -786,7 +786,7 @@ export const pitWall: PitRole[] = [
     period: "Dec 2022 – Dec 2025",
     tag: "Founder",
     metric: "200+ volunteers · 6 cities · $24K",
-    note: "Built 8 classrooms, installed 100+ computers, educated 2,200+ across digital literacy and vocational programs — 700+ women, 600+ children, 300+ seniors.",
+    note: "Built 8 classrooms, installed 100+ computers, educated 2,200+ across digital literacy and vocational programs - 700+ women, 600+ children, 300+ seniors.",
     featured: true,
   },
   {
@@ -795,7 +795,7 @@ export const pitWall: PitRole[] = [
     period: "Oct 2025",
     tag: "Events",
     metric: "1,000+ attendees · 30+ volunteers",
-    note: "Directed a 4-hour campus festival on a centralized task system — 50+ tracked tasks, 10+ cultural performances, vendor and crowd-flow coordination.",
+    note: "Directed a 4-hour campus festival on a centralized task system - 50+ tracked tasks, 10+ cultural performances, vendor and crowd-flow coordination.",
   },
   {
     org: "Book writing & editorial work",
@@ -829,7 +829,7 @@ export const pitWall: PitRole[] = [
     period: "Aug 2023 – Aug 2024",
     tag: "Leadership",
     metric: "15+ workshops · 900+ trained",
-    note: "Ran cybersecurity workshops and a 1,000+ participant TechFest while managing the school website and network — School Colour for ICT, the only high-school recipient.",
+    note: "Ran cybersecurity workshops and a 1,000+ participant TechFest while managing the school website and network - School Colour for ICT, the only high-school recipient.",
   },
   {
     org: "MetroVaartha",
@@ -857,7 +857,7 @@ export const pitWall: PitRole[] = [
   },
 ];
 
-/** Headline numbers behind the leadership work — each traceable to one role above. */
+/** Headline numbers behind the leadership work - each traceable to one role above. */
 export const crewStats: { label: string; value: string; sub: string }[] = [
   { label: "Funds raised", value: "$42K+", sub: "across every program" },
   { label: "Educated", value: "2,200+", sub: "Project Uthaan" },
@@ -865,7 +865,7 @@ export const crewStats: { label: string; value: string; sub: string }[] = [
   { label: "Trees planted", value: "18,000+", sub: "SBI drive · 6 acres" },
 ];
 
-/** Unpaid crews joined rather than led — the short list under the Pit Wall. */
+/** Unpaid crews joined rather than led - the short list under the Pit Wall. */
 export const volunteering: { org: string; contribution: string }[] = [
   {
     org: "Hira Nyas Trust",
@@ -903,13 +903,13 @@ export type TimelineStint = {
 };
 
 export const timeline: TimelineStint[] = [
-  // Engineering — newest first
+  // Engineering - newest first
   { track: "eng", start: 2026, end: 2026, title: "Mega Service Solutions · Engineering Lead", detail: "Three-engineer HubSpot migration workstream within a 10+ person team; 1,000+ records, Python validation and Supabase integration." },
   { track: "eng", start: 2026, end: 2026, title: "RecallRush · Architect & PM", detail: "Managed five developers and integrated an adaptive-learning MVP with deterministic scoring and validated AI outputs." },
   { track: "eng", start: 2026, end: 2026, title: "SIGMobile · ScrollEat", detail: "Technical Director & Project Lead; React Native, FastAPI, transactional group voting and PostgreSQL." },
   { track: "eng", start: 2026, end: 2026, title: "GeoCrop & FloodSense", detail: "Aug 2026–present: satellite-quality analysis and geometry-based screening with provenance." },
-  { track: "eng", start: 2026, end: 2026, title: "HDF Group — SWE", detail: "LLM refactoring engine for the HDF5 C library; dual-model consensus gate (Claude + GPT-4o)." },
-  { track: "eng", start: 2026, end: 2026, title: "QuantHQ — SWE Intern", detail: "Solo-built Alpha Engine: multi-asset signal research, 22 analyzers, 1,009 tests." },
+  { track: "eng", start: 2026, end: 2026, title: "HDF Group - SWE", detail: "LLM refactoring engine for the HDF5 C library; dual-model consensus gate (Claude + GPT-4o)." },
+  { track: "eng", start: 2026, end: 2026, title: "QuantHQ - SWE Intern", detail: "Solo-built Alpha Engine: multi-asset signal research, 22 analyzers, 1,009 tests." },
   { track: "eng", start: 2026, end: 2026, title: "Mnemostack", detail: "Graph-aware code-retrieval MCP for AI coding assistants." },
   { track: "eng", start: 2026, end: 2026, title: "AstraSign", detail: "Real-time bidirectional ASL ↔ speech translator, ~30 FPS." },
   { track: "eng", start: 2026, end: 2026, title: "Meter", detail: "LLM cost-governance proxy: reservation-based spend ceilings, dual-protocol SSE metering." },
@@ -918,28 +918,28 @@ export const timeline: TimelineStint[] = [
   { track: "eng", start: 2025, end: 2026, title: "Adaptive Learning Platform", detail: "7-agent backend + Bayesian Knowledge Tracing from scratch." },
   { track: "eng", start: 2025, end: 2025, title: "SIGAIDA Campus Energy", detail: "Env-monitoring platform + PyTorch LSTM PM2.5 forecast; 10-person team." },
   { track: "eng", start: 2025, end: 2025, title: "Project Helix", detail: "1000+ campus events unified from 15+ sources; OAuth2 calendar export." },
-  { track: "eng", start: 2024, end: 2024, title: "Exam Lounge — AI/NLP Lead", detail: "Led 31 interns; +15% model accuracy; Intern of the Month ×3." },
-  { track: "eng", start: 2023, end: 2023, title: "IETE — ML Intern", detail: "AI chatbot (200+/day), BiLSTM misinformation detector at 87%." },
+  { track: "eng", start: 2024, end: 2024, title: "Exam Lounge - AI/NLP Lead", detail: "Led 31 interns; +15% model accuracy; Intern of the Month ×3." },
+  { track: "eng", start: 2023, end: 2023, title: "IETE - ML Intern", detail: "AI chatbot (200+/day), BiLSTM misinformation detector at 87%." },
 
-  // Research & Writing — newest first
+  // Research & Writing - newest first
   { track: "research", start: 2026, end: 2026, title: "ConvAI · GroundWorks", detail: "Implementation, experiments and analysis; fourth author on an ICLR 2027 submission." },
   { track: "research", start: 2026, end: 2026, title: "OnCARE · Exploratory Pilot", detail: "AI-assisted learning and student wellbeing; study preparation, execution and co-design." },
   { track: "research", start: 2026, end: 2026, title: "UR2PhD Pre-REC Training", detail: "Reproduced a 72-dataset protein-classification benchmark and an NLP bias workflow." },
-  { track: "research", start: 2025, end: 2025, title: "Book — Beyond the Black Box", detail: "Explainable AI, counterfactuals and surrogate models across healthcare, finance and autonomy; ASIN B0F38TX4ZR." },
+  { track: "research", start: 2025, end: 2025, title: "Book - Beyond the Black Box", detail: "Explainable AI, counterfactuals and surrogate models across healthcare, finance and autonomy; ASIN B0F38TX4ZR." },
   { track: "research", start: 2023, end: 2025, title: "Editor & Book Assistant", detail: "10+ book projects; edited 300+ academic essays." },
-  { track: "research", start: 2024, end: 2024, title: "Paper — Conversational Agents", detail: "IJETAE. Compared ChatGPT, Gemini, Perplexity & Claude." },
-  { track: "research", start: 2024, end: 2024, title: "Book — IoT in Agriculture", detail: "ISBN; 500+ copies; recognized by the Governor of Madhya Pradesh." },
-  { track: "research", start: 2023, end: 2023, title: "Paper — ChatGPT & Common Sense", detail: "IJETAE. Best Junior Author ($1,000); most-downloaded high-school-authored paper in journal history." },
-  { track: "research", start: 2022, end: 2023, title: "MetroVaartha — Jr Editor-in-Chief", detail: "AI column reached 50k+ readers; led the technology section." },
+  { track: "research", start: 2024, end: 2024, title: "Paper - Conversational Agents", detail: "IJETAE. Compared ChatGPT, Gemini, Perplexity & Claude." },
+  { track: "research", start: 2024, end: 2024, title: "Book - IoT in Agriculture", detail: "ISBN; 500+ copies; recognized by the Governor of Madhya Pradesh." },
+  { track: "research", start: 2023, end: 2023, title: "Paper - ChatGPT & Common Sense", detail: "IJETAE. Best Junior Author ($1,000); most-downloaded high-school-authored paper in journal history." },
+  { track: "research", start: 2022, end: 2023, title: "MetroVaartha - Jr Editor-in-Chief", detail: "AI column reached 50k+ readers; led the technology section." },
 
-  // Leadership — newest first
+  // Leadership - newest first
   { track: "lead", start: 2026, end: 2026, title: "ENG177 · Course Assistant", detail: "Support 15–20 students in physical design, technical papers, presentations and class sessions." },
   { track: "lead", start: 2026, end: 2026, title: "CS124 · Course Assistant / Tutor", detail: "Programming fundamentals and debugging support since January 2026, separate from peer mentoring." },
   { track: "lead", start: 2026, end: 2026, title: "MLH Commit Fellow", detail: "2.5% acceptance founder-track; advised founders & GPs on PMF." },
   { track: "lead", start: 2026, end: 2026, title: "CS Peer Mentor", detail: "80+ one-on-one sessions across UIUC CS courses, separate from the CS124 CA role." },
-  { track: "lead", start: 2025, end: 2026, title: "SSUAB — Director of Board Development", detail: "Board-wide professional development; authored comprehensive research & career services report." },
-  { track: "lead", start: 2025, end: 2026, title: "UI-CON — Panels Head", detail: "2,000+ attendees; 60+ volunteers; 20+ panels, 40+ guests." },
-  { track: "lead", start: 2023, end: 2025, title: "AI & STEM Club — Founder", detail: "80+ members; built the city's first AI lab; $7K raised." },
-  { track: "lead", start: 2022, end: 2025, title: "Project Uthaan — Founder", detail: "200+ volunteers, 6 cities, $24K raised, 2,200+ educated." },
-  { track: "lead", start: 2022, end: 2024, title: "Model UN — Secretary General ×2", detail: "35+ MUNs, 17 Best Delegate awards; ran 700+ delegate conferences." },
+  { track: "lead", start: 2025, end: 2026, title: "SSUAB - Director of Board Development", detail: "Board-wide professional development; authored comprehensive research & career services report." },
+  { track: "lead", start: 2025, end: 2026, title: "UI-CON - Panels Head", detail: "2,000+ attendees; 60+ volunteers; 20+ panels, 40+ guests." },
+  { track: "lead", start: 2023, end: 2025, title: "AI & STEM Club - Founder", detail: "80+ members; built the city's first AI lab; $7K raised." },
+  { track: "lead", start: 2022, end: 2025, title: "Project Uthaan - Founder", detail: "200+ volunteers, 6 cities, $24K raised, 2,200+ educated." },
+  { track: "lead", start: 2022, end: 2024, title: "Model UN - Secretary General ×2", detail: "35+ MUNs, 17 Best Delegate awards; ran 700+ delegate conferences." },
 ];

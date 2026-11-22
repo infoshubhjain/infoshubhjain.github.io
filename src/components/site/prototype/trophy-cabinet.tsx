@@ -6,7 +6,7 @@ import { anton, serif } from "@/lib/prototype-fonts";
 import { trophies, type Trophy } from "@/lib/prototype-data";
 
 /**
- * The honours board — a podium for the three headline awards, then the cabinet
+ * The honours board - a podium for the three headline awards, then the cabinet
  * behind it. Replaces the old skill radar (which redrew the build sheet) and the
  * career area chart (which plotted an invented "load per year" score).
  */
@@ -15,7 +15,7 @@ import { trophies, type Trophy } from "@/lib/prototype-data";
 // order stays P1 · P2 · P3 so the winner leads when the grid stacks on phones;
 // flex `order` puts P1 in the centre slot once there's a row to arrange.
 const SLOT = ["md:order-2", "md:order-1", "md:order-3"];
-const STEP = ["h-12", "h-6", "h-3"]; // plinth height by rank — P1 stands tallest
+const STEP = ["h-12", "h-6", "h-3"]; // plinth height by rank - P1 stands tallest
 const MEDAL = ["#ffd000", "#c7ccd1", "#cd7f32"]; // gold · silver · bronze
 
 function PodiumTrophy({ t, rank }: { t: Trophy; rank: number }) {
@@ -31,7 +31,7 @@ function PodiumTrophy({ t, rank }: { t: Trophy; rank: number }) {
         className="pt-glass relative overflow-hidden rounded-xl border p-5 pt-6"
         style={{ borderColor: "var(--pt-line)" }}
       >
-        {/* Medal bar as an element — a border-top here would conflict with the
+        {/* Medal bar as an element - a border-top here would conflict with the
             `borderColor` above and trip React's shorthand warning. */}
         <span aria-hidden className="absolute inset-x-0 top-0 h-0.5" style={{ background: MEDAL[rank] }} />
         <span
@@ -53,7 +53,7 @@ function PodiumTrophy({ t, rank }: { t: Trophy; rank: number }) {
           {t.note}
         </p>
       </div>
-      {/* Plinth — steps down from the centre, so P1 physically stands tallest.
+      {/* Plinth - steps down from the centre, so P1 physically stands tallest.
           Only once the podium is a row; stacked on phones it's just noise. */}
       <motion.div
         aria-hidden
@@ -83,11 +83,11 @@ export function TrophyCabinet() {
           </span>
         </Heading>
         <p className="mt-6 max-w-2xl text-lg" style={{ color: "var(--pt-muted)" }}>
-          A patent, a paid research prize, and a 2.5% founder fellowship — plus the rest of the cabinet.
+          A patent, a paid research prize, and a 2.5% founder fellowship - plus the rest of the cabinet.
         </p>
       </div>
 
-      {/* Podium — P2 · P1 · P3, stacked on phones where there's no room to step. */}
+      {/* Podium - P2 · P1 · P3, stacked on phones where there's no room to step. */}
       <div className="mt-10 flex flex-col items-stretch gap-4 md:grid md:grid-cols-3 md:items-end">
         {podium.map((t, rank) => (
           <PodiumTrophy key={t.title} t={t} rank={rank} />

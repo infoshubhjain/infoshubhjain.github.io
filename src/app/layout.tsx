@@ -29,7 +29,7 @@ const SITE_URL = "https://infoshubhjain.github.io";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Shubh Jain — Computer Science, Software Engineering & ML Research",
+    default: "Shubh Jain - Computer Science, Software Engineering & ML Research",
     template: "%s · Shubh Jain",
   },
   description:
@@ -59,13 +59,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "Shubh Jain",
-    title: "Shubh Jain — Computer Science, Software Engineering & ML Research",
+    title: "Shubh Jain - Computer Science, Software Engineering & ML Research",
     description:
       "Computer Science @ UIUC. Software engineering and applied ML work across LLM infrastructure, graph-aware retrieval, model evaluation, and accessible technology.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shubh Jain — Computer Science, Software Engineering & ML Research",
+    title: "Shubh Jain - Computer Science, Software Engineering & ML Research",
     description:
       "Computer Science @ UIUC. Software engineering and applied ML work across LLM infrastructure, graph-aware retrieval, model evaluation, and accessible technology.",
   },

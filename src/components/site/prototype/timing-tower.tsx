@@ -3,7 +3,7 @@
 import { wins } from "@/lib/prototype-data";
 
 /**
- * A broadcast-style timing tower — a thin auto-scrolling leaderboard of the work,
+ * A broadcast-style timing tower - a thin auto-scrolling leaderboard of the work,
  * running like live F1 timing between sections.
  */
 

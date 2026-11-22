@@ -105,7 +105,7 @@ export function Heading({ children }: { children: ReactNode }) {
   );
 }
 
-/** One rolling digit — a 0-9 reel that settles on the target (odometer/trip-meter feel). */
+/** One rolling digit - a 0-9 reel that settles on the target (odometer/trip-meter feel). */
 function DigitReel({ target, delay }: { target: number; delay: number }) {
   return (
     <span aria-hidden="true" className="inline-block overflow-hidden" style={{ height: "1em", lineHeight: 1, verticalAlign: "bottom" }}>
@@ -264,7 +264,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{ background: "radial-gradient(300px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.10), transparent 55%)" }}
         />
-        {/* Screenshot — a recruiter should be able to see the thing, not just read
+        {/* Screenshot - a recruiter should be able to see the thing, not just read
             about it. Bleeds to the card edges by cancelling the p-6. */}
         {win.image && (
           <div className="relative -mx-6 -mt-6 mb-5 h-40 overflow-hidden" style={{ borderBottom: `1px solid ${P.line}` }}>
@@ -467,7 +467,7 @@ export function Setup() {
           The <span style={{ color: P.rosso }}>build sheet.</span>
         </Heading>
         <p className="mt-6 max-w-2xl text-lg" style={{ color: P.muted }}>
-          Every system on the car, tuned. Drag isn&apos;t optional — the whole package has to work together.
+          Every system on the car, tuned. Drag isn&apos;t optional - the whole package has to work together.
         </p>
       </Reveal>
       <div className="mt-10 grid gap-4 md:grid-cols-2">
@@ -524,7 +524,7 @@ function CrewCard({ r }: { r: PitRole }) {
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{ background: "radial-gradient(260px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.08), transparent 55%)" }}
       />
-      {/* Featured spine — an element rather than a border-left, which would
+      {/* Featured spine - an element rather than a border-left, which would
           conflict with the `borderColor` set above. */}
       {r.featured && <span aria-hidden className="absolute inset-y-0 left-0 w-[3px]" style={{ background: P.rosso }} />}
       <div className="flex items-start justify-between gap-3">
@@ -570,12 +570,12 @@ export function PitWall() {
           Calling the <span style={{ color: P.rosso }}>strategy.</span>
         </Heading>
         <p className="mt-6 max-w-2xl text-lg" style={{ color: P.muted }}>
-          Races aren&apos;t won by drivers alone — {pitWall.length} teaching, leadership, editorial and service roles. 200+ people,
+          Races aren&apos;t won by drivers alone - {pitWall.length} teaching, leadership, editorial and service roles. 200+ people,
           six cities, tens of thousands reached.
         </p>
       </Reveal>
 
-      {/* Aggregate impact — every figure traces to one role below. */}
+      {/* Aggregate impact - every figure traces to one role below. */}
       <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {crewStats.map((s, i) => (
           <AnimatedStat key={s.label} value={s.value} label={s.label} sub={s.sub} delay={i * 0.05} />
@@ -597,12 +597,12 @@ export function PitWall() {
         ))}
       </div>
 
-      {/* Volunteering — crews joined rather than led. */}
+      {/* Volunteering - crews joined rather than led. */}
       <Reveal>
         <div className="pt-glass mt-10 rounded-xl border p-5" style={{ borderColor: P.line }}>
           <div className="flex items-center gap-3">
             <span className="font-mono text-xs font-bold uppercase tracking-[0.28em]" style={{ color: P.white }}>
-              Also on the grid — volunteering
+              Also on the grid - volunteering
             </span>
             <span className="h-px flex-1" style={{ background: P.line }} />
           </div>
@@ -643,7 +643,7 @@ function RadioForm() {
       if (++ticks > 9) {
         clearInterval(iv);
         const subject = encodeURIComponent(`Radio from ${from.trim() || "the grid"}`);
-        const body = encodeURIComponent(`${message.trim()}${from.trim() ? `\n\n— ${from.trim()}` : ""}`);
+        const body = encodeURIComponent(`${message.trim()}${from.trim() ? `\n\n- ${from.trim()}` : ""}`);
         window.location.href = `mailto:${driver.email}?subject=${subject}&body=${body}`;
         setStatus("sent");
         setNoise("");
@@ -688,7 +688,7 @@ function RadioForm() {
         {btn}
       </button>
       <p className="mt-3 font-mono text-xs" style={{ color: P.muted }}>
-        Opens your mail client — or radio in direct at {driver.email}
+        Opens your mail client - or radio in direct at {driver.email}
       </p>
     </form>
   );
@@ -704,7 +704,7 @@ export function Radio() {
             Let&apos;s go <span style={{ color: P.rosso }}>racing.</span>
           </Heading>
           <p className="mt-6 max-w-md text-lg leading-relaxed" style={{ color: P.muted }}>
-            Open to internships, research collaborations, and ambitious builds. Radio in — I usually reply
+            Open to internships, research collaborations, and ambitious builds. Radio in - I usually reply
             within a day.
           </p>
           <div className="mt-8 space-y-3 font-mono text-sm">
@@ -738,7 +738,7 @@ export function Radio() {
             className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
             style={{ borderColor: P.line, color: P.white }}
           >
-            ↓ Download press kit — résumé
+            ↓ Download press kit - résumé
           </a>
         </Reveal>
       </div>
@@ -761,7 +761,7 @@ export function Podium() {
             Chequered flag · built with Next.js · Three.js · Framer Motion
           </p>
           <p className="mt-2 font-mono text-xs" style={{ color: P.muted }}>
-            <span style={{ color: P.rosso }}>Radio codes</span> — scroll = throttle · hold Alt while typing{" "}
+            <span style={{ color: P.rosso }}>Radio codes</span> - scroll = throttle · hold Alt while typing{" "}
             <span style={{ color: P.white }}>hotlap</span>, <span style={{ color: P.white }}>quali</span>,{" "}
             <span style={{ color: P.white }}>forza</span>, <span style={{ color: P.white }}>wings</span>,{" "}
             <span style={{ color: P.white }}>box</span> outside text fields, or the Konami code (↑↑↓↓←→←→ B A) for a hot lap.
@@ -779,7 +779,7 @@ export function Podium() {
             >
               &ldquo;Ferrari F1-75&rdquo;
             </a>{" "}
-            by Sketcher (CC-BY-NC-4.0); Red Bull RB18 via FetchCFD. Fan homage — not affiliated with either team.
+            by Sketcher (CC-BY-NC-4.0); Red Bull RB18 via FetchCFD. Fan homage - not affiliated with either team.
           </p>
         </div>
         {/* checkered flag strip */}

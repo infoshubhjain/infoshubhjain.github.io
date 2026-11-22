@@ -14,15 +14,15 @@ import { useMediaQuery } from "@/lib/hooks/use-media-query";
 type Palette = (typeof PALETTES)[TeamId];
 
 /**
- * "URBANA GP — GRID RUN": a time-trial dash. Launched from the hero Drive button.
+ * "URBANA GP - GRID RUN": a time-trial dash. Launched from the hero Drive button.
  * Steer the real team car across three lanes to dodge single-lane barriers, and
- * control your own pace — ↑ accelerate, ↓ brake — to reach the chequered flag as
+ * control your own pace - ↑ accelerate, ↓ brake - to reach the chequered flag as
  * fast as you can without crashing. Hot state lives in a mutable `game` ref
  * mutated inside useFrame; the DOM HUD samples it on its own rAF.
  */
 
 const DRACO_PATH = "/draco/";
-// Tuned so the car's nose points down-track (away from the chase cam) — we chase
+// Tuned so the car's nose points down-track (away from the chase cam) - we chase
 // the rear of the car, not its face.
 const PLAYER_YAW = Math.PI;
 const LANES = [-2.3, 0, 2.3];
@@ -224,7 +224,7 @@ function Scene({ game, colors, modelPath, mobile, onEnd }: { game: React.Mutable
           h.lane = Math.floor(Math.random() * 3);
           h.hit = false;
         } else {
-          h.z = SPAWN_Z * 3; // park it away — clear run to the line
+          h.z = SPAWN_Z * 3; // park it away - clear run to the line
           h.hit = true;
         }
       }
@@ -371,7 +371,7 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
     };
   }, []);
 
-  // input — ↑↓ speed (held), ←→ steer (discrete)
+  // input - ↑↓ speed (held), ←→ steer (discrete)
   useEffect(() => {
     const move = (dir: -1 | 1) => {
       const g = game.current;
@@ -525,7 +525,7 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
               ))}
             </div>
             <div className={`${anton.className} mt-6 text-2xl uppercase tracking-wide text-white/80 sm:text-4xl`}>
-              {lights < 5 ? "Grid — get ready" : "Lights out!"}
+              {lights < 5 ? "Grid - get ready" : "Lights out!"}
             </div>
           </motion.div>
         )}
@@ -536,7 +536,7 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
         {(status === "over" || status === "finish") && (
           <motion.div className="absolute inset-0 z-[72] flex flex-col items-center justify-center text-center" style={{ background: "rgba(0,0,0,0.62)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="font-mono text-sm uppercase tracking-[0.3em]" style={{ color: palette.vars["--pt-primary"] }}>
-              {isFinish ? "🏁 Chequered flag" : "Retired — DNF"}
+              {isFinish ? "🏁 Chequered flag" : "Retired - DNF"}
             </div>
             <div className={`${anton.className} mt-2 text-6xl uppercase leading-none sm:text-7xl`}>
               {isFinish ? fmtTime(finalTime) : "Crashed"}

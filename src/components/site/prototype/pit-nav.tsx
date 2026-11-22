@@ -37,7 +37,7 @@ export function PitNav({ onGo }: { onGo: (id: string) => void }) {
         return;
       }
       if (e.key === "Escape") setOpen(false);
-      // Number keys jump straight to a section — but not while typing, and not
+      // Number keys jump straight to a section - but not while typing, and not
       // while the easter-egg letter codes are being entered.
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;

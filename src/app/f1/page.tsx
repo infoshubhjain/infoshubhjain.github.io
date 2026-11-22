@@ -26,7 +26,7 @@ import { F1Loader } from "@/components/site/prototype/f1-loader";
 import { PitNav } from "@/components/site/prototype/pit-nav";
 
 // three.js + R3F + postprocessing is ~600KB of the client bundle, and React can't
-// hydrate — so the start-lights timers can't even start — until it has all parsed.
+// hydrate - so the start-lights timers can't even start - until it has all parsed.
 // Both of these mount only after an explicit trigger, so neither belongs in the
 // initial bundle. This is what actually gated first paint, not the loader length.
 const F1Scene = dynamic(() => import("@/components/site/prototype/f1-scene").then((m) => m.F1Scene), { ssr: false });
@@ -43,7 +43,7 @@ const GIALLO = "var(--pt-accent)";
 const WHITE = "var(--pt-white)";
 const MUTED = "var(--pt-muted)";
 
-/** F1 "swipe" flash on team change — a skewed colour panel in the incoming
+/** F1 "swipe" flash on team change - a skewed colour panel in the incoming
  *  team's colour sweeps across and fades, branding the swap. Remounted via a
  *  changing `key` so each toggle replays it. */
 function TeamWipe({ team }: { team: TeamId }) {
@@ -101,7 +101,7 @@ export default function Home() {
   const mobile = useMediaQuery("(max-width: 768px)");
   const [launched, setLaunched] = useState(false);
   // Mounting F1Scene the instant the loader finishes made the Draco decode and
-  // shader compile starve the loader's own exit animation — the overlay sat on
+  // shader compile starve the loader's own exit animation - the overlay sat on
   // screen for ~4s after the lights had gone out. Wait for the exit to complete
   // (the timeout covers repeat visits, where the loader is skipped entirely).
   const [sceneReady, setSceneReady] = useState(false);
@@ -118,7 +118,7 @@ export default function Home() {
   // `flash.n` is a nonce that remounts TeamWipe so its animation replays.
   const [flash, setFlash] = useState<{ team: TeamId; n: number } | null>(null);
   // The colour-morph transition (.pt-morphing) is only worth its cost during a
-  // swap — see globals.css.
+  // swap - see globals.css.
   const [morphing, setMorphing] = useState(false);
   const morphTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const changeTeam = (t: TeamId) => {
@@ -191,12 +191,12 @@ export default function Home() {
         {!launched && <F1Loader key="f1-loader" onDone={() => setLaunched(true)} />}
       </AnimatePresence>
 
-      {/* F1 endless-runner minigame — launched from the hero Drive button */}
+      {/* F1 endless-runner minigame - launched from the hero Drive button */}
       <AnimatePresence>
         {racing && <GridRun key="grid-run" team={team} onExit={() => setRacing(false)} />}
       </AnimatePresence>
 
-      {/* Mount the heavy 3D scene only after the loader — keeps the launch sequence
+      {/* Mount the heavy 3D scene only after the loader - keeps the launch sequence
           smooth (no timer starvation) and crossfades the car in. */}
       {sceneReady && (
         <div style={{ animation: "ptFade 1s ease" }}>
@@ -212,7 +212,7 @@ export default function Home() {
       {flash && <TeamWipe key={flash.n} team={flash.team} />}
       <EasterEggs speedRef={speedRef} team={team} />
 
-      {/* Broadcast chrome — hidden on phones (toggle carries the team identity there) */}
+      {/* Broadcast chrome - hidden on phones (toggle carries the team identity there) */}
       <div className="pointer-events-none fixed inset-0 z-20 hidden sm:block">
         <div className="absolute left-5 top-20 flex items-center gap-3 sm:left-8 sm:top-20">
           <span className={`${anton.className} text-lg uppercase`} style={{ color: ROSSO }}>
@@ -225,9 +225,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Hero — the grid */}
+      {/* Hero - the grid */}
       <section className="relative z-10 flex min-h-screen flex-col justify-center px-5 pb-28 pt-40 sm:px-8 sm:pb-16 sm:pt-32 md:px-16">
-        {/* Mobile legibility scrim — dims the car behind the hero text on phones */}
+        {/* Mobile legibility scrim - dims the car behind the hero text on phones */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 sm:hidden"
@@ -262,7 +262,7 @@ export default function Home() {
             <span><span style={{ color: WHITE }}>3.83</span> CGPA</span>
             <span style={{ color: GIALLO }}>Dean&apos;s List · James Scholar</span>
           </div>
-          {/* Primary CTAs — the work leads; the game is a chip beside it. */}
+          {/* Primary CTAs - the work leads; the game is a chip beside it. */}
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <button
               onClick={() => goTo("wins")}
@@ -310,7 +310,7 @@ export default function Home() {
           </div>{/* /left column */}
           </div>{/* /hero two-column */}
           <div className="mt-12 font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: GIALLO }}>
-            ↓ &nbsp;scroll to accelerate — telemetry is live
+            ↓ &nbsp;scroll to accelerate - telemetry is live
           </div>
         </motion.div>
       </section>

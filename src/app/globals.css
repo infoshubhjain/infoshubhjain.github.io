@@ -55,7 +55,7 @@
 :root {
   --radius: 0.875rem;
 
-  /* Light — clean, high-contrast, paper-like */
+  /* Light - clean, high-contrast, paper-like */
   --background: oklch(0.985 0.003 240);
   --foreground: oklch(0.12 0.02 250);
 
@@ -92,7 +92,7 @@
   --sidebar-border: oklch(0.78 0.008 250 / 40%);
   --sidebar-ring: oklch(0.45 0.16 165);
 
-  /* Liquid glass tokens (light) — more opaque for readability */
+  /* Liquid glass tokens (light) - more opaque for readability */
   --glass-bg: oklch(1 0 0 / 72%);
   --glass-bg-strong: oklch(1 0 0 / 88%);
   --glass-highlight: rgba(255, 255, 255, 0.95);
@@ -107,13 +107,13 @@
   --background: oklch(0.08 0.008 240);
   --foreground: oklch(0.97 0.005 240);
 
-  /* Card surfaces — layered glass */
+  /* Card surfaces - layered glass */
   --card: oklch(0.12 0.012 240 / 60%);
   --card-foreground: oklch(0.97 0.005 240);
   --popover: oklch(0.1 0.012 240 / 85%);
   --popover-foreground: oklch(0.97 0.005 240);
 
-  /* Base shadcn tokens — used by ui/sonner and Tailwind utilities. The page
+  /* Base shadcn tokens - used by ui/sonner and Tailwind utilities. The page
      itself themes off the --pt-* livery vars in prototype-theme.ts. */
   --primary: oklch(0.78 0.18 165);
   --primary-foreground: oklch(0.06 0.01 240);
@@ -204,7 +204,7 @@
 
 @layer utilities {
   /* ════════════════════════════════════════════════════════════
-     LIQUID GLASS — Apple-inspired translucent surfaces
+     LIQUID GLASS - Apple-inspired translucent surfaces
      - NO pseudo-elements (avoids conflicts with .scanlines, .conic-border,
 
   /* Hide default cursor when custom cursor is active */
@@ -212,8 +212,8 @@
     cursor: none !important;
   }
 
-  /* Prototype liquid glass — frosted backdrop + light-catching specular edges.
-     ponytail: the SVG displacement refraction (url(#glassRefract)) was dropped —
+  /* Prototype liquid glass - frosted backdrop + light-catching specular edges.
+     ponytail: the SVG displacement refraction (url(#glassRefract)) was dropped -
      ~40 glass surfaces each running feTurbulence + feDisplacementMap over their
      backdrop was the page's biggest paint cost, for a difference you can't see
      behind 16px of blur. Re-add on a single hero surface if the look is missed. */
@@ -229,7 +229,7 @@
       0 24px 60px -28px rgba(0, 0, 0, 0.7);
   }
 
-  /* Smooth team-mode color morph. Only while a livery swap is in flight — a
+  /* Smooth team-mode color morph. Only while a livery swap is in flight - a
      permanent `.pt-root *` transition makes every hover and scroll-driven style
      change on the page animate, and forces a match against every node. */
   .pt-morphing,

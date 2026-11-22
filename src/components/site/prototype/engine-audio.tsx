@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Synthesized F1 power unit — no audio files. Three detuned oscillators (saw +
+ * Synthesized F1 power unit - no audio files. Three detuned oscillators (saw +
  * saw + sub) through a sweeping low-pass and a limiter. Toggling on fires a
  * satisfying start-up rev; after that, pitch + brightness track scroll speed,
  * so the engine revs as you scroll (scroll = throttle). Also revved by the
@@ -121,7 +121,7 @@ export function EngineAudio({ speedRef }: { speedRef: SpeedRef }) {
         color: on ? "var(--pt-primary)" : "rgba(245,243,238,0.65)",
       }}
       aria-pressed={on}
-      title="Engine sound — revs as you scroll"
+      title="Engine sound - revs as you scroll"
     >
       <span
         className={on ? "animate-pulse" : ""}

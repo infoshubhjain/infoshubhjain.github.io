@@ -97,7 +97,7 @@ export default function Home() {
       <div className="mt-10 border-t border-white/10 pt-8">
         <div className="mx-auto grid max-w-none gap-7 md:grid-cols-[11rem_1fr]">
           <div><p className="font-mono text-xs uppercase tracking-[0.14em] text-white/65">Technical areas</p><p className="mt-1 text-sm text-white/65">From project and course work</p></div>
-          <div><p className="mb-5 text-lg">Selected work: Python, TypeScript, FastAPI, PostgreSQL, React, Docker, automated testing and agent evaluation.</p><details><summary className="cursor-pointer text-base">Full technical reference</summary><div className="mt-4 grid gap-4 sm:grid-cols-2">{setup.map((group) => <p key={group.unit} className="text-base leading-relaxed text-white/65"><span className="text-white/65">{group.unit.replace(/^[^—]+— /, "")} · </span>{group.parts.join(" · ")}</p>)}</div></details></div>
+          <div><p className="mb-5 text-lg">Selected work: Python, TypeScript, FastAPI, PostgreSQL, React, Docker, automated testing and agent evaluation.</p><details><summary className="cursor-pointer text-base">Full technical reference</summary><div className="mt-4 grid gap-4 sm:grid-cols-2">{setup.map((group) => <p key={group.unit} className="text-base leading-relaxed text-white/65"><span className="text-white/65">{group.unit.replace(/^[^-]+- /, "")} · </span>{group.parts.join(" · ")}</p>)}</div></details></div>
         </div>
       </div>
 

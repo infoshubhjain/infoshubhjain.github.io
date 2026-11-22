@@ -6,7 +6,7 @@ import { anton, grotesk, serif } from "@/lib/prototype-fonts";
 import { PALETTES, DEFAULT_TEAM } from "@/lib/prototype-theme";
 
 /**
- * Dead links land here — including /prototype, which search engines still have
+ * Dead links land here - including /prototype, which search engines still have
  * indexed from the retired site. It applies the palette vars itself because
  * they live inline on the homepage's .pt-root, which this page never mounts.
  *
@@ -58,7 +58,7 @@ export default function NotFound() {
         </h1>
 
         <p className="mt-4 max-w-md text-base leading-relaxed" style={{ color: "var(--pt-muted)" }}>
-          Error 404 — no page at this address. It may have been retired in a rebuild.
+          Error 404 - no page at this address. It may have been retired in a rebuild.
           Head back to the grid and pick a sector from the menu.
         </p>
 
@@ -80,7 +80,7 @@ export default function NotFound() {
         </div>
       </motion.div>
 
-      {/* Checkered strip — the same motif that closes the homepage. */}
+      {/* Checkered strip - the same motif that closes the homepage. */}
       <div aria-hidden className="absolute inset-x-0 bottom-0 flex h-3.5">
         {Array.from({ length: 60 }).map((_, i) => (
           <span

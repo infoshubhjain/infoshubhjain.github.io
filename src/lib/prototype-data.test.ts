@@ -194,7 +194,7 @@ describe('Live site data integrity', () => {
     /**
      * Sort key for a period's end: "Present" outranks any date. A year-only
      * bound ("2023", from the two CV entries that give a season rather than a
-     * month) counts as mid-year — assuming December would rank a vague "2023"
+     * month) counts as mid-year - assuming December would rank a vague "2023"
      * above a precise "Aug 2023" on no real evidence.
      */
     const endOf = (period: string): number => {

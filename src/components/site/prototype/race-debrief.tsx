@@ -11,7 +11,7 @@ import type { Win } from "@/lib/prototype-data";
 const POS_COLOR: Record<string, string> = { P1: "#ffd000", P2: "#c7ccd1", P3: "#cd7f32" };
 const LINK_ICON = { github: Github, demo: ExternalLink, paper: FileText } as const;
 
-/** Full project "race debrief" — opens when a Win card is tapped. */
+/** Full project "race debrief" - opens when a Win card is tapped. */
 export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => void }) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -21,7 +21,7 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
   }, []);
 
   // `onClose` is usually an inline arrow, so keeping it in the deps re-ran the
-  // scroll lock on every parent render — releasing and re-taking it mid-scroll.
+  // scroll lock on every parent render - releasing and re-taking it mid-scroll.
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
 
@@ -44,7 +44,7 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
       }
     };
     window.addEventListener("keydown", onKey);
-    // body overflow alone doesn't stop Lenis — it drives window scroll itself.
+    // body overflow alone doesn't stop Lenis - it drives window scroll itself.
     const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
     lenis?.stop();
     document.body.style.overflow = "hidden";
@@ -146,8 +146,8 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
               {/* Body */}
               <div className="space-y-8 p-6 sm:p-8">
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Block icon={<Target className="h-4 w-4" />} label="Circuit — the problem" body={win.circuit} />
-                  <Block icon={<Wrench className="h-4 w-4" />} label="Setup — the approach" body={win.setup} />
+                  <Block icon={<Target className="h-4 w-4" />} label="Circuit - the problem" body={win.circuit} />
+                  <Block icon={<Wrench className="h-4 w-4" />} label="Setup - the approach" body={win.setup} />
                 </div>
 
                 <div>

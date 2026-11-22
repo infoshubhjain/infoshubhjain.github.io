@@ -66,3 +66,12 @@ Task: Rebuilt the portfolio as an F1 race-weekend theme (static export to GitHub
 - Updated the shared profile, skills, timeline, Llama Naturals dates, and current SWE resume PDF. Kept the raw CV ignored and retained the two deliberately excluded older roles.
 - Labeled GroundWorks as an ICLR 2027 submission in visible copy and structured data. Corrected the explainable-AI book's ASIN so it is not emitted as an ISBN.
 - Verified 31 tests, CI lint, static export, desktop/narrow-mobile layout, expandable content, and F1 rendering.
+
+## November 21, 2026: full-site CV and mobile audit
+
+- Reconciled project periods, added coursework and editorial work, corrected the explainable-AI book title, and linked the 2023 paper to its publisher PDF. Derived the project count from the actual project list and removed an unsupported retrieval complexity claim.
+- Added the owner-provided agriculture title, record 202421028435, and June 21, 2024 date. Public search did not establish grant status, so the site does not label it granted.
+- Made mobile navigation visible, increased formal-page text size/contrast and touch targets, separated teaching from employment, and exposed remaining experience bullets through disclosures. Added distinct project anchors to structured data.
+- Stacked F1 project cards on narrow/short screens and with reduced motion; separated fixed mobile controls. Fixed card keyboard activation and debrief focus containment, Escape handling, focus restoration, and close-button size.
+- Verified desktop and 320/390 px mobile rendering, publication wrapping, project debrief opening/closing and focus, and production export. Lint, TypeScript/static build, 34 tests, unique IDs, and internal anchors passed.
+- Checked 23 external links: 21 returned successfully; LinkedIn blocks automated requests and OpenReview redirects to a verification challenge. Kept those valid destinations. ScrollEat remains private, so no inaccessible public source link was added. Raw CV remains ignored.

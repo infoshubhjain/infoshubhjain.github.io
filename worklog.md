@@ -84,3 +84,6 @@ Task: Rebuilt the portfolio as an F1 race-weekend theme (static export to GitHub
 - Corrected structured project/language/authorship data, removed unused scrolling code and cmdk, and updated dependencies. Audit reports zero known vulnerabilities; 36 tests, lint and static export pass.
 - Tested the menu in IAB and Brave, including focus containment/restoration. Measured no page overflow at 320, 390, 768, 1024 and 1440 px in Brave. Actual Safari opening timed out; speech-output testing is not available through the tools.
 - Checked public Meter, AstraSign and adaptive-learning flows. Adaptive-learning session creation fails; the portfolio labels its deployment limitation. No payment, camera/microphone, or authenticated provider operations were exercised. Full linked-project feature certification remains unavailable without required services/hardware/access.
+
+- Final Slow 4G homepage audit: performance 98, accessibility 100, best practices 100, SEO 100. F1 audit: 97/100/100/92 before its self-canonical repair; deployed HTML now confirms the corrected canonical.
+- Verified FloodSense synthetic analysis and zone highlighting; corrected its current Node.js/TypeScript/Turf stack and added its working demo link. GeoCrop sample analysis remained loading, and FloodSense download verification timed out. Neither is marked fully verified.

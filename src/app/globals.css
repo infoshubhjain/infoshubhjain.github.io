@@ -292,3 +292,6 @@
     scroll-behavior: auto !important;
   }
 }
+
+.pt-root section[id] { scroll-margin-top: 128px; }
+@media(max-width:640px) { .pt-root section[id] { padding-top:128px; } .pt-root #radio a { overflow-wrap:anywhere; min-width:0; } .pt-root #radio form { min-width:0; } }

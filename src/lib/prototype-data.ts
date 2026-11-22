@@ -24,7 +24,7 @@ export const SECTIONS = [
 export const driver = {
   name: "Shubh Jain",
   number: "16",
-  team: "Independent · Self-Built",
+  team: "Backend systems · ML research",
   role: "CS @ UIUC · AI Systems Engineer",
   grid: "Urbana-Champaign, IL",
   graduation: "May 2028",
@@ -130,18 +130,18 @@ export const wins: Win[] = [
     name: "Meter",
     year: "2026",
     role: "Backend & Infra Lead",
-    circuit: "LLM spend has no enforcement layer — concurrent requests race past the same budget ceiling and streamed responses silently under-bill.",
+    circuit: "Concurrent LLM requests can bypass naive budget checks: concurrent requests race past the same budget ceiling and streamed responses silently under-bill.",
     setup: "FastAPI metering proxy with an authorize/capture reservation system under a single asyncio lock, dual-protocol SSE usage parsing, and a two-condition circuit breaker.",
     gap: "~3,600 LOC · 256-assertion suite · ~400 req/s · 1 round trip removed",
     tech: ["Python", "FastAPI", "asyncio", "PostgreSQL", "Docker"],
     featured: true,
     overview:
-      "An autonomous LLM cost-governance proxy that sits in front of OpenAI and Anthropic. It enforces per-project and per-feature spend ceilings on the hot path — authenticate → attribute → predict → circuit-break → reserve → forward → capture — while a caller's existing provider SDK keeps working unmodified.",
+      "An OpenAI/Anthropic-compatible proxy that reserves budget before forwarding requests and reconciles streamed usage afterward. The concurrency test exercised 40 simultaneous requests; the soak test measured approximately 400 requests/sec over 5,000 requests at 16 clients. These are test results, not a claim about production traffic or distributed-worker safety.",
     impact: [
       "Authorize/capture reservations count in-flight holds alongside settled ledger spend inside one asyncio lock, closing the read-then-call race that lets N concurrent requests overspend a shared ceiling; proved with a 40-way concurrent test against a ceiling funding exactly 4 requests.",
-      "Heartbeats reservations every 30s against a 120s TTL so a hold can't expire mid-stream — the under-billing failure mode that raised no exception and hit the longest, most expensive requests hardest.",
+      "Renewed reservation holds every 30s against a 120s TTL so a hold can't expire mid-stream — the under-billing failure mode that raised no exception and hit the longest, most expensive requests hardest.",
       "Dual-protocol SSE usage parser reconciles formats that disagree: injects and strips OpenAI's stream_options.include_usage, and reassembles Anthropic usage split across message_start and message_delta — reading only the first under-counts output tokens ~40×.",
-      "Found and fixed a silent corruption invalidating 100% of streamed cost data: real providers gzip SSE, the raw read found no data: lines and quietly downgraded to byte-count estimates. The whole suite passed throughout, because fake upstreams don't compress — pinned with a purpose-built gzipping HTTP server.",
+      "Fixed gzip SSE parsing that caused compressed streams to fall back to byte-count cost estimates. Added a gzipping upstream HTTP server to cover the case that uncompressed test fixtures missed.",
       "Reframed proxy latency as a round-trip count model, proved the published 52.7 ms benchmark measured a config nobody runs, and removed one database round trip (~50 ms/request remote) by folding two spend aggregates into a single scan.",
       "Two-condition circuit breaker: absolute spend floor over a 5-minute window AND a 3× burst ratio against the trailing hour, with tag-scoped 429 throttling, key-scoped 403 revocation and half-open recovery — Google's multi-burn-rate pattern adapted, not ported.",
       "Led a full-codebase security audit reproducing every finding against a running service: a CORS regex matching any attacker-published *.vercel.app deployment, an unauthenticated endpoint exposing the payment loop, and a per-IP rate-limit bypass from a missing --proxy-headers flag.",
@@ -149,7 +149,7 @@ export const wins: Win[] = [
     ],
     metrics: [
       { label: "Proxy LOC", value: "~3,600" },
-      { label: "Assertions", value: "867" },
+      { label: "Proxy assertions", value: "256" },
       { label: "Throughput", value: "~400 req/s" },
       { label: "Concurrency test", value: "40-way" },
     ],
@@ -212,7 +212,7 @@ export const wins: Win[] = [
     overview:
       "An ASL/speech translation prototype combining browser hand tracking, sign classification, speech tools, and animated avatars, processing video at approximately 30 FPS.",
     impact: [
-      "MediaPipe HandLandmarker tracks 2 hands × 21 landmarks (63 features/frame) on a ~33 ms requestAnimationFrame loop.",
+      "MediaPipe HandLandmarker tracks 2 hands × 21 landmarks (63 coordinate features per hand) on a ~33 ms requestAnimationFrame loop.",
       "Browser TensorFlow.js classifier (68→128/64/32 dense, dropout, softmax) with landmark smoothing and temporal confidence accumulation.",
       "Multi-model NLP pipeline: Whisper STT → Gemini English→ASL gloss → 262-sign lookup → ElevenLabs TTS.",
       "30+ React components and custom hooks (useHandTracking, useVoicePipeline) keep the UI responsive under continuous video inference.",
@@ -247,7 +247,7 @@ export const wins: Win[] = [
     tech: ["Next.js 15", "FastAPI", "Supabase", "OpenAI", "pgvector"],
     featured: true,
     overview:
-      "A full-stack adaptive learning platform whose multi-agent backend personalizes every step — powered by a Bayesian Knowledge Tracing engine written from scratch.",
+      "An adaptive learning platform with a Bayesian Knowledge Tracing engine and a multi-agent backend. Public deployment check, November 21, 2026: onboarding is visible, but session creation currently fails.",
     impact: [
       "7 specialized ReAct agents (Roadmap, Knowledge, Quiz, Conversation, Tasker, Memory Compactor, Orchestrator) coordinate in real time via a mixin architecture.",
       "BKT engine models per-skill mastery with learn/guess/slip parameters and selects the next question by maximizing expected information gain.",
@@ -267,7 +267,7 @@ export const wins: Win[] = [
       { group: "AI", items: ["OpenAI", "Gemini", "BKT", "Info-gain"] },
       { group: "Data", items: ["Supabase", "pgvector", "RLS"] },
     ],
-    links: [{ label: "Live demo", href: "https://aiceuiuc.vercel.app/", kind: "demo" }],
+    links: [{ label: "Preview (session unavailable)", href: "https://aiceuiuc.vercel.app/", kind: "demo" }],
   },
   {
     id: "sigaida", period: "Aug 2025 – Dec 2025",
@@ -346,7 +346,7 @@ export const wins: Win[] = [
       "A full-stack ecosystem for four dining halls that keeps nutrition data fresh and filterable for 1000+ daily users.",
     impact: [
       "React + Node.js dashboard shows calories, macros, allergens and meal filtering for 1000+ daily users.",
-      "Python Selenium scrapers collect daily menus automatically, keeping data 100% up to date.",
+      "Python Selenium scrapers collect daily menus automatically, with scheduled refreshes.",
       "RESTful Node.js backend serves all frontend requests from SQLite.",
       "GitHub Actions CI/CD automates daily scraping, validation and deployment — cutting manual upkeep ~90%.",
     ],
@@ -484,7 +484,7 @@ export type Stint = {
 
 export const standings: Stint[] = [
   {
-    team: "Mega Service Solutions", role: "Software Engineering Lead", period: "Aug 2026 – Present", featured: true,
+    team: "Mega Service Solutions", role: "Software Engineering Lead · Revamp UIUC client project", period: "Aug 2026 – Present", featured: true,
     note: "Lead three engineers within a 10+ person team on Python pipelines for an ongoing migration of 1,000+ HubSpot CRM records toward an in-house Supabase-backed CRM.",
     points: ["Design field mappings that preserve HubSpot identifiers, company hierarchies, and associations between deals, companies, contacts, and notes.", "Develop Excel/CSV validation and exception reports for duplicate or uncertain relationships before import.", "Coordinate sales review and export handoff with the client's database team; migration remains in progress."],
   },
@@ -505,7 +505,7 @@ export const standings: Stint[] = [
     featured: true,
     role: "Software Engineering Intern",
     period: "May 2026 – Aug 2026",
-    note: "Solo-built Alpha Engine: deterministic multi-asset signal research across crypto, US & Indian equities, F&O and forex — then backtested it honestly and published the null result rather than a claim.",
+    note: "Built Alpha Engine for reproducible multi-asset signal research, with data ingestion, provider failover, and CLI, HTTP and MCP interfaces.",
     points: [
       "Built a deterministic research engine — 22 independent analyzers synthesized into directional signals with calibrated confidence and explicit invalidation prices (33K LOC, solo).",
       "Integrated 25+ market data sources (Binance, Glassnode, FRED, OANDA, Dhan, AngelOne, NSE, RBI, Finnhub) behind a unified ingestion layer with caching, health tracking and automatic failover.",
@@ -520,7 +520,7 @@ export const standings: Stint[] = [
     featured: true,
     role: "Software Engineer (part-time) — HDF5 AI Pipeline",
     period: "May 2026 – Aug 2026",
-    note: "LLM refactoring engine for the 25-year-old HDF5 C library with a dual-LLM consensus gate (Claude + GPT-4o both_approve/disagree).",
+    note: "LLM refactoring engine for the HDF5 C library. Independent Claude and GPT-4o reviews gate proposed changes and route disagreements to human review.",
     points: [
       "Built the primary LLM refactoring engine (457 LOC) generating git-format-patch-validated diffs with invariants enforcing no-new-API / no-new-export / no-new-file.",
       "Designed the multi-model consensus gate — Claude Sonnet and GPT-4o independently review every diff, with split verdicts routed to a human-review disagreements ledger.",
@@ -539,7 +539,7 @@ export const standings: Stint[] = [
       "Built the preprocessing and tokenization infrastructure turning raw advertising scripts into model-ready tensor datasets (input_ids, attention_mask, labels) in PyTorch and HuggingFace Transformers.",
       "Expanded the labelled corpus 5.3× (10 to 53 samples), balancing binary compliance labels across examples covering 15 violation categories.",
       "Designed the canonical dataset schema and tensor artifact specification adopted project-wide — the data contract downstream contributors built against.",
-      "Curated a domain-specific corpus spanning social, influencer, e-commerce, broadcast, podcast, email and print advertising so the model generalises across formats rather than one channel.",
+      "Curated a domain-specific corpus spanning social, influencer, e-commerce, broadcast, podcast, email and print advertising covering multiple advertising formats.",
       "Implemented DistilBERT-compatible tokenization across the full 512-token context window with padding, truncation and attention masking.",
     ],
   },
@@ -568,7 +568,7 @@ export const standings: Stint[] = [
   },
   {
     team: "Rancho Labs · IIT Delhi",
-    role: "AI/ML Program — Top 20 Nationwide",
+    role: "AI/ML Training Program — Top 20 Nationwide",
     period: "2022 – 2023",
     note: "Selected among 20 students nationwide for an intensive AI/ML program at IIT Delhi's IHFC innovation hub.",
     points: [
@@ -621,7 +621,7 @@ export const trophies: Trophy[] = [
     title: "MLH Commit Fellow",
     issuer: "Major League Hacking × Transcend Network",
     year: "2026",
-    note: "One of 30 fellows in the inaugural founder-track cohort, selected globally alongside Stanford, MIT and Ivy League peers.",
+    note: "One of 30 fellows in the inaugural founder-track cohort, selected through a global application process.",
     tier: 1,
   },
   {
@@ -929,7 +929,7 @@ export const timeline: TimelineStint[] = [
   { track: "research", start: 2023, end: 2025, title: "Editor & Book Assistant", detail: "10+ book projects; edited 300+ academic essays." },
   { track: "research", start: 2024, end: 2024, title: "Paper — Conversational Agents", detail: "IJETAE. Compared ChatGPT, Gemini, Perplexity & Claude." },
   { track: "research", start: 2024, end: 2024, title: "Book — IoT in Agriculture", detail: "ISBN; 500+ copies; recognized by the Governor of Madhya Pradesh." },
-  { track: "research", start: 2023, end: 2023, title: "Paper — ChatGPT & Common Sense", detail: "IJETAE. Best Junior Author ($1,000); most-downloaded in journal history." },
+  { track: "research", start: 2023, end: 2023, title: "Paper — ChatGPT & Common Sense", detail: "IJETAE. Best Junior Author ($1,000); most-downloaded high-school-authored paper in journal history." },
   { track: "research", start: 2022, end: 2023, title: "MetroVaartha — Jr Editor-in-Chief", detail: "AI column reached 50k+ readers; led the technology section." },
 
   // Leadership — newest first

@@ -46,7 +46,7 @@ function PodiumTrophy({ t, rank }: { t: Trophy; rank: number }) {
         <h3 className="mt-3 text-lg font-semibold leading-tight" style={{ color: "var(--pt-white)" }}>
           {t.title}
         </h3>
-        <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: "var(--pt-muted)" }}>
+        <div className="mt-1 font-mono text-xs uppercase tracking-[0.18em]" style={{ color: "var(--pt-muted)" }}>
           {t.issuer} · {t.year}
         </div>
         <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--pt-muted)" }}>
@@ -118,7 +118,7 @@ export function TrophyCabinet() {
               <h3 className="mt-1.5 text-sm font-semibold leading-tight" style={{ color: "var(--pt-white)" }}>
                 {t.title}
               </h3>
-              <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: "var(--pt-muted)" }}>
+              <div className="mt-0.5 font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "var(--pt-muted)" }}>
                 {t.issuer} · {t.year}
               </div>
               <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--pt-muted)" }}>

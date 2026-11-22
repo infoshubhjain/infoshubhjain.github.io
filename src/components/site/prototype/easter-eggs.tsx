@@ -40,6 +40,7 @@ export function EasterEggs({ speedRef, team }: { speedRef: React.MutableRefObjec
   const [msg, setMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let letters = "";
     let konami: string[] = [];
     let hideTimer: ReturnType<typeof setTimeout>;
@@ -78,6 +79,7 @@ export function EasterEggs({ speedRef, team }: { speedRef: React.MutableRefObjec
     };
 
     const onKey = (e: KeyboardEvent) => {
+      if (!e.altKey) return;
       // ignore typing in inputs
       const el = e.target as HTMLElement;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;

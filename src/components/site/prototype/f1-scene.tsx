@@ -283,7 +283,7 @@ export function F1Scene({ speedRef, reduced, colors, mobile }: { speedRef: Speed
         shadows={!mobile}
         camera={{ position: [9.5, 5.5, 9.5], fov: 40 }}
         dpr={mobile ? [1, 1.3] : [1, 1.7]}
-        frameloop={live ? "always" : "demand"}
+        frameloop={live && !reduced ? "always" : "demand"}
         gl={{ antialias: !mobile }}
       >
         <color attach="background" args={[colors.canvas]} />

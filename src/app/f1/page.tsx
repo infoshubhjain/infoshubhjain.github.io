@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import { Github, Linkedin, Mail, FileDown, ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import { TelemetryHud } from "@/components/site/prototype/telemetry-hud";
@@ -42,20 +42,6 @@ const CARBON = "var(--pt-canvas)";
 const GIALLO = "var(--pt-accent)";
 const WHITE = "var(--pt-white)";
 const MUTED = "var(--pt-muted)";
-
-const NOISE =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
-
-/** Filmic overlay: soft vignette + subtle film grain. */
-function CinematicOverlay() {
-  return (
-    <div className="pointer-events-none fixed inset-0 z-30">
-      <div className="absolute inset-0" style={{ boxShadow: "inset 0 0 220px 50px rgba(0,0,0,0.6)" }} />
-      <div className="absolute inset-0 opacity-[0.045] mix-blend-overlay" style={{ backgroundImage: NOISE }} />
-    </div>
-  );
-}
-
 
 /** F1 "swipe" flash on team change — a skewed colour panel in the incoming
  *  team's colour sweeps across and fades, branding the swap. Remounted via a
@@ -168,8 +154,8 @@ export default function Home() {
     const el = document.getElementById(id);
     if (!el) return;
     const lenis = (window as unknown as { __lenis?: { scrollTo: (t: HTMLElement, o?: object) => void } }).__lenis;
-    if (lenis) lenis.scrollTo(el, { offset: -20 });
-    else el.scrollIntoView({ behavior: "smooth" });
+    if (lenis) lenis.scrollTo(el, { offset: -128 });
+    else el.scrollIntoView({ behavior: reduced ? "instant" : "smooth" });
   };
 
   useEffect(() => {
@@ -197,7 +183,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main
+    <MotionConfig reducedMotion="user"><main
       className={`pt-root ${morphing ? "pt-morphing " : ""}${grotesk.className}`}
       style={{ ...palette.vars, background: CARBON, color: WHITE } as React.CSSProperties}
     >
@@ -217,7 +203,7 @@ export default function Home() {
           <F1Scene speedRef={speedRef} reduced={reduced} colors={palette.three} mobile={mobile} />
         </div>
       )}
-      <CinematicOverlay />
+      {/* Reading surfaces remain unobscured by decorative overlays. */}
       <TelemetryHud speedRef={speedRef} />
       <CircuitMap />
       <EngineAudio speedRef={speedRef} />
@@ -268,7 +254,7 @@ export default function Home() {
             <span style={{ color: ROSSO }}>Jain</span>
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed sm:text-2xl" style={{ color: "#d6d4ce" }}>
-            {driver.tagline} <span className={`${serif.className} italic`}>Built from first principles.</span>
+            {driver.tagline} <span className={`${serif.className} italic`}>Built through experiments and iteration.</span>
           </p>
           {/* Credentials */}
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs uppercase tracking-[0.18em]" style={{ color: MUTED }}>
@@ -314,7 +300,7 @@ export default function Home() {
               ))}
             </div>
             <button
-              onClick={() => setRacing(true)}
+              data-game-trigger onClick={() => setRacing(true)}
               className="pt-glass inline-flex items-center gap-2 rounded-xl border px-4 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-transform hover:-translate-y-0.5"
               style={{ borderColor: GIALLO, color: GIALLO }}
             >
@@ -343,6 +329,6 @@ export default function Home() {
       <Setup />
       <Radio />
       <Podium />
-    </main>
+    </main></MotionConfig>
   );
 }

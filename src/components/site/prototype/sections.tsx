@@ -1,11 +1,11 @@
 "use client";
 
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { anton, serif } from "@/lib/prototype-fonts";
 import { RaceDebrief } from "./race-debrief";
-import { useMediaQuery, usePrefersReducedMotion } from "@/lib/hooks/use-media-query";
+import { usePrefersReducedMotion } from "@/lib/hooks/use-media-query";
 import {
   driver,
   seasonStats,
@@ -63,7 +63,7 @@ export function SectorTag({ n, label, purple }: { n: string; label: string; purp
   return (
     <div className="mb-6 flex items-center gap-3">
       <span
-        className="rounded px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.28em]"
+        className="rounded px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.28em]"
         // Opaque, not rgba(...,0.9): at 90% the dark canvas bled through and
         // dropped this badge to 4.25:1 against its text, under the 4.5:1 AA
         // floor for 11px bold. Same hue, 5.02:1.
@@ -71,7 +71,7 @@ export function SectorTag({ n, label, purple }: { n: string; label: string; purp
       >
         {n}
       </span>
-      <span className="font-mono text-[11px] uppercase tracking-[0.32em]" style={{ color: P.muted }}>
+      <span className="font-mono text-xs uppercase tracking-[0.32em]" style={{ color: P.muted }}>
         {label}
       </span>
       <span className="h-px flex-1" style={{ background: `linear-gradient(90deg, ${P.line}, transparent)` }} />
@@ -80,9 +80,10 @@ export function SectorTag({ n, label, purple }: { n: string; label: string; purp
 }
 
 function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
+  const reduced = usePrefersReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+      initial={reduced ? false : { opacity: 0, y: 28, filter: "blur(10px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "-70px" }}
       transition={{ duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] }}
@@ -107,7 +108,7 @@ export function Heading({ children }: { children: ReactNode }) {
 /** One rolling digit — a 0-9 reel that settles on the target (odometer/trip-meter feel). */
 function DigitReel({ target, delay }: { target: number; delay: number }) {
   return (
-    <span className="inline-block overflow-hidden" style={{ height: "1em", lineHeight: 1, verticalAlign: "bottom" }}>
+    <span aria-hidden="true" className="inline-block overflow-hidden" style={{ height: "1em", lineHeight: 1, verticalAlign: "bottom" }}>
       <motion.span
         className="flex flex-col"
         initial={{ y: "0em" }}
@@ -126,8 +127,10 @@ function DigitReel({ target, delay }: { target: number; delay: number }) {
 }
 
 function Odometer({ value, baseDelay = 0 }: { value: string; baseDelay?: number }) {
+  const reduced = usePrefersReducedMotion();
+  if (reduced) return <span>{value}</span>;
   return (
-    <span className="inline-flex tabular-nums" style={{ lineHeight: 1 }}>
+    <span aria-label={value} role="img" className="inline-flex tabular-nums" style={{ lineHeight: 1 }}>
       {[...value].map((ch, i) =>
         /\d/.test(ch) ? (
           <DigitReel key={i} target={Number(ch)} delay={baseDelay + i * 0.06} />
@@ -144,7 +147,7 @@ function Odometer({ value, baseDelay = 0 }: { value: string; baseDelay?: number 
 function AnimatedStat({ value, label, sub, delay }: { value: string; label: string; sub: string; delay: number }) {
   return (
     <div className="pt-glass rounded-lg border p-4" style={{ borderColor: P.line }}>
-      <div className="font-mono text-[9px] uppercase tracking-[0.28em]" style={{ color: P.muted }}>
+      <div className="font-mono text-xs uppercase tracking-[0.28em]" style={{ color: P.muted }}>
         {label}
       </div>
       <div className={`${anton.className} mt-1 text-4xl`} style={{ color: P.white }}>
@@ -182,7 +185,7 @@ export function Driver() {
             {honors.map((h) => (
               <span
                 key={h}
-                className="rounded-full border px-3 py-1 font-mono text-[11px] uppercase tracking-wider"
+                className="rounded-full border px-3 py-1 font-mono text-xs uppercase tracking-wider"
                 style={{ borderColor: P.rosso, color: P.giallo }}
               >
                 {h}
@@ -285,7 +288,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
               <span className={`${anton.className} text-2xl`} style={{ color: POS_COLOR[win.pos] ?? P.white }}>
                 {win.pos}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: P.muted }}>
+              <span className="font-mono text-xs uppercase tracking-[0.2em]" style={{ color: P.muted }}>
                 {win.period ?? win.year} · {win.role}
               </span>
             </div>
@@ -294,7 +297,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
             </h3>
           </div>
           {win.featured && (
-            <span className="rounded px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider" style={{ background: P.rosso, color: P.onPrimary }}>
+            <span className="rounded px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-wider" style={{ background: P.rosso, color: P.onPrimary }}>
               Win
             </span>
           )}
@@ -304,7 +307,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
           {win.circuit}
         </p>
 
-        <div className="mt-4 flex items-center gap-2 font-mono text-[11px]">
+        <div className="mt-4 flex items-center gap-2 font-mono text-xs">
           <span className="rounded px-1.5 py-0.5" style={{ background: "rgba(46,229,107,0.15)", color: "#2ee56b" }}>
             ⚑ FL
           </span>
@@ -313,7 +316,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
 
         <div className="mt-4 flex flex-wrap gap-1.5">
           {win.tech.map((t) => (
-            <span key={t} className="rounded border px-2 py-0.5 font-mono text-[10px]" style={{ borderColor: P.line, color: P.muted }}>
+            <span key={t} className="rounded border px-2 py-0.5 font-mono text-xs" style={{ borderColor: P.line, color: P.muted }}>
               {t}
             </span>
           ))}
@@ -321,11 +324,11 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
 
         {/* footer: debrief affordance + quick links (links stop card click) */}
         <div className="mt-auto flex items-center justify-between border-t pt-4" style={{ borderColor: P.line }}>
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-wider" style={{ color: P.rosso }}>
+          <span className="font-mono text-xs font-semibold uppercase tracking-wider" style={{ color: P.rosso }}>
             View debrief →
           </span>
           {win.links.length > 0 && (
-            <div className="flex gap-3 font-mono text-[10px] uppercase tracking-wider">
+            <div className="flex gap-3 font-mono text-xs uppercase tracking-wider">
               {win.links.map((l) => (
                 <a
                   key={l.href}
@@ -354,74 +357,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
 
 export function Wins() {
   const [selected, setSelected] = useState<Win | null>(null);
-  const mobile = useMediaQuery("(max-width: 1024px), (max-height: 850px)");
-  const reduced = usePrefersReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
-  const [dist, setDist] = useState(0);
-
-  useEffect(() => {
-    if (mobile || reduced) return;
-    const measure = () => {
-      const t = trackRef.current;
-      if (t) setDist(Math.max(0, t.scrollWidth - window.innerWidth + 64));
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [mobile, reduced]);
-
-  const x = useTransform(scrollYProgress, [0.06, 0.94], [0, -dist]);
-
-  const header = (
-    <>
-      <SectorTag n="Pit Lane" label="Race Wins (Projects)" purple />
-      <Heading>
-        Things I&apos;ve <span style={{ color: P.rosso }}>shipped</span> at the{" "}
-        <span className={`${serif.className} normal-case italic`}>limit.</span>
-      </Heading>
-      <p className="mt-5 max-w-2xl text-lg" style={{ color: P.muted }}>
-        Down the pit lane — every build is a race result. Tap any car for the full debrief.
-      </p>
-    </>
-  );
-
-  if (mobile || reduced) {
-    return (
-      <Shell id="wins">
-        {header}
-        <div className="mt-8 grid gap-4">
-          {wins.map((w, i) => (
-            <WinCard key={w.id} win={w} i={i} onOpen={setSelected} />
-          ))}
-        </div>
-        <RaceDebrief win={selected} onClose={() => setSelected(null)} />
-      </Shell>
-    );
-  }
-
-  const vh = 120 + wins.length * 26; // taller section → more scroll to traverse the lane
-  return (
-    <section
-      ref={sectionRef}
-      id="wins"
-      className="relative z-10"
-      style={{ height: `${vh}vh`, background: "var(--pt-panel)", borderTop: "1px solid var(--pt-line)" }}
-    >
-      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-        <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 md:px-16">{header}</div>
-        <motion.div ref={trackRef} style={{ x }} className="mt-10 flex gap-5 pl-5 pr-[32vw] will-change-transform sm:pl-8 md:pl-16">
-          {wins.map((w, i) => (
-            <div key={w.id} className="w-[400px] shrink-0">
-              <WinCard win={w} i={i} onOpen={setSelected} />
-            </div>
-          ))}
-        </motion.div>
-      </div>
-      <RaceDebrief win={selected} onClose={() => setSelected(null)} />
-    </section>
-  );
+  return <Shell id="wins"><SectorTag n="Pit Lane" label="Projects" /><Heading>Selected <span style={{color:P.rosso}}>engineering work.</span></Heading><p className="mt-5 text-lg" style={{color:P.muted}}>Open a project for implementation details and evidence.</p><div className="mt-8 grid gap-5 md:grid-cols-2">{wins.map((win,i)=><WinCard key={win.id} win={win} i={i} onOpen={setSelected}/>)}</div><RaceDebrief win={selected} onClose={()=>setSelected(null)}/></Shell>;
 }
 
 export function Directives() {
@@ -443,12 +379,12 @@ export function Directives() {
             >
               <div className="flex items-center gap-3 sm:w-40 sm:flex-col sm:items-start">
                 <span
-                  className="rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider"
+                  className="rounded px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-wider"
                   style={{ background: badge[d.kind], color: "#0a0a0b" }}
                 >
                   {d.status === "Submitted" ? "Submission" : d.kind}
                 </span>
-                <span className="font-mono text-[11px]" style={{ color: P.muted }}>
+                <span className="font-mono text-xs" style={{ color: P.muted }}>
                   {d.venue} · {d.year}
                 </span>
               </div>
@@ -478,7 +414,7 @@ export function Standings() {
         </Heading>
       </Reveal>
       <div className="mt-10 space-y-6">
-        {standings.map((s, i) => (
+        {standings.filter(s=>!s.role.includes("Training Program")).map((s, i) => (
           <Reveal key={s.team} delay={i * 0.04}>
             <div
               className="pt-glass rounded-xl border p-6"
@@ -498,7 +434,7 @@ export function Standings() {
                       s.team
                     )}
                   </div>
-                  <div className="font-mono text-[11px] uppercase tracking-wider mt-1" style={{ color: P.giallo }}>
+                  <div className="font-mono text-xs uppercase tracking-wider mt-1" style={{ color: P.giallo }}>
                     {s.role} · {s.period}
                   </div>
                   <p className="mt-3 text-sm leading-relaxed" style={{ color: P.muted }}>
@@ -596,16 +532,16 @@ function CrewCard({ r }: { r: PitRole }) {
           {r.org}
         </h3>
         <span
-          className="shrink-0 rounded border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em]"
+          className="shrink-0 rounded border px-1.5 py-0.5 font-mono text-xs uppercase tracking-[0.18em]"
           style={{ borderColor: P.line, color: P.muted }}
         >
           {r.tag}
         </span>
       </div>
-      <div className="mt-1 font-mono text-[11px] uppercase tracking-wider" style={{ color: P.giallo }}>
+      <div className="mt-1 font-mono text-xs uppercase tracking-wider" style={{ color: P.giallo }}>
         {r.role}
       </div>
-      <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: P.muted }}>
+      <div className="mt-0.5 font-mono text-xs uppercase tracking-[0.2em]" style={{ color: P.muted }}>
         {r.period}
       </div>
       <div className="mt-3 font-mono text-sm font-bold" style={{ color: P.rosso }}>
@@ -634,7 +570,7 @@ export function PitWall() {
           Calling the <span style={{ color: P.rosso }}>strategy.</span>
         </Heading>
         <p className="mt-6 max-w-2xl text-lg" style={{ color: P.muted }}>
-          Races aren&apos;t won by drivers alone — {pitWall.length} crews founded, chaired or run. 200+ people,
+          Races aren&apos;t won by drivers alone — {pitWall.length} teaching, leadership, editorial and service roles. 200+ people,
           six cities, tens of thousands reached.
         </p>
       </Reveal>
@@ -665,7 +601,7 @@ export function PitWall() {
       <Reveal>
         <div className="pt-glass mt-10 rounded-xl border p-5" style={{ borderColor: P.line }}>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.28em]" style={{ color: P.white }}>
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.28em]" style={{ color: P.white }}>
               Also on the grid — volunteering
             </span>
             <span className="h-px flex-1" style={{ background: P.line }} />
@@ -673,7 +609,7 @@ export function PitWall() {
           <div className="mt-4 grid gap-4 md:grid-cols-3">
             {volunteering.map((v) => (
               <div key={v.org}>
-                <div className="font-mono text-[11px] uppercase tracking-wider" style={{ color: P.giallo }}>
+                <div className="font-mono text-xs uppercase tracking-wider" style={{ color: P.giallo }}>
                   {v.org}
                 </div>
                 <p className="mt-1.5 text-sm leading-relaxed" style={{ color: P.muted }}>
@@ -717,19 +653,19 @@ function RadioForm() {
   };
 
   const header =
-    status === "sent" ? "copy that — message received" : status === "tx" ? "transmitting…" : "radio channel open";
-  const btn = status === "sent" ? "Get in there! ✓" : status === "tx" ? "Box, box…" : "Transmit →";
+    status === "sent" ? "continue in your email app to send" : status === "tx" ? "transmitting…" : "radio channel open";
+  const btn = status === "sent" ? "Continue in email app" : status === "tx" ? "Box, box…" : "Open email draft →";
 
   return (
     <form onSubmit={submit} className="pt-glass rounded-xl border p-6" style={{ borderColor: P.rosso }}>
-      <div className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em]" style={{ color: P.rosso }}>
+      <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em]" style={{ color: P.rosso }}>
         <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: P.rosso }} />
         {header}
       </div>
       <input
         value={from}
         onChange={(e) => setFrom(e.target.value)}
-        placeholder="Your name / team"
+        aria-label="Your name or team" placeholder="Your name / team"
         className="mb-3 w-full rounded-lg border bg-transparent px-3 py-2 font-mono text-sm outline-none focus:border-white/40"
         style={{ borderColor: P.line, color: P.white }}
       />
@@ -737,7 +673,7 @@ function RadioForm() {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         rows={4}
-        placeholder="> transmit your message, driver…"
+        aria-label="Your message" placeholder="Your message"
         className="w-full resize-none rounded-lg border bg-transparent px-3 py-2 font-mono text-sm outline-none focus:border-white/40"
         style={{ borderColor: P.line, color: P.white }}
       />
@@ -751,7 +687,7 @@ function RadioForm() {
       >
         {btn}
       </button>
-      <p className="mt-3 font-mono text-[11px]" style={{ color: P.muted }}>
+      <p className="mt-3 font-mono text-xs" style={{ color: P.muted }}>
         Opens your mail client — or radio in direct at {driver.email}
       </p>
     </form>
@@ -821,16 +757,16 @@ export function Podium() {
           <div className={`${anton.className} text-2xl uppercase`} style={{ color: P.white }}>
             Shubh Jain · <span style={{ color: P.rosso }}>#{driver.number}</span>
           </div>
-          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.25em]" style={{ color: P.muted }}>
+          <p className="mt-1 font-mono text-xs uppercase tracking-[0.25em]" style={{ color: P.muted }}>
             Chequered flag · built with Next.js · Three.js · Framer Motion
           </p>
-          <p className="mt-2 font-mono text-[11px]" style={{ color: P.muted }}>
+          <p className="mt-2 font-mono text-xs" style={{ color: P.muted }}>
             <span style={{ color: P.rosso }}>Radio codes</span> — scroll = throttle · type{" "}
             <span style={{ color: P.white }}>hotlap</span>, <span style={{ color: P.white }}>quali</span>,{" "}
             <span style={{ color: P.white }}>forza</span>, <span style={{ color: P.white }}>wings</span>,{" "}
-            <span style={{ color: P.white }}>box</span> anywhere, or the Konami code (↑↑↓↓←→←→ B A) for a hot lap.
+            <span style={{ color: P.white }}>box</span> outside text fields, or the Konami code (↑↑↓↓←→←→ B A) for a hot lap.
           </p>
-          <p className="mt-2 max-w-md text-[10px] leading-relaxed" style={{ color: P.muted }}>
+          <p className="mt-2 max-w-md text-xs leading-relaxed" style={{ color: P.muted }}>
             3D cars:{" "}
             <a
               href="https://sketchfab.com/3d-models/ferrari-f1-75-06454e0f23a44fcdabcc7808aee6caf9"

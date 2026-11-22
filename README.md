@@ -107,11 +107,11 @@ The project uses Vitest for data and utility checks, plus:
 ## 📦 Performance Optimizations
 
 - Lazy-loaded 3D scenes with Suspense
-- DPR capped at 1.8 for integrated GPUs
-- Particle count tuned for performance
+- DPR capped at 1.7 on desktop and 1.3 on mobile
+- Heavy graphics and the optional game are loaded separately
 - Telemetry HUD throttled when not scrolling
-- Ambient particles pause when tab hidden
-- Reduced motion support throughout
+- The 3D renderer pauses when the tab is hidden
+- Reduced-motion preferences disable the loader and govern Framer Motion and the car presentation
 
 ## ♿ Accessibility
 
@@ -119,7 +119,7 @@ The project uses Vitest for data and utility checks, plus:
 - ARIA labels on interactive elements
 - Keyboard navigation support (1-9 keys for sections, Cmd+K for command palette)
 - Focus management and visible focus rings
-- `prefers-reduced-motion` support on all animations
+- Reduced-motion CSS, Framer Motion policy, and selected 3D motion guards; verify future effects separately
 - Screen reader compatibility
 
 ## 🔧 Development Guidelines
@@ -148,7 +148,7 @@ The project uses Vitest for data and utility checks, plus:
 ### Build Issues
 - Clear cache: `rm -rf .next out`
 - Reinstall dependencies: `rm -rf node_modules package-lock.json && npm install`
-- Check Node version: Required Node.js 18+
+- Check Node version: Required Node.js 20.9+
 
 ### 3D Model Issues
 - Ensure `public/draco/` contains Draco decoder files

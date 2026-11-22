@@ -17,7 +17,7 @@ export function F1Loader({ onDone }: { onDone: () => void }) {
   onDoneRef.current = onDone;
 
   useEffect(() => {
-    if (sessionStorage.getItem("f1-launched")) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || sessionStorage.getItem("f1-launched")) {
       onDoneRef.current();
       return;
     }

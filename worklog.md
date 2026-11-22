@@ -75,3 +75,12 @@ Task: Rebuilt the portfolio as an F1 race-weekend theme (static export to GitHub
 - Stacked F1 project cards on narrow/short screens and with reduced motion; separated fixed mobile controls. Fixed card keyboard activation and debrief focus containment, Escape handling, focus restoration, and close-button size.
 - Verified desktop and 320/390 px mobile rendering, publication wrapping, project debrief opening/closing and focus, and production export. Lint, TypeScript/static build, 34 tests, unique IDs, and internal anchors passed.
 - Checked 23 external links: 21 returned successfully; LinkedIn blocks automated requests and OpenReview redirects to a verification challenge. Kept those valid destinations. ScrollEat remains private, so no inaccessible public source link was added. Raw CV remains ignored.
+
+## November 21, 2026: recruiter-review fixes
+
+- Replaced misleading email delivery confirmation, added named form controls, contained menu/game dialogs, focus restoration, accessible stat values, and focus-dependent navigation shortcuts.
+- Brightened text colors, removed the reading vignette, increased small metadata, added motion guards, replaced the horizontal project lane, and added a recent-first mobile timeline with archived history.
+- Moved primary contact actions above education on mobile, highlighted HDF5/GroundWorks/Meter, prioritized projects, added architecture flows, collapsed secondary work/awards/skills, and qualified metrics and role context.
+- Corrected structured project/language/authorship data, removed unused scrolling code and cmdk, and updated dependencies. Audit reports zero known vulnerabilities; 36 tests, lint and static export pass.
+- Tested the menu in IAB and Brave, including focus containment/restoration. Measured no page overflow at 320, 390, 768, 1024 and 1440 px in Brave. Actual Safari opening timed out; speech-output testing is not available through the tools.
+- Checked public Meter, AstraSign and adaptive-learning flows. Adaptive-learning session creation fails; the portfolio labels its deployment limitation. No payment, camera/microphone, or authenticated provider operations were exercised. Full linked-project feature certification remains unavailable without required services/hardware/access.

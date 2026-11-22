@@ -51,7 +51,7 @@ export function StrategyBoard() {
       <SectorTag n="Strategy Board" label="Strategy Board (Timeline)" />
       <div>
         <Heading>
-          Engineering, research and leadership, run <span style={{ color: "var(--pt-primary)" }}>flat out.</span>
+          Experience <span style={{ color: "var(--pt-primary)" }}>timeline.</span>
         </Heading>
         <p className="mt-6 max-w-2xl text-lg" style={{ color: "var(--pt-muted)" }}>
           Engineering, research and leadership — running at the same time, not in sequence. Hover or tap a
@@ -59,7 +59,8 @@ export function StrategyBoard() {
         </p>
       </div>
 
-      <div className="mt-10 overflow-x-auto">
+      <div className="mt-8 space-y-4 md:hidden">{[...timeline].sort((a,b)=>b.end-a.end || b.start-a.start).slice(0,6).map(s=><article key={s.title} className="rounded border p-4"><h3 className="font-semibold">{s.title}</h3><p className="mt-1 text-sm">{s.start}{s.end!==s.start ? `–${s.end}` : ""}</p><p className="mt-2 text-base leading-relaxed">{s.detail}</p></article>)}<details><summary className="cursor-pointer py-4">Full timeline</summary><div className="space-y-4">{[...timeline].sort((a,b)=>b.end-a.end || b.start-a.start).slice(6).map(s=><article key={s.title} className="rounded border p-4"><h3 className="font-semibold">{s.title}</h3><p className="mt-1 text-sm">{s.start}{s.end!==s.start ? `–${s.end}` : ""}</p><p className="mt-2 text-base leading-relaxed">{s.detail}</p></article>)}</div></details></div>
+      <div className="mt-10 hidden overflow-x-auto md:block">
         <div className="min-w-[860px]">
           {/* Year axis. The milestone diamonds that used to sit here were the
               same four awards the Trophy Cabinet now lists in full — and their
@@ -81,10 +82,10 @@ export function StrategyBoard() {
               <div key={track.id} className="relative">
                 <div className="mb-2 flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-sm" style={{ background: TRACK_COLOR[track.id] }} />
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--pt-white)" }}>
+                  <span className="font-mono text-xs font-bold uppercase tracking-[0.2em]" style={{ color: "var(--pt-white)" }}>
                     {track.label}
                   </span>
-                  <span className="font-mono text-[10px] tabular-nums" style={{ color: "var(--pt-muted)" }}>
+                  <span className="font-mono text-xs tabular-nums" style={{ color: "var(--pt-muted)" }}>
                     {placed.length}
                   </span>
                 </div>
@@ -132,7 +133,7 @@ export function StrategyBoard() {
                         <span className="truncate text-[13px] font-semibold leading-tight" style={{ color: "var(--pt-white)" }}>
                           {s.title}
                         </span>
-                        <span className="font-mono text-[9px] tabular-nums leading-tight" style={{ color: "var(--pt-muted)" }}>
+                        <span className="font-mono text-xs tabular-nums leading-tight" style={{ color: "var(--pt-muted)" }}>
                           &apos;{String(s.start).slice(2)}
                           {s.end !== s.start ? `–'${String(s.end).slice(2)}` : ""}
                         </span>
@@ -155,7 +156,7 @@ export function StrategyBoard() {
             <div className={`${anton.className} text-lg uppercase`} style={{ color: "var(--pt-white)" }}>
               {active.title}
             </div>
-            <div className="font-mono text-[11px] uppercase tracking-wider" style={{ color: "var(--pt-primary)" }}>
+            <div className="font-mono text-xs uppercase tracking-wider" style={{ color: "var(--pt-primary)" }}>
               {active.start === active.end ? active.start : `${active.start}–${active.end}`}
             </div>
             <div className="text-sm sm:flex-1" style={{ color: "var(--pt-muted)" }}>

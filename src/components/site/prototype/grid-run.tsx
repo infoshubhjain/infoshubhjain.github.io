@@ -5,6 +5,7 @@ import { MeshReflectorMaterial, useGLTF } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { PALETTES, type TeamId } from "@/lib/prototype-theme";
 import { anton } from "@/lib/prototype-fonts";
@@ -38,7 +39,7 @@ const N_HURDLES = 8;
 const HURDLE_GAP = 21; // min spacing between barriers
 
 type Hurdle = { z: number; lane: number; hit: boolean };
-type Status = "countdown" | "racing" | "over" | "finish";
+type Status = "ready" | "countdown" | "racing" | "over" | "finish";
 type Game = {
   status: Status;
   speed: number;
@@ -337,10 +338,15 @@ function Scene({ game, colors, modelPath, mobile, onEnd }: { game: React.Mutable
 /* eslint-enable react-hooks/immutability */
 
 export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) {
+  useEffect(() => {
+    const controller = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    controller?.stop();
+    return () => controller?.start();
+  }, []);
   const palette = PALETTES[team];
   const mobile = useMediaQuery("(max-width: 768px)");
   const game = useRef<Game>(makeGame());
-  const [status, setStatus] = useState<Status>("countdown");
+  const [status, setStatus] = useState<Status>("ready");
   const [lights, setLights] = useState(0);
   const [hud, setHud] = useState({ kmh: 0, gear: 1, time: 0, progress: 0 });
   const [best, setBest] = useState<number | null>(null);
@@ -363,7 +369,6 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
       };
       setTimeout(tick, 500);
     };
-    startCountdown.current();
   }, []);
 
   // input — ↑↓ speed (held), ←→ steer (discrete)
@@ -455,13 +460,15 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
   const isPB = best != null && Math.abs(best - finalTime) < 0.05;
 
   return (
-    <motion.div
+    <Dialog.Root open onOpenChange={(open) => { if (!open) onExit(); }}><Dialog.Portal container={typeof document === "undefined" ? undefined : document.querySelector(".pt-root")}><Dialog.Content asChild aria-describedby={undefined} onCloseAutoFocus={event=>{event.preventDefault();document.querySelector<HTMLButtonElement>("[data-game-trigger]")?.focus({preventScroll:true});}}><motion.div
       className="fixed inset-0 z-[70] overflow-hidden"
       style={{ background: palette.vars["--pt-canvas"] }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
+      <Dialog.Title className="sr-only">Grid Run racing game</Dialog.Title>
+      {status === "ready" && <div className="absolute inset-0 z-[75] flex flex-col justify-center items-center bg-black/80 p-6 text-center"><p className="text-lg text-white">Swipe left or right to steer. Swipe up to accelerate and down to brake. Keyboard: arrow keys.</p><button className="mt-6 rounded bg-white text-black px-6 py-3" onClick={() => { setStatus("countdown"); startCountdown.current(); }}>Start race</button></div>}
       <Canvas shadows={!mobile} camera={{ position: [0, 3.5, 8.6], fov: mobile ? 70 : 62 }} dpr={mobile ? [1, 1.3] : [1, 1.7]} gl={{ antialias: !mobile }}>
         <Suspense fallback={null}>
           <Scene game={game} colors={palette} modelPath={palette.three.model} mobile={mobile} onEnd={onEnd} />
@@ -507,6 +514,7 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
         ✕ exit
       </button>
 
+      <p className="absolute bottom-20 inset-x-5 z-[73] text-center text-sm text-white bg-black/80 rounded p-3">Swipe left/right to steer; swipe up/down to change speed. Keyboard: arrows. Use Exit to return.</p>
       {/* start-lights countdown */}
       <AnimatePresence>
         {status === "countdown" && (
@@ -547,6 +555,6 @@ export function GridRun({ team, onExit }: { team: TeamId; onExit: () => void }) 
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </motion.div></Dialog.Content></Dialog.Portal></Dialog.Root>
   );
 }

@@ -107,7 +107,7 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
                   <span className={`${anton.className} text-3xl`} style={{ color: POS_COLOR[win.pos] ?? "var(--pt-white)" }}>
                     {win.pos}
                   </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.25em]" style={{ color: "var(--pt-muted)" }}>
+                  <span className="font-mono text-xs uppercase tracking-[0.25em]" style={{ color: "var(--pt-muted)" }}>
                     {win.period ?? win.year} · {win.role}
                   </span>
                 </div>
@@ -170,7 +170,7 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
                         <div className={`${anton.className} text-2xl`} style={{ color: "var(--pt-primary)" }}>
                           {m.value}
                         </div>
-                        <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: "var(--pt-muted)" }}>
+                        <div className="mt-0.5 font-mono text-xs uppercase tracking-[0.18em]" style={{ color: "var(--pt-muted)" }}>
                           {m.label}
                         </div>
                       </div>
@@ -183,12 +183,12 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     {win.stack.map((g) => (
                       <div key={g.group} className="rounded-lg border p-4" style={{ borderColor: "var(--pt-line)", background: "rgba(255,255,255,0.02)" }}>
-                        <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--pt-primary)" }}>
+                        <div className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.2em]" style={{ color: "var(--pt-primary)" }}>
                           {g.group}
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {g.items.map((it) => (
-                            <span key={it} className="rounded border px-2 py-0.5 font-mono text-[11px]" style={{ borderColor: "var(--pt-line)", color: "#cfcdc7" }}>
+                            <span key={it} className="rounded border px-2 py-0.5 font-mono text-xs" style={{ borderColor: "var(--pt-line)", color: "#cfcdc7" }}>
                               {it}
                             </span>
                           ))}
@@ -215,7 +215,7 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="font-mono text-[11px] font-bold uppercase tracking-[0.28em]" style={{ color: "var(--pt-white)" }}>
+      <span className="font-mono text-xs font-bold uppercase tracking-[0.28em]" style={{ color: "var(--pt-white)" }}>
         {children}
       </span>
       <span className="h-px flex-1" style={{ background: "var(--pt-line)" }} />
@@ -226,7 +226,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 function Block({ icon, label, body }: { icon: React.ReactNode; label: string; body: string }) {
   return (
     <div className="rounded-lg border p-5" style={{ borderColor: "var(--pt-line)", background: "rgba(255,255,255,0.02)" }}>
-      <div className="mb-2 flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--pt-primary)" }}>
+      <div className="mb-2 flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.2em]" style={{ color: "var(--pt-primary)" }}>
         {icon} {label}
       </div>
       <p className="text-sm leading-relaxed" style={{ color: "#d8d6d0" }}>

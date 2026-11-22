@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { anton, serif } from "@/lib/prototype-fonts";
 import { RaceDebrief } from "./race-debrief";
-import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import { useMediaQuery, usePrefersReducedMotion } from "@/lib/hooks/use-media-query";
 import {
   driver,
   seasonStats,
@@ -177,6 +177,7 @@ export function Driver() {
           <p className="mt-8 max-w-xl text-lg leading-relaxed" style={{ color: "#cfcdc7" }}>
             {driver.intro}
           </p>
+          <p className="mt-5 max-w-xl text-base leading-relaxed" style={{color:P.muted}}>Coursework: {driver.coursework.join(" · ")}</p>
           <div className="mt-6 flex flex-wrap gap-2">
             {honors.map((h) => (
               <span
@@ -243,7 +244,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
         onClick={() => onOpen(win)}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen(win)}
+        onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onOpen(win); } }}
         className="pt-glass group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border p-6"
         style={{
           borderColor: hover ? P.rosso : P.line,
@@ -285,7 +286,7 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
                 {win.pos}
               </span>
               <span className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: P.muted }}>
-                {win.year} · {win.role}
+                {win.period ?? win.year} · {win.role}
               </span>
             </div>
             <h3 className={`${anton.className} mt-1 text-2xl uppercase`} style={{ color: P.white }}>
@@ -353,14 +354,15 @@ function WinCard({ win, i, onOpen }: { win: Win; i: number; onOpen: (w: Win) => 
 
 export function Wins() {
   const [selected, setSelected] = useState<Win | null>(null);
-  const mobile = useMediaQuery("(max-width: 768px)");
+  const mobile = useMediaQuery("(max-width: 1024px), (max-height: 850px)");
+  const reduced = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
   const [dist, setDist] = useState(0);
 
   useEffect(() => {
-    if (mobile) return;
+    if (mobile || reduced) return;
     const measure = () => {
       const t = trackRef.current;
       if (t) setDist(Math.max(0, t.scrollWidth - window.innerWidth + 64));
@@ -368,7 +370,7 @@ export function Wins() {
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [mobile]);
+  }, [mobile, reduced]);
 
   const x = useTransform(scrollYProgress, [0.06, 0.94], [0, -dist]);
 
@@ -385,7 +387,7 @@ export function Wins() {
     </>
   );
 
-  if (mobile) {
+  if (mobile || reduced) {
     return (
       <Shell id="wins">
         {header}

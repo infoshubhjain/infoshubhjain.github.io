@@ -13,6 +13,7 @@ const LINK_ICON = { github: Github, demo: ExternalLink, paper: FileText } as con
 
 /** Full project "race debrief" — opens when a Win card is tapped. */
 export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -26,16 +27,33 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
 
   useEffect(() => {
     if (!win) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeRef.current();
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const focusFrame = requestAnimationFrame(() => dialogRef.current?.focus({ preventScroll: true }));
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeRef.current();
+      if (e.key !== "Tab") return;
+      const dialog = dialogRef.current;
+      const controls = dialog?.querySelectorAll<HTMLElement>('a[href], button, [tabindex="0"]');
+      if (!dialog || !controls?.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && (document.activeElement === last || document.activeElement === dialog)) {
+        e.preventDefault(); first.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
     // body overflow alone doesn't stop Lenis — it drives window scroll itself.
     const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
     lenis?.stop();
     document.body.style.overflow = "hidden";
     return () => {
+      cancelAnimationFrame(focusFrame);
       window.removeEventListener("keydown", onKey);
       lenis?.start();
       document.body.style.overflow = "";
+      previousFocus?.focus({ preventScroll: true });
     };
   }, [win]);
 
@@ -51,6 +69,11 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
           style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(10px)" }}
         >
           <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="debrief-title"
+            tabIndex={-1}
             initial={{ y: 36, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 36, opacity: 0, scale: 0.98 }}
@@ -74,21 +97,21 @@ export function RaceDebrief({ win, onClose }: { win: Win | null; onClose: () => 
                 <div className="absolute inset-x-0 top-0 h-1" style={{ background: "var(--pt-primary)" }} />
                 <button
                   onClick={onClose}
-                  className="pt-glass absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-lg border"
+                  className="pt-glass absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-lg border"
                   style={{ borderColor: "var(--pt-line)", color: "var(--pt-white)" }}
                   aria-label="Close debrief"
                 >
                   <X className="h-4 w-4" />
                 </button>
-                <div className="mb-2 flex items-center gap-3">
+                <div className="mb-2 flex items-center gap-3 pr-10">
                   <span className={`${anton.className} text-3xl`} style={{ color: POS_COLOR[win.pos] ?? "var(--pt-white)" }}>
                     {win.pos}
                   </span>
                   <span className="font-mono text-[11px] uppercase tracking-[0.25em]" style={{ color: "var(--pt-muted)" }}>
-                    {win.year} · {win.role}
+                    {win.period ?? win.year} · {win.role}
                   </span>
                 </div>
-                <h2 className={`${anton.className} text-4xl uppercase leading-none sm:text-5xl`} style={{ color: "var(--pt-white)" }}>
+                <h2 id="debrief-title" className={`${anton.className} text-4xl uppercase leading-none sm:text-5xl`} style={{ color: "var(--pt-white)" }}>
                   {win.name}
                 </h2>
                 <p className="mt-4 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: "#d8d6d0" }}>

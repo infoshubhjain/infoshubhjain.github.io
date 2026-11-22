@@ -30,6 +30,7 @@ export const driver = {
   graduation: "May 2028",
   degree: "B.S. Computer Science",
   gpa: "3.83 / 4.00",
+  coursework: ["Data Structures & Algorithms", "Systems Design", "Computer Architecture", "Discrete Structures", "Probability & Statistics", "Linear Algebra"],
   summary: "I build reliable backend systems, data pipelines, and AI tools. At UIUC, I study how agents handle changing requirements and contribute to human-centered AI research.",
   tagline: "I build intelligent systems that reason — and I race to ship them.",
   intro:
@@ -40,17 +41,6 @@ export const driver = {
   resumeUrl: "https://infoshubhjain.github.io/Shubh_Jain_SWE_Resume.pdf",
 };
 
-export const seasonStats: { label: string; value: string; sub: string }[] = [
-  { label: "Championship", value: "3.83", sub: "CGPA / 4.0" },
-  { label: "Wins", value: "15+", sub: "projects shipped" },
-  { label: "Research", value: "1", sub: "ICLR 2027 submission" },
-  { label: "Titles", value: "2", sub: "books · ISBN" },
-  { label: "Patents", value: "1", sub: "IoT agriculture" },
-  { label: "Grid crew", value: "200+", sub: "volunteers led" },
-  { label: "Fastest laps", value: "17", sub: "MUN Best Delegate" },
-  { label: "Sponsorship", value: "$42K+", sub: "funds raised" },
-];
-
 export const honors = ["Dean's List", "James Scholar"];
 
 export type WinLink = { label: string; href: string; kind: "github" | "demo" | "paper" };
@@ -59,6 +49,7 @@ export type Win = {
   pos: string; // P1 / P2 / P3
   name: string;
   year: string;
+  period?: string;
   role: string;
   circuit: string; // the problem
   setup: string; // the approach
@@ -77,7 +68,7 @@ export type Win = {
 
 export const wins: Win[] = [
   {
-    id: "recallrush", pos: "P1", name: "RecallRush", year: "2026", role: "Architect & Project Manager", featured: true,
+    id: "recallrush", period: "Aug 2026 – Present", pos: "P1", name: "RecallRush", year: "2026", role: "Architect & Project Manager", featured: true,
     circuit: "Students need practice that tests recall and responds to specific weaknesses.",
     setup: "Three layers separate browser-side typing, deterministic mastery and drill selection, and server-side AI generation. Managed five student developers and integrated their implementation into a working MVP.",
     gap: "5 developers · 3 practice modes · 60 drills per course",
@@ -94,7 +85,7 @@ export const wins: Win[] = [
     links: [],
   },
   {
-    id: "scrolleat", pos: "P1", name: "ScrollEat", year: "2026", role: "ACM SIGMobile Technical Director & Project Lead", featured: true,
+    id: "scrolleat", period: "Aug 2026 – Present", pos: "P1", name: "ScrollEat", year: "2026", role: "ACM SIGMobile Technical Director & Project Lead", featured: true,
     circuit: "UIUC students need a practical way to discover dishes and make food decisions together.",
     setup: "React Native/Expo mobile flows connect to FastAPI and PostgreSQL. Group updates use polling; the scope excludes in-app ordering and payments.",
     gap: "REST APIs · transactional voting · schema migrations",
@@ -110,7 +101,7 @@ export const wins: Win[] = [
     links: [],
   },
   {
-    id: "geocrop", pos: "P2", name: "GeoCrop", year: "2026", role: "Developer · Aug 2026–Present",
+    id: "geocrop", period: "Aug 2026 – Present", pos: "P2", name: "GeoCrop", year: "2026", role: "Developer",
     circuit: "A satellite basemap alone does not explain vegetation changes within a field.",
     setup: "A map-first workflow analyzes imagery within field boundaries, with raster alignment, cloud masking, pixel quality, and vegetation-index trends.",
     gap: "Sentinel-2 · field boundaries · quality-aware analysis",
@@ -122,7 +113,7 @@ export const wins: Win[] = [
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/geocrop", kind: "github" }],
   },
   {
-    id: "floodsense", pos: "P2", name: "FloodSense", year: "2026", role: "Developer · Aug 2026–Present",
+    id: "floodsense", period: "Aug 2026 – Present", pos: "P2", name: "FloodSense", year: "2026", role: "Developer",
     circuit: "Spatial screening needs valid geometries and traceable results, not an unexplained map overlay.",
     setup: "Validate selected/uploaded geometries, intersect flood zones, avoid double counting overlapping polygons, and export results with provenance.",
     gap: "Geometry validation · overlap analysis · provenance",
@@ -134,7 +125,7 @@ export const wins: Win[] = [
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/floodsense", kind: "github" }],
   },
   {
-    id: "meter",
+    id: "meter", period: "Aug 2026",
     pos: "P1",
     name: "Meter",
     year: "2026",
@@ -174,14 +165,14 @@ export const wins: Win[] = [
     ],
   },
   {
-    id: "mnemostack",
+    id: "mnemostack", period: "Jun 2026 – Aug 2026",
     pos: "P1",
     name: "Mnemostack",
     year: "2026",
     role: "Lead SWE",
     circuit: "AI coding assistants retrieve isolated files, losing the dependency chain.",
     setup: "Local MCP daemon: hybrid FAISS HNSW + SQLite FTS5/BM25 fused with RRF (k=60), plus 2-hop BFS call-graph expansion.",
-    gap: "150+ tests · 5.6k LOC · 8 MCP tools · O(log n) ANN",
+    gap: "150+ tests · 5.6k LOC · 8 MCP tools · HNSW retrieval",
     tech: ["Python", "tree-sitter", "FAISS HNSW", "BM25 / RRF", "MCP"],
     featured: true,
     overview:
@@ -190,7 +181,7 @@ export const wins: Win[] = [
       "Fused FAISS HNSW semantic search with SQLite FTS5/BM25 keyword search via Reciprocal Rank Fusion (k=60) and 3× top-k over-fetch.",
       "2-hop BFS call-graph expansion over CALLS / IMPORTS_FROM edges surfaces cross-file dependencies 1–2 hops away.",
       "Multi-signal re-ranking weighted 0.6 semantic · 0.25 recency · 0.15 dependency, with a 60-minute recency half-life.",
-      "AST chunking via tree-sitter across 6 language extensions; live re-indexing on save with a 500 ms debounce.",
+      "AST chunking via tree-sitter for Python and JavaScript/TypeScript files; live re-indexing on save with a 500 ms debounce.",
       "Validated with 150+ tests across ~5.6k lines of Python; shipped 8 typed MCP tools over stdio.",
     ],
     metrics: [
@@ -201,14 +192,14 @@ export const wins: Win[] = [
     ],
     stack: [
       { group: "Retrieval", items: ["FAISS HNSW", "SQLite FTS5/BM25", "RRF fusion"] },
-      { group: "Parsing", items: ["tree-sitter", "AST chunking", "6 languages"] },
+      { group: "Parsing", items: ["tree-sitter", "AST chunking", "Python / JS / TS"] },
       { group: "Graph", items: ["2-hop BFS", "CALLS / IMPORTS_FROM"] },
       { group: "Runtime", items: ["MCP over stdio", "watchdog", "500ms debounce"] },
     ],
     links: [{ label: "Source", href: "https://github.com/Switchblack-Labs/Mnemostack", kind: "github" }],
   },
   {
-    id: "astrasign",
+    id: "astrasign", period: "Feb 2026",
     pos: "P1",
     name: "AstraSign",
     year: "2026",
@@ -245,7 +236,7 @@ export const wins: Win[] = [
     ],
   },
   {
-    id: "adaptive-learning",
+    id: "adaptive-learning", period: "Dec 2025 – May 2026",
     pos: "P1",
     name: "Adaptive Learning Platform",
     year: "2026",
@@ -279,7 +270,7 @@ export const wins: Win[] = [
     links: [{ label: "Live demo", href: "https://aiceuiuc.vercel.app/", kind: "demo" }],
   },
   {
-    id: "sigaida",
+    id: "sigaida", period: "Aug 2025 – Dec 2025",
     pos: "P2",
     name: "SIGAIDA Campus Energy",
     year: "2025",
@@ -311,7 +302,7 @@ export const wins: Win[] = [
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/SIGAIDA-CAMPUS-ENERGY", kind: "github" }],
   },
   {
-    id: "neuro-rust",
+    id: "neuro-rust", period: "Spring 2026",
     pos: "P2",
     name: "neuro-rust",
     year: "2026",
@@ -342,7 +333,7 @@ export const wins: Win[] = [
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/cs128hons", kind: "github" }],
   },
   {
-    id: "harvest",
+    id: "harvest", period: "Dec 2025 – Present",
     pos: "P3",
     name: "Project Harvest",
     year: "2025",
@@ -374,7 +365,7 @@ export const wins: Win[] = [
     links: [{ label: "Source", href: "https://github.com/infoshubhjain/Project-Harvest", kind: "github" }],
   },
   {
-    id: "helix",
+    id: "helix", period: "Aug 2025 – Dec 2025",
     pos: "P3",
     name: "Project Helix",
     year: "2025",
@@ -417,6 +408,17 @@ export type Directive = {
   status?: "Submitted";
 };
 
+export const seasonStats: { label: string; value: string; sub: string }[] = [
+  { label: "Championship", value: driver.gpa.split(" / ")[0], sub: "CGPA / 4.0" },
+  { label: "Builds", value: String(wins.length), sub: "documented projects" },
+  { label: "Research", value: "1", sub: "ICLR 2027 submission" },
+  { label: "Titles", value: "2", sub: "authored books" },
+  { label: "Patents", value: "1", sub: "IoT agriculture" },
+  { label: "Grid crew", value: "200+", sub: "volunteers led" },
+  { label: "Fastest laps", value: "17", sub: "MUN Best Delegate" },
+  { label: "Sponsorship", value: "$42K+", sub: "funds raised" },
+];
+
 export const directives: Directive[] = [
   {
     kind: "Paper", status: "Submitted", year: "2026", venue: "ICLR 2027 submission · fourth author",
@@ -433,8 +435,8 @@ export const directives: Directive[] = [
   },
   {
     kind: "Patent",
-    title: "IoT & Precision Agriculture System",
-    venue: "Granted Patent",
+    title: "IoT Based System for Increasing Crop Production Using Machine Learning Model",
+    venue: "India · 202421028435 · June 21, 2024",
     year: "2024",
     note: "Real-time soil / crop / water monitoring with automated irrigation and predictive analytics for sustainable farming in India.",
   },
@@ -448,14 +450,15 @@ export const directives: Directive[] = [
   },
   {
     kind: "Paper",
-    title: "Performance of ChatGPT on Common-Sense Questionnaires",
-    venue: "IJETAE",
+    title: "Investigation on the Performance of ChatGPT's in Answering Common Sense Based Questionnaire",
+    venue: "IJETAE, 13(9), 1–8 · September 2023",
     year: "2023",
-    note: "Best Junior Author of the Year ($1,000) · most-downloaded high-school-authored paper in journal history.",
+    note: "Examines ChatGPT responses to commonsense questions using quantitative and qualitative analysis, with examples of incorrect reasoning and inconsistent answers.",
+    link: "https://www.ijetae.com/files/Volume13Issue9/IJETAE_0923_01.pdf",
   },
   {
     kind: "Book",
-    title: "Beyond the Black Box: Unlocking Explainable AI",
+    title: "Beyond the Black Box: Unlocking the Secrets of Explainable AI",
     venue: "ASIN B0F38TX4ZR",
     year: "2025",
     note: "Post-hoc interpretability, counterfactuals & surrogate models applied to healthcare, finance and autonomous systems.",
@@ -622,11 +625,11 @@ export const trophies: Trophy[] = [
     tier: 1,
   },
   {
-    value: "Granted",
-    title: "IoT & Precision Agriculture Patent",
+    value: "2024",
+    title: "IoT & Machine Learning Agriculture Patent",
     issuer: "Government of India",
     year: "2024",
-    note: "Real-time soil, crop and water monitoring with automated irrigation and predictive analytics for sustainable farming.",
+    note: "IoT Based System for Increasing Crop Production Using Machine Learning Model. Record 202421028435, dated June 21, 2024.",
     tier: 1,
   },
   {
@@ -642,7 +645,7 @@ export const trophies: Trophy[] = [
     title: "Academic Honours",
     issuer: "University of Illinois Urbana-Champaign",
     year: "2025–26",
-    note: "Sustained academic excellence in a top-5 US Computer Science program, alongside the James Scholar honours program.",
+    note: "Dean's List and James Scholar recognition at UIUC, with a 3.83/4.0 GPA.",
     tier: 2,
   },
   {
@@ -795,6 +798,14 @@ export const pitWall: PitRole[] = [
     note: "Directed a 4-hour campus festival on a centralized task system — 50+ tracked tasks, 10+ cultural performances, vendor and crowd-flow coordination.",
   },
   {
+    org: "Book writing & editorial work",
+    role: "Book Writing Assistant / Editor & Proofreader",
+    period: "Mar 2023 – May 2025",
+    tag: "Editorial",
+    metric: "10+ book projects · 300+ essays",
+    note: "Researched, drafted, and edited book content; reviewed academic essays for clarity, structure, technical accuracy, and style. Developed style guides and detailed feedback for authors.",
+  },
+  {
     org: "AI & STEM Club",
     role: "Founder & President",
     period: "Mar 2023 – Mar 2025",
@@ -903,6 +914,7 @@ export const timeline: TimelineStint[] = [
   { track: "eng", start: 2026, end: 2026, title: "AstraSign", detail: "Real-time bidirectional ASL ↔ speech translator, ~30 FPS." },
   { track: "eng", start: 2026, end: 2026, title: "Meter", detail: "LLM cost-governance proxy: reservation-based spend ceilings, dual-protocol SSE metering." },
   { track: "eng", start: 2026, end: 2026, title: "BERT Ad Compliance Classifier", detail: "Jan–May 2026: preprocessing and tensor contracts for a DistilBERT FDA/FTC classifier across 15 categories." },
+  { track: "eng", start: 2025, end: 2026, title: "Project Harvest", detail: "Dec 2025–present: four dining halls, automated menu collection, nutrition filtering and CI/CD." },
   { track: "eng", start: 2025, end: 2026, title: "Adaptive Learning Platform", detail: "7-agent backend + Bayesian Knowledge Tracing from scratch." },
   { track: "eng", start: 2025, end: 2025, title: "SIGAIDA Campus Energy", detail: "Env-monitoring platform + PyTorch LSTM PM2.5 forecast; 10-person team." },
   { track: "eng", start: 2025, end: 2025, title: "Project Helix", detail: "1000+ campus events unified from 15+ sources; OAuth2 calendar export." },
@@ -913,7 +925,7 @@ export const timeline: TimelineStint[] = [
   { track: "research", start: 2026, end: 2026, title: "ConvAI · GroundWorks", detail: "Implementation, experiments and analysis; fourth author on an ICLR 2027 submission." },
   { track: "research", start: 2026, end: 2026, title: "OnCARE · Exploratory Pilot", detail: "AI-assisted learning and student wellbeing; study preparation, execution and co-design." },
   { track: "research", start: 2026, end: 2026, title: "UR2PhD Pre-REC Training", detail: "Reproduced a 72-dataset protein-classification benchmark and an NLP bias workflow." },
-  { track: "research", start: 2025, end: 2025, title: "Book — Beyond the Black Box", detail: "ISBN; explainable AI across healthcare, finance & autonomy." },
+  { track: "research", start: 2025, end: 2025, title: "Book — Beyond the Black Box", detail: "Explainable AI, counterfactuals and surrogate models across healthcare, finance and autonomy; ASIN B0F38TX4ZR." },
   { track: "research", start: 2023, end: 2025, title: "Editor & Book Assistant", detail: "10+ book projects; edited 300+ academic essays." },
   { track: "research", start: 2024, end: 2024, title: "Paper — Conversational Agents", detail: "IJETAE. Compared ChatGPT, Gemini, Perplexity & Claude." },
   { track: "research", start: 2024, end: 2024, title: "Book — IoT in Agriculture", detail: "ISBN; 500+ copies; recognized by the Governor of Madhya Pradesh." },
@@ -924,7 +936,7 @@ export const timeline: TimelineStint[] = [
   { track: "lead", start: 2026, end: 2026, title: "ENG177 · Course Assistant", detail: "Support 15–20 students in physical design, technical papers, presentations and class sessions." },
   { track: "lead", start: 2026, end: 2026, title: "CS124 · Course Assistant / Tutor", detail: "Programming fundamentals and debugging support since January 2026, separate from peer mentoring." },
   { track: "lead", start: 2026, end: 2026, title: "MLH Commit Fellow", detail: "2.5% acceptance founder-track; advised founders & GPs on PMF." },
-  { track: "lead", start: 2026, end: 2026, title: "CS Peer Mentor · Tutor", detail: "80+ one-on-one sessions across UIUC CS courses." },
+  { track: "lead", start: 2026, end: 2026, title: "CS Peer Mentor", detail: "80+ one-on-one sessions across UIUC CS courses, separate from the CS124 CA role." },
   { track: "lead", start: 2025, end: 2026, title: "SSUAB — Director of Board Development", detail: "Board-wide professional development; authored comprehensive research & career services report." },
   { track: "lead", start: 2025, end: 2026, title: "UI-CON — Panels Head", detail: "2,000+ attendees; 60+ volunteers; 20+ panels, 40+ guests." },
   { track: "lead", start: 2023, end: 2025, title: "AI & STEM Club — Founder", detail: "80+ members; built the city's first AI lab; $7K raised." },

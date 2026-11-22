@@ -88,7 +88,7 @@ function TeamWipe({ team }: { team: TeamId }) {
 
 function TeamToggle({ team, onChange }: { team: TeamId; onChange: (t: TeamId) => void }) {
   return (
-    <div className="pointer-events-auto pt-glass fixed left-1/2 top-4 z-30 flex -translate-x-1/2 items-center gap-1.5 rounded-full border p-1.5 sm:top-6" style={{ borderColor: "rgba(255,255,255,0.14)" }}>
+    <div className="pointer-events-auto pt-glass fixed left-1/2 top-16 z-30 flex -translate-x-1/2 items-center gap-1.5 rounded-full border p-1.5 sm:top-6" style={{ borderColor: "rgba(255,255,255,0.14)" }}>
       {(["ferrari", "redbull"] as TeamId[]).map((t) => {
         const active = team === t;
         return (
@@ -228,7 +228,7 @@ export default function Home() {
 
       {/* Broadcast chrome — hidden on phones (toggle carries the team identity there) */}
       <div className="pointer-events-none fixed inset-0 z-20 hidden sm:block">
-        <div className="absolute left-5 top-5 flex items-center gap-3 sm:left-8 sm:top-8">
+        <div className="absolute left-5 top-20 flex items-center gap-3 sm:left-8 sm:top-20">
           <span className={`${anton.className} text-lg uppercase`} style={{ color: ROSSO }}>
             {palette.label} <span style={{ color: WHITE }}>·{driver.number}</span>
           </span>
@@ -240,7 +240,7 @@ export default function Home() {
       </div>
 
       {/* Hero — the grid */}
-      <section className="relative z-10 flex min-h-screen flex-col justify-center px-5 pb-28 pt-20 sm:px-8 sm:pb-0 sm:pt-0 md:px-16">
+      <section className="relative z-10 flex min-h-screen flex-col justify-center px-5 pb-28 pt-40 sm:px-8 sm:pb-16 sm:pt-32 md:px-16">
         {/* Mobile legibility scrim — dims the car behind the hero text on phones */}
         <div
           aria-hidden

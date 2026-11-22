@@ -131,7 +131,7 @@ const projectJsonLd = wins.map((w) => ({
   name: w.name,
   description: w.circuit,
   author: { "@type": "Person", name: "Shubh Jain" },
-  url: SITE_URL,
+  url: `${SITE_URL}/#project-${w.id}`,
   applicationCategory: w.role,
   programmingLanguage: w.tech.join(", "),
   datePublished: w.year,

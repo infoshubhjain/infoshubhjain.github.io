@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { SECTIONS, driver, wins, directives, standings, trophies, pitWall, timeline } from './prototype-data';
+import { SECTIONS, driver, wins, directives, standings, trophies, pitWall, timeline, seasonStats } from './prototype-data';
 
 describe('Live site data integrity', () => {
   describe('driver', () => {
@@ -131,6 +131,25 @@ describe('Live site data integrity', () => {
       expect(pitWall.find((role) => role.org === 'CS124 · UIUC')?.role).toBe('Course Assistant / Tutor');
       expect(pitWall.find((role) => role.org === 'ENG177 GFX Scholars · UIUC')?.metric).toBe('15–20 students');
       expect(pitWall.find((role) => role.role === 'CS Peer Mentor')?.metric).toBe('80+ sessions');
+    });
+  });
+
+  describe('portfolio audit corrections', () => {
+    it('derives the project count from documented projects', () => {
+      expect(seasonStats.find((stat) => stat.label === 'Builds')?.value).toBe(String(wins.length));
+    });
+
+    it('retains full project dates and the supplied patent identifier', () => {
+      ['geocrop', 'floodsense'].forEach((id) => expect(wins.find((win) => win.id === id)?.period).toBe('Aug 2026 – Present'));
+      expect(wins.find((win) => win.id === 'harvest')?.period).toBe('Dec 2025 – Present');
+      const patent = directives.find((item) => item.kind === 'Patent');
+      expect(patent?.venue).toContain('202421028435');
+      expect(patent?.venue).not.toMatch(/granted/i);
+    });
+
+    it('includes the verified paper link and exact book title', () => {
+      expect(directives.find((item) => item.kind === 'Paper' && item.year === '2023')?.link).toBe('https://www.ijetae.com/files/Volume13Issue9/IJETAE_0923_01.pdf');
+      expect(directives.some((item) => item.title === 'Beyond the Black Box: Unlocking the Secrets of Explainable AI')).toBe(true);
     });
   });
 

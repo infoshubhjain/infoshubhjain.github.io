@@ -51,7 +51,7 @@ export function StrategyBoard() {
       <SectorTag n="Strategy Board" label="Strategy Board (Timeline)" />
       <div>
         <Heading>
-          Four years, run <span style={{ color: "var(--pt-primary)" }}>flat out.</span>
+          Engineering, research and leadership, run <span style={{ color: "var(--pt-primary)" }}>flat out.</span>
         </Heading>
         <p className="mt-6 max-w-2xl text-lg" style={{ color: "var(--pt-muted)" }}>
           Engineering, research and leadership — running at the same time, not in sequence. Hover or tap a

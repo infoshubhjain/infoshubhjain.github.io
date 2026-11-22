@@ -761,7 +761,7 @@ export function Podium() {
             Chequered flag · built with Next.js · Three.js · Framer Motion
           </p>
           <p className="mt-2 font-mono text-xs" style={{ color: P.muted }}>
-            <span style={{ color: P.rosso }}>Radio codes</span> — scroll = throttle · type{" "}
+            <span style={{ color: P.rosso }}>Radio codes</span> — scroll = throttle · hold Alt while typing{" "}
             <span style={{ color: P.white }}>hotlap</span>, <span style={{ color: P.white }}>quali</span>,{" "}
             <span style={{ color: P.white }}>forza</span>, <span style={{ color: P.white }}>wings</span>,{" "}
             <span style={{ color: P.white }}>box</span> outside text fields, or the Konami code (↑↑↓↓←→←→ B A) for a hot lap.
